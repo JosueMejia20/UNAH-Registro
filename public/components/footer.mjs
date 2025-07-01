@@ -1,4 +1,7 @@
-<!-- Footer mejorado -->
+//  Footer mejorado 
+class UnahFooter extends HTMLElement{
+    connectedCallback(){
+    this.innerHTML = `
     <footer class="footer-unah">
         <div class="container">
             <div class="row">
@@ -60,3 +63,10 @@
             </div>
         </div>
     </footer>
+    `;        
+    }
+} 
+
+export{
+    UnahFooter
+}

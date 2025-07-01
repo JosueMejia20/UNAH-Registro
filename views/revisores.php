@@ -11,14 +11,8 @@
     <link rel="stylesheet" href="/../../assets/css/revisores_style.css">
 </head>
 <body>
-    <?php require __DIR__ . "/../public/components/navbar.php"?>
-
-    <!-- Pantalla de carga -->
-    <div id="loading-screen">
-        <img src="https://biologia.unah.edu.hn/dmsdocument/1433-unah-logo-texto" alt="Logo UNAH" class="loading-logo">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Cargando sistema de revisión...</div>
-    </div>
+    <pantalla-de-carga></pantalla-de-carga>
+    <unah-navbar></unah-navbar>
 
     <!-- Contenido principal -->
     <header>
@@ -144,8 +138,9 @@
             </div>
         </div>
     </div>
-    <?php require __DIR__ . "/../public/components/footer.php"?>
+    <unah-footer></unah-footer>
 
     <script src="/../../assets/js/revisores.js"></script>
+    <script type="module" src="../../assets/js/main.js"></script>
 </body>
 </html>

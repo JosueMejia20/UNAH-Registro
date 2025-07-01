@@ -12,8 +12,8 @@
 
 </head>
 <body>
-    <?php require __DIR__ . "/../public/components/loading.php"?>
-    <?php require __DIR__ . "/../public/components/navbar.php"?>
+    <pantalla-de-carga></pantalla-de-carga>
+    <unah-navbar></unah-navbar>
 
     <!-- Hero section -->
     <section class="hero">
@@ -144,10 +144,11 @@
         </div>
     </section>
 
-    <?php require __DIR__ . "/../public/components/footer.php"?>
+    <unah-footer></unah-footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/../../assets/js/landing_script.js"></script>
     <script src="/../../assets/js/loading.js"></script>
+    <script type="module" src="../../assets/js/main.js"></script>
 </body>
 </html>

@@ -12,8 +12,9 @@
 </head>
 <body>
     
-        <?php require __DIR__ . "/../public/components/loading.php"?>
-        <?php require __DIR__ . "/../public/components/navbar.php"?>
+    <pantalla-de-carga></pantalla-de-carga>
+    <unah-navbar></unah-navbar>
+    
     <div class="container-completo">
 
         <!-- Sidebar -->
@@ -92,6 +93,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/../../assets/js/loading.js"></script>
+    <script type="module" src="../../assets/js/main.js"></script>
     <script>
         
         document.addEventListener('DOMContentLoaded', function() {

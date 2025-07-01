@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="/../../assets/css/formulario_style.css">
 </head>
 <body>
-    <?php require __DIR__ . "/../public/components/navbar.php"?>
+    
+    <unah-navbar></unah-navbar>
 
     <!-- Initial Loading Screen -->
     <div class="initial-loading" id="initialLoading">
@@ -329,8 +330,11 @@
         </div>
     </div>
 
+    <unah-footer></unah-footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/../../assets/js/formulario_script.js"></script>
+    <script type="module" src="../../assets/js/main.js"></script>
     
     <?php require __DIR__ . "/../public/components/footer.php"?>
 </body>

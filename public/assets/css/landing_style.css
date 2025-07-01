@@ -109,7 +109,7 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
         }
-        
+
         /* Hero section */
         .hero {
             background: linear-gradient(135deg, var(--unah-blue) 0%, var(--unah-blue-dark) 100%);
@@ -117,6 +117,7 @@
             padding: 100px 0 80px;
             position: relative;
             overflow: hidden;
+            margin-top: 78px;
         }
         
         .hero-bg {
