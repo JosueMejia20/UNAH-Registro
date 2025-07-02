@@ -18,27 +18,6 @@
             margin-top: 79px;
         }
         
-        .sidebar {
-            background-color: var(--unah-blue);
-            color: white;
-            height: 100vh;
-            position: fixed;
-            transition: all 0.3s;
-            width: 250px;
-        }
-        
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            border-left: 4px solid transparent;
-            margin-bottom: 5px;
-            transition: all 0.3s;
-        }
-        
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: white;
-            background-color: var(--unah-blue-dark);
-            border-left: 4px solid var(--vibrant-yellow);
-        }
         
         .main-content {
             margin-left: 250px;

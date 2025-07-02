@@ -29,11 +29,11 @@ class UnahNavbar extends HTMLElement {
                                 Sistema de Pregrado
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="admisionesDropdown">
-                                <li><a class="dropdown-item" href="index.php?page=estudiantes">Estudiantes</a></li>
-                                <li><a class="dropdown-item" href="#">Docentes</a></li>
-                                <li><a class="dropdown-item" href="#">Coordinador</a></li>
-                                <li><a class="dropdown-item" href="#">Jefe de Departamento</a></li>
-                                <li><a class="dropdown-item" href="index.php?page=revisor">Revisores</a></li>
+                                <li><a class="dropdown-item" href="?page=login&rol=estudiante">Estudiantes</a></li>
+                                <li><a class="dropdown-item" href="?page=login&rol=docente">Docentes</a></li>
+                                <li><a class="dropdown-item" href="?page=login&rol=coordinador">Coordinador</a></li>
+                                <li><a class="dropdown-item" href="?page=login&rol=JefeDeDepartamento">Jefe de Departamento</a></li>
+                                <li><a class="dropdown-item" href="?page=login&rol=revisor">Revisores</a></li>
                             </ul>
                         </li>
                     </ul>

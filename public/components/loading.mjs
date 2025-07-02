@@ -11,7 +11,16 @@ class Cargando extends HTMLElement{
         `;
     }
 }
+const loadingEvent = ()=>{
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            document.getElementById('loading-screen').classList.add('hidden');
+        }, 1500);
+    });
+    
+};
 
 export{
-    Cargando
+    Cargando,
+    loadingEvent
 }

@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil Estudiante - UNAH</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/../../assets/css/loading.css">
+    <link rel="stylesheet" href="/../../assets/css/principal_components.css">
     <link rel="stylesheet" href="/../../assets/css/estudiante_style.css">
-    <link rel="stylesheet" href="/../../assets/css/nav_footer.css">
-    
 </head>
 <body>
     
@@ -18,59 +16,14 @@
     <div class="container-completo">
 
         <!-- Sidebar -->
-        <div class="sidebar d-flex flex-column flex-shrink-0 p-3">
-            <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                <img src="https://www.unah.edu.hn/themes/portalunah/assets/images/logo-unah.png" alt="UNAH Logo" style="height: 40px;">
-                <span class="fs-5 ms-2">Portal Estudiantil</span>
-            </div>
-            <hr>
-            <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item">
-                    <a href="#" class="nav-link active" data-view="dashboard">
-                        Perfil
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link" data-view="matricula">
-                        Matrícula
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link" data-view="chat">
-                        Chat y Solicitudes
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link" data-view="solicitudes">
-                        Gestión de Solicitudes
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link" data-view="docentes">
-                        
-                        Perfil de Docentes
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link" data-view="certificado">
-                        Certificado Académico
-                    </a>
-                </li>
-            </ul>
-            <hr>
-            <div class="dropdown">
-                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="https://via.placeholder.com/40" alt="Usuario" width="32" height="32" class="rounded-circle me-2">
-                    <strong>Estudiante UNAH</strong>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                    <li><a class="dropdown-item" href="#">Perfil</a></li>
-                    <li><a class="dropdown-item" href="#">Configuración</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
-                </ul>
-            </div>
-        </div>
+        <unah-sidebar menu-items='[
+        {"label": "Perfil", "view": "dashboard"},
+        {"label": "Matrícula", "view": "matricula"},
+        {"label": "Chat y Solicitudes", "view": "chat"},
+        {"label": "Gestión de Solicitudes", "view": "solictud"},
+        {"label": "Perfil de Docentes", "view": "docentes"},
+        {"label": "Certificado Académico", "view": "certificado"}
+        ]'></unah-sidebar>
     
         <!-- Contenido Principal -->
         <div class="main-content">
@@ -92,7 +45,6 @@
        
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/../../assets/js/loading.js"></script>
     <script type="module" src="../../assets/js/main.js"></script>
     <script>
         

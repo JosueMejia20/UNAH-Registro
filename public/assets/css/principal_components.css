@@ -200,3 +200,74 @@ nav .navbar-unah .btn-unah-secondary:hover {
     color: #333;
     transform: translateY(-3px);
 }
+
+/* loading */
+
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--unah-blue);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out;
+}
+
+#loading-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-logo {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+.loading-spinner {
+    border: 5px solid var(--blue-gray);
+    border-top: 5px solid var(--vibrant-yellow);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: white;
+    margin-top: 20px;
+    font-size: 1.2rem;
+}
+
+/* sidebar */
+.sidebar {
+    background-color: var(--unah-blue);
+    color: white;
+    height: 100vh;
+    position: fixed;
+    transition: all 0.3s;
+    width: 250px;
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    border-left: 4px solid transparent;
+    margin-bottom: 5px;
+    transition: all 0.3s;
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    color: white;
+    background-color: var(--unah-blue-dark);
+    border-left: 4px solid var(--vibrant-yellow);
+}
+
