@@ -62,13 +62,19 @@
                             <div class="form-col">
                                 <div class="form-group">
                                     <label for="primer-nombre" class="required">Primer Nombre</label>
-                                    <input type="text" id="primer-nombre" name="primer-nombre" required>
+                                    <input type="text" id="primer-nombre" name="primer_nombre" required 
+                                           pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" 
+                                           title="Solo letras y espacios, sin caracteres especiales">
+                                    <div class="error-message" id="primer-nombre-error">Solo se permiten letras y espacios, sin caracteres especiales</div>
                                 </div>
                             </div>
                             <div class="form-col">
                                 <div class="form-group">
                                     <label for="segundo-nombre">Segundo Nombre</label>
-                                    <input type="text" id="segundo-nombre" name="segundo-nombre">
+                                    <input type="text" id="segundo-nombre" name="segundo_nombre"
+                                           pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]*"
+                                           title="Solo letras y espacios, sin caracteres especiales">
+                                    <div class="error-message" id="segundo-nombre-error">Solo se permiten letras y espacios, sin caracteres especiales</div>
                                 </div>
                             </div>
                         </div>
@@ -77,13 +83,19 @@
                             <div class="form-col">
                                 <div class="form-group">
                                     <label for="primer-apellido" class="required">Primer Apellido</label>
-                                    <input type="text" id="primer-apellido" name="primer-apellido" required>
+                                    <input type="text" id="primer-apellido" name="primer_apellido" required
+                                           pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
+                                           title="Solo letras y espacios, sin caracteres especiales">
+                                    <div class="error-message" id="primer-apellido-error">Solo se permiten letras y espacios, sin caracteres especiales</div>
                                 </div>
                             </div>
                             <div class="form-col">
                                 <div class="form-group">
                                     <label for="segundo-apellido">Segundo Apellido</label>
-                                    <input type="text" id="segundo-apellido" name="segundo-apellido">
+                                    <input type="text" id="segundo-apellido" name="segundo_apellido"
+                                           pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]*"
+                                           title="Solo letras y espacios, sin caracteres especiales">
+                                    <div class="error-message" id="segundo-apellido-error">Solo se permiten letras y espacios, sin caracteres especiales</div>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +104,8 @@
                             <div class="form-col">
                                 <div class="form-group">
                                     <label for="fecha-nacimiento" class="required">Fecha de Nacimiento</label>
-                                    <input type="date" id="fecha-nacimiento" name="fecha-nacimiento" required>
+                                    <input type="date" id="fecha-nacimiento" name="fecha_nacimiento" required>
+                                    <div class="error-message" id="fecha-nacimiento-error">Debe ser una fecha válida</div>
                                 </div>
                             </div>
                             <div class="form-col">
@@ -104,6 +117,7 @@
                                         <option value="femenino">Femenino</option>
                                         <option value="otro">Otro</option>
                                     </select>
+                                    <div class="error-message" id="genero-error">Seleccione una opción</div>
                                 </div>
                             </div>
                         </div>
@@ -111,15 +125,30 @@
                         <div class="form-row">
                             <div class="form-col">
                                 <div class="form-group">
-                                    <label for="identidad" class="required">Número de Identidad</label>
-                                    <input type="text" id="identidad" name="identidad" required placeholder="0000-0000-00000" pattern="^\d{4}-\d{4}-\d{5}$" title="Formato correcto: 0000-0000-00000">
-                                    <div class="error-message" id="identidad-error">El formato debe ser 0000-0000-00000</div>
+                                    <label for="tipo-identificacion" class="required">Tipo de Identificación</label>
+                                    <select id="tipo-identificacion" name="tipo_identificacion" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="identidad">Identidad</option>
+                                        <option value="pasaporte">Pasaporte</option>
+                                    </select>
+                                    <div class="error-message" id="tipo-identificacion-error">Seleccione una opción</div>
                                 </div>
                             </div>
                             <div class="form-col">
                                 <div class="form-group">
+                                    <label for="numero-identificacion" class="required">Número de Identificación</label>
+                                    <input type="text" id="numero-identificacion" name="numero_identificacion" required 
+                                           placeholder="0000-0000-00000 o número de pasaporte">
+                                    <div class="error-message" id="numero-identificacion-error">Ingrese un número válido</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
                                     <label for="estado-civil" class="required">Estado Civil</label>
-                                    <select id="estado-civil" name="estado-civil" required>
+                                    <select id="estado-civil" name="estado_civil" required>
                                         <option value="">Seleccionar...</option>
                                         <option value="soltero">Soltero(a)</option>
                                         <option value="casado">Casado(a)</option>
@@ -127,6 +156,13 @@
                                         <option value="viudo">Viudo(a)</option>
                                         <option value="union-libre">Unión Libre</option>
                                     </select>
+                                    <div class="error-message" id="estado-civil-error">Seleccione una opción</div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="nacionalidad" class="required">Nacionalidad</label>
+                                    <input type="text" id="nacionalidad" name="nacionalidad" required value="Hondureño" readonly>
                                 </div>
                             </div>
                         </div>
@@ -148,13 +184,29 @@
                                         <option value="francisco-morazan">Francisco Morazán</option>
                                         <option value="cortes">Cortés</option>
                                         <option value="comayagua">Comayagua</option>
+                                        <option value="atlantida">Atlántida</option>
+                                        <option value="colon">Colón</option>
+                                        <option value="copan">Copán</option>
+                                        <option value="choluteca">Choluteca</option>
+                                        <option value="el-paraiso">El Paraíso</option>
+                                        <option value="intibuca">Intibucá</option>
+                                        <option value="islas-de-la-bahia">Islas de la Bahía</option>
+                                        <option value="la-paz">La Paz</option>
+                                        <option value="lempira">Lempira</option>
+                                        <option value="ocotepeque">Ocotepeque</option>
+                                        <option value="olancho">Olancho</option>
+                                        <option value="santa-barbara">Santa Bárbara</option>
+                                        <option value="valle">Valle</option>
+                                        <option value="yoro">Yoro</option>
                                     </select>
+                                    <div class="error-message" id="departamento-error">Seleccione un departamento</div>
                                 </div>
                             </div>
                             <div class="form-col">
                                 <div class="form-group">
-                                    <label for="municipio" class="required">Municipio</label>
-                                    <input type="text" id="municipio" name="municipio" required>
+                                    <label for="direccion" class="required">Dirección Completa</label>
+                                    <textarea id="direccion" name="direccion" rows="2" required></textarea>
+                                    <div class="error-message" id="direccion-error">Ingrese una dirección válida</div>
                                 </div>
                             </div>
                         </div>
@@ -162,14 +214,28 @@
                         <div class="form-row">
                             <div class="form-col">
                                 <div class="form-group">
-                                    <label for="direccion" class="required">Dirección</label>
-                                    <textarea id="direccion" name="direccion" rows="2" required></textarea>
+                                    <label for="codigo-pais" class="required">Código de País</label>
+                                    <select id="codigo-pais" name="codigo_pais" class="country-code" required>
+                                        <option value="+504">+504 (Honduras)</option>
+                                        <option value="+502">+502 (Guatemala)</option>
+                                        <option value="+503">+503 (El Salvador)</option>
+                                        <option value="+505">+505 (Nicaragua)</option>
+                                        <option value="+506">+506 (Costa Rica)</option>
+                                        <option value="+507">+507 (Panamá)</option>
+                                        <option value="+1">+1 (EE.UU./Canadá)</option>
+                                        <option value="+52">+52 (México)</option>
+                                        <option value="other">Otro</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-col">
                                 <div class="form-group">
                                     <label for="telefono" class="required">Teléfono</label>
-                                    <input type="tel" id="telefono" name="telefono" required placeholder="0000-0000" pattern="^\d{4}-\d{4}$" title="Formato correcto: 0000-0000">
+                                    <div class="phone-input-container">
+                                        <input type="text" id="codigo-pais-input" name="codigo_pais_input" class="country-code" value="+504" readonly>
+                                        <input type="tel" id="telefono" name="telefono" class="phone-number" required 
+                                               placeholder="0000-0000" pattern="^\d{4}-\d{4}$" title="Formato correcto: 0000-0000">
+                                    </div>
                                     <div class="error-message" id="telefono-error">El formato debe ser 0000-0000</div>
                                 </div>
                             </div>
@@ -186,7 +252,7 @@
                             <div class="form-col">
                                 <div class="form-group">
                                     <label for="email-confirm" class="required">Confirmar Correo Electrónico</label>
-                                    <input type="email" id="email-confirm" name="email-confirm" required placeholder="ejemplo@correo.com">
+                                    <input type="email" id="email-confirm" name="email_confirm" required placeholder="ejemplo@correo.com">
                                     <div class="error-message" id="email-confirm-error">Los correos electrónicos no coinciden</div>
                                 </div>
                             </div>
@@ -198,137 +264,97 @@
                         </div>
                     </div>
 
-                    <!-- Sección 3: Información Académica -->
-                    <div class="form-section" id="section3" data-section="3">
-                        <h2 class="section-title">Información Académica</h2>
-                        <div class="form-row">
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label for="instituto" class="required">Instituto de Educación Media</label>
-                                    <input type="text" id="instituto" name="instituto" required>
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label for="graduacion" class="required">Año de Graduación</label>
-                                    <input type="number" id="graduacion" name="graduacion" min="1950" max="2025" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label for="pais-estudio" class="required">País donde realizó estudios</label>
-                                    <select id="pais-estudio" name="pais-estudio" required>
-                                        <option value="honduras">Honduras</option>
-                                        <option value="otros">Otro país</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label for="titulo-obtenido" class="required">Título Obtenido</label>
-                                    <input type="text" id="titulo-obtenido" name="titulo-obtenido" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label for="carrera-interes" class="required">Carrera de Interés</label>
-                                    <select id="carrera-interes" name="carrera-interes" required>
-                                        <option value="">Seleccionar...</option>
-                                        <option value="medicina">Medicina</option>
-                                        <option value="derecho">Derecho</option>
-                                        <option value="ingenieria">Ingeniería</option>
-                                        <option value="administracion">Administración de Empresas</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label for="campus" class="required">Campus de Interés</label>
-                                    <select id="campus" name="campus" required>
-                                        <option value="">Seleccionar...</option>
-                                        <option value="tegucigalpa">Tegucigalpa</option>
-                                        <option value="san-pedro-sula">San Pedro Sula</option>
-                                        <option value="comayagua">Comayagua</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-navigation">
-                            <button type="button" class="btn btn-prev" id="prev3">Anterior</button>
-                            <button type="button" class="btn btn-next" id="next3">Siguiente</button>
-                        </div>
-                    </div>
-
-                    <!-- Sección 4: Documentación -->
-                    <div class="form-section" id="section4" data-section="4">
-                        <h2 class="section-title">Documentación Requerida</h2>
-                        <div class="form-group">
-                            <p>Por favor, adjunte los siguientes documentos (PDF o imágenes, máximo 5MB cada uno):</p>
-                            
-                            <div class="file-upload">
-                                <label for="documentos" class="btn">Seleccionar Archivos</label>
-                                <input type="file" id="documentos" name="documentos[]" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="showFiles(this)">
-                                <div class="file-list" id="fileList"></div>
-                            </div>
-                            
-                            <div class="checkbox-group" style="margin-top: 20px;">
-                                <input type="checkbox" id="doc-identidad" name="documentos-requeridos[]" value="identidad" required>
-                                <label for="doc-identidad" class="required">Copia de identidad</label>
-                            </div>
-                            
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="doc-titulo" name="documentos-requeridos[]" value="titulo" required>
-                                <label for="doc-titulo" class="required">Título de educación media (copia)</label>
-                            </div>
-                            
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="doc-record" name="documentos-requeridos[]" value="record" required>
-                                <label for="doc-record" class="required">Record de notas (copia)</label>
-                            </div>
-                            
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="doc-foto" name="documentos-requeridos[]" value="foto">
-                                <label for="doc-foto">Dos fotografías tamaño carnet</label>
-                            </div>
-                        </div>
-
-                        <div class="form-navigation">
-                            <button type="button" class="btn btn-prev" id="prev4">Anterior</button>
-                            <button type="button" class="btn btn-next" id="next4">Siguiente</button>
-                        </div>
-                    </div>
-
-                    <!-- Sección 5: Declaración -->
-                    <div class="form-section" id="section5" data-section="5">
-                        <h2 class="section-title">Declaración</h2>
-                        <div class="form-group">
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="declaracion" name="declaracion" required>
-                                <label for="declaracion" class="required">Declaro que toda la información proporcionada es verídica y acepto los términos y condiciones del proceso de admisión.</label>
-                            </div>
-                        </div>
-
-                        <div class="last-section-footer">
-                            <div class="form-complete-message" id="completeMessage">
-                                ¡Formulario completo! Revise sus datos antes de enviar.
-                            </div>
-                            <div>
-                                <button type="button" class="btn btn-prev" id="prev5">Anterior</button>
-                                <button type="submit" class="btn btn-submit" id="submitBtn">Enviar Solicitud</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                    <!-- Sección 3: Información Académica (versión modificada) -->
+<div class="form-section" id="section3" data-section="3">
+    <h2 class="section-title">Información Académica</h2>
+    <div class="form-row">
+        <div class="form-col">
+            <div class="form-group">
+                <label for="instituto" class="required">Instituto de Educación Media</label>
+                <input type="text" id="instituto" name="instituto_educacion_media" required>
+                <div class="error-message" id="instituto-error">Ingrese el nombre del instituto</div>
+            </div>
+        </div>
+        <div class="form-col">
+            <div class="form-group">
+                <label for="graduacion" class="required">Año de Graduación</label>
+                <input type="number" id="graduacion" name="anio_graduacion" min="1950" max="2025" required>
+                <div class="error-message" id="graduacion-error">Ingrese un año válido (1950-2025)</div>
             </div>
         </div>
     </div>
+
+    <div class="form-row">
+        <div class="form-col">
+            <div class="form-group">
+                <label for="pais-estudio" class="required">País donde realizó estudios</label>
+                <select id="pais-estudio" name="pais_estudios" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="honduras">Honduras</option>
+                    <option value="otros">Otro país</option>
+                </select>
+                <div class="error-message" id="pais-estudio-error">Seleccione una opción</div>
+            </div>
+        </div>
+        <div class="form-col">
+            <div class="form-group">
+                <label for="titulo-obtenido" class="required">Título Obtenido</label>
+                <input type="text" id="titulo-obtenido" name="titulo_obtenido" required>
+                <div class="error-message" id="titulo-obtenido-error">Ingrese el título obtenido</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-col">
+            <div class="form-group">
+                <label for="centro-regional" class="required">Centro Regional</label>
+                <select id="centro-regional" name="centro_regional" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="tegucigalpa">Tegucigalpa</option>
+                    <option value="san-pedro-sula">San Pedro Sula</option>
+                    <option value="comayagua">Comayagua</option>
+                    <option value="la-ceiba">La Ceiba</option>
+                    <option value="puerto-cortes">Puerto Cortés</option>
+                    <option value="santa-rosa-de-copan">Santa Rosa de Copán</option>
+                    <option value="danli">Danlí</option>
+                    <option value="juticalpa">Juticalpa</option>
+                    <option value="tela">Tela</option>
+                    <option value="trujillo">Trujillo</option>
+                    <option value="valle-de-sula">Valle de Sula</option>
+                </select>
+                <div class="error-message" id="centro-regional-error">Seleccione un centro regional</div>
+            </div>
+        </div>
+        <div class="form-col">
+            <div class="form-group">
+                <label for="carrera-interes" class="required">Carrera de Interés (Primera Opción)</label>
+                <select id="carrera-interes" name="carrera_interes_primera" required disabled>
+                    <option value="">Primero seleccione un centro regional</option>
+                </select>
+                <div class="error-message" id="carrera-interes-error">Seleccione una carrera</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-col">
+            <div class="form-group">
+                <label for="carrera-secundaria">Carrera de Interés (Segunda Opción)</label>
+                <select id="carrera-secundaria" name="carrera_interes_secundaria" disabled>
+                    <option value="">Primero seleccione un centro regional</option>
+                </select>
+            </div>
+        </div>
+        <!-- Este espacio queda vacío después de quitar el campo de modalidad -->
+        <div class="form-col"></div>
+    </div>
+
+    <div class="form-navigation">
+        <button type="button" class="btn btn-prev" id="prev3">Anterior</button>
+        <button type="button" class="btn btn-next" id="next3">Siguiente</button>
+    </div>
+</div>
 
     <unah-footer></unah-footer>
 
