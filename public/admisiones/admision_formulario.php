@@ -160,7 +160,7 @@
                                 </div>
                             </div>
                             <div class="form-col">
-                                <!-- Campo de nacionalidad eliminado según solicitud -->
+                                <!-- Espacio dejado para mantener el diseño -->
                             </div>
                         </div>
 
@@ -211,30 +211,15 @@
                         <div class="form-row">
                             <div class="form-col">
                                 <div class="form-group">
-                                    <label for="codigo-pais" class="required">Código de País</label>
-                                    <select id="codigo-pais" name="codigo_pais" class="country-code" required>
-                                        <option value="+504">+504 (Honduras)</option>
-                                        <option value="+502">+502 (Guatemala)</option>
-                                        <option value="+503">+503 (El Salvador)</option>
-                                        <option value="+505">+505 (Nicaragua)</option>
-                                        <option value="+506">+506 (Costa Rica)</option>
-                                        <option value="+507">+507 (Panamá)</option>
-                                        <option value="+1">+1 (EE.UU./Canadá)</option>
-                                        <option value="+52">+52 (México)</option>
-                                        <option value="other">Otro</option>
-                                    </select>
+                                    <label for="telefono" class="required">Teléfono</label>
+                                    <input type="tel" id="telefono" name="telefono" required 
+                                           placeholder="8XXX-XXXX o 9XXX-XXXX" pattern="^[89]\d{3}-\d{4}$" 
+                                           title="Ingrese un número de teléfono hondureño válido (formato: 8XXX-XXXX o 9XXX-XXXX)">
+                                    <div class="error-message" id="telefono-error">El formato debe ser 8XXX-XXXX o 9XXX-XXXX (números hondureños)</div>
                                 </div>
                             </div>
                             <div class="form-col">
-                                <div class="form-group">
-                                    <label for="telefono" class="required">Teléfono</label>
-                                    <div class="phone-input-container">
-                                        <input type="text" id="codigo-pais-input" name="codigo_pais_input" class="country-code" value="+504" readonly>
-                                        <input type="tel" id="telefono" name="telefono" class="phone-number" required 
-                                               placeholder="0000-0000" pattern="^\d{4}-\d{4}$" title="Formato correcto: 0000-0000">
-                                    </div>
-                                    <div class="error-message" id="telefono-error">El formato debe ser 0000-0000</div>
-                                </div>
+                                <!-- Espacio dejado para mantener el diseño -->
                             </div>
                         </div>
 
@@ -297,7 +282,7 @@
                                 </div>
                             </div>
                             <div class="form-col">
-                                <!-- Campo de título obtenido eliminado según solicitud -->
+                                <!-- Espacio dejado para mantener el diseño -->
                             </div>
                         </div>
 
@@ -335,7 +320,7 @@
                                 </div>
                             </div>
                             <div class="form-col">
-                                <!-- Campo de modalidad de estudio eliminado según solicitud -->
+                                <!-- Espacio dejado para mantener el diseño -->
                             </div>
                         </div>
 

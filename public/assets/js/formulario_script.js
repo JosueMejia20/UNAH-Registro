@@ -18,19 +18,6 @@
             // Configurar eventos para el centro regional y carreras
             document.getElementById('centro-regional').addEventListener('change', cargarCarrerasDesdeBD);
             
-            // Configurar evento para código de país
-            document.getElementById('codigo-pais').addEventListener('change', function() {
-                const codigoPaisInput = document.getElementById('codigo-pais-input');
-                if (this.value === 'other') {
-                    codigoPaisInput.readOnly = false;
-                    codigoPaisInput.value = '';
-                    codigoPaisInput.placeholder = 'Ingrese código';
-                } else {
-                    codigoPaisInput.readOnly = true;
-                    codigoPaisInput.value = this.value;
-                }
-            });
-            
             // Configurar validación para número de identificación según tipo
             document.getElementById('tipo-identificacion').addEventListener('change', function() {
                 const numeroIdentificacion = document.getElementById('numero-identificacion');
@@ -51,6 +38,12 @@
 
             // Cargar centros regionales desde la base de datos
             cargarCentrosRegionales();
+            
+            // Validación en tiempo real para el teléfono
+            document.getElementById('telefono').addEventListener('input', function() {
+                const regex = /^[89]\d{3}-\d{4}$/;
+                validateField(this, regex, 'telefono-error');
+            });
         });
 
         // Función para cargar centros regionales desde la base de datos
@@ -316,7 +309,7 @@
                 
                 // Mostrar/ocultar mensaje en la última sección
                 if (currentSection === totalSections) {
-                    document.getElementById('completeMessage').style.display = allComplete ? 'block' : 'none';
+                    document.getElementById('completeMessage').style.display = allSectionsComplete ? 'block' : 'none';
                 }
                 
                 return allSectionsComplete;
@@ -447,9 +440,9 @@
                         }
                     }
                     
-                    // Validación para teléfono
+                    // Validación para teléfono (solo números hondureños)
                     if (input.id === 'telefono') {
-                        const regex = /^\d{4}-\d{4}$/;
+                        const regex = /^[89]\d{3}-\d{4}$/;
                         if (!regex.test(input.value)) {
                             input.classList.add('invalid');
                             if (errorElement) errorElement.style.display = 'block';
@@ -578,7 +571,7 @@
             });
             
             document.getElementById('telefono').addEventListener('input', function() {
-                const regex = /^\d{4}-\d{4}$/;
+                const regex = /^[89]\d{3}-\d{4}$/;
                 validateField(this, regex, 'telefono-error');
             });
             
