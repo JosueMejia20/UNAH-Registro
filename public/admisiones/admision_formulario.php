@@ -14,7 +14,7 @@
     
     <unah-navbar></unah-navbar>
 
-    <!-- Initial Loading Screen -->
+   <!-- Initial Loading Screen -->
     <div class="initial-loading" id="initialLoading">
         <img src="https://biologia.unah.edu.hn/dmsdocument/1433-unah-logo-texto" alt="Logo UNAH" class="initial-loading-logo">
         <div class="initial-spinner"></div>
@@ -160,10 +160,7 @@
                                 </div>
                             </div>
                             <div class="form-col">
-                                <div class="form-group">
-                                    <label for="nacionalidad" class="required">Nacionalidad</label>
-                                    <input type="text" id="nacionalidad" name="nacionalidad" required value="Hondureño" readonly>
-                                </div>
+                                <!-- Campo de nacionalidad eliminado según solicitud -->
                             </div>
                         </div>
 
@@ -245,7 +242,9 @@
                             <div class="form-col">
                                 <div class="form-group">
                                     <label for="email" class="required">Correo Electrónico</label>
-                                    <input type="email" id="email" name="email" required placeholder="ejemplo@correo.com" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Ingrese un correo electrónico válido">
+                                    <input type="email" id="email" name="email" required placeholder="ejemplo@correo.com" 
+                                           pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+                                           title="Ingrese un correo electrónico válido">
                                     <div class="error-message" id="email-error">Ingrese un correo electrónico válido</div>
                                 </div>
                             </div>
@@ -264,97 +263,158 @@
                         </div>
                     </div>
 
-                    <!-- Sección 3: Información Académica (versión modificada) -->
-<div class="form-section" id="section3" data-section="3">
-    <h2 class="section-title">Información Académica</h2>
-    <div class="form-row">
-        <div class="form-col">
-            <div class="form-group">
-                <label for="instituto" class="required">Instituto de Educación Media</label>
-                <input type="text" id="instituto" name="instituto_educacion_media" required>
-                <div class="error-message" id="instituto-error">Ingrese el nombre del instituto</div>
-            </div>
-        </div>
-        <div class="form-col">
-            <div class="form-group">
-                <label for="graduacion" class="required">Año de Graduación</label>
-                <input type="number" id="graduacion" name="anio_graduacion" min="1950" max="2025" required>
-                <div class="error-message" id="graduacion-error">Ingrese un año válido (1950-2025)</div>
-            </div>
-        </div>
-    </div>
+                    <!-- Sección 3: Información Académica -->
+                    <div class="form-section" id="section3" data-section="3">
+                        <h2 class="section-title">Información Académica</h2>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="instituto" class="required">Instituto de Educación Media</label>
+                                    <input type="text" id="instituto" name="instituto_educacion_media" required>
+                                    <div class="error-message" id="instituto-error">Ingrese el nombre del instituto</div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="graduacion" class="required">Año de Graduación</label>
+                                    <input type="number" id="graduacion" name="anio_graduacion" min="1950" max="2025" required
+                                           title="El año debe estar entre 1950 y 2025">
+                                    <div class="error-message" id="graduacion-error">Ingrese un año válido (1950-2025)</div>
+                                </div>
+                            </div>
+                        </div>
 
-    <div class="form-row">
-        <div class="form-col">
-            <div class="form-group">
-                <label for="pais-estudio" class="required">País donde realizó estudios</label>
-                <select id="pais-estudio" name="pais_estudios" required>
-                    <option value="">Seleccionar...</option>
-                    <option value="honduras">Honduras</option>
-                    <option value="otros">Otro país</option>
-                </select>
-                <div class="error-message" id="pais-estudio-error">Seleccione una opción</div>
-            </div>
-        </div>
-        <div class="form-col">
-            <div class="form-group">
-                <label for="titulo-obtenido" class="required">Título Obtenido</label>
-                <input type="text" id="titulo-obtenido" name="titulo_obtenido" required>
-                <div class="error-message" id="titulo-obtenido-error">Ingrese el título obtenido</div>
-            </div>
-        </div>
-    </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="pais-estudio" class="required">País donde realizó estudios</label>
+                                    <select id="pais-estudio" name="pais_estudios" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="honduras">Honduras</option>
+                                        <option value="otros">Otro país</option>
+                                    </select>
+                                    <div class="error-message" id="pais-estudio-error">Seleccione una opción</div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <!-- Campo de título obtenido eliminado según solicitud -->
+                            </div>
+                        </div>
 
-    <div class="form-row">
-        <div class="form-col">
-            <div class="form-group">
-                <label for="centro-regional" class="required">Centro Regional</label>
-                <select id="centro-regional" name="centro_regional" required>
-                    <option value="">Seleccionar...</option>
-                    <option value="tegucigalpa">Tegucigalpa</option>
-                    <option value="san-pedro-sula">San Pedro Sula</option>
-                    <option value="comayagua">Comayagua</option>
-                    <option value="la-ceiba">La Ceiba</option>
-                    <option value="puerto-cortes">Puerto Cortés</option>
-                    <option value="santa-rosa-de-copan">Santa Rosa de Copán</option>
-                    <option value="danli">Danlí</option>
-                    <option value="juticalpa">Juticalpa</option>
-                    <option value="tela">Tela</option>
-                    <option value="trujillo">Trujillo</option>
-                    <option value="valle-de-sula">Valle de Sula</option>
-                </select>
-                <div class="error-message" id="centro-regional-error">Seleccione un centro regional</div>
-            </div>
-        </div>
-        <div class="form-col">
-            <div class="form-group">
-                <label for="carrera-interes" class="required">Carrera de Interés (Primera Opción)</label>
-                <select id="carrera-interes" name="carrera_interes_primera" required disabled>
-                    <option value="">Primero seleccione un centro regional</option>
-                </select>
-                <div class="error-message" id="carrera-interes-error">Seleccione una carrera</div>
-            </div>
-        </div>
-    </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="centro-regional" class="required">Centro Regional</label>
+                                    <select id="centro-regional" name="centro_regional" required>
+                                        <option value="">Seleccionar centro regional...</option>
+                                        <!-- Las opciones se cargarán dinámicamente desde la base de datos -->
+                                    </select>
+                                    <div class="error-message" id="centro-regional-error">Seleccione un centro regional</div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="carrera-interes" class="required">Carrera de Interés (Primera Opción)</label>
+                                    <select id="carrera-interes" name="carrera_interes_primera" required disabled>
+                                        <option value="">Primero seleccione un centro regional</option>
+                                        <!-- Las opciones se cargarán dinámicamente desde la base de datos -->
+                                    </select>
+                                    <div class="error-message" id="carrera-interes-error">Seleccione una carrera</div>
+                                </div>
+                            </div>
+                        </div>
 
-    <div class="form-row">
-        <div class="form-col">
-            <div class="form-group">
-                <label for="carrera-secundaria">Carrera de Interés (Segunda Opción)</label>
-                <select id="carrera-secundaria" name="carrera_interes_secundaria" disabled>
-                    <option value="">Primero seleccione un centro regional</option>
-                </select>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="carrera-secundaria">Carrera de Interés (Segunda Opción)</label>
+                                    <select id="carrera-secundaria" name="carrera_interes_secundaria" disabled>
+                                        <option value="">Primero seleccione un centro regional</option>
+                                        <!-- Las opciones se cargarán dinámicamente desde la base de datos -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <!-- Campo de modalidad de estudio eliminado según solicitud -->
+                            </div>
+                        </div>
+
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-prev" id="prev3">Anterior</button>
+                            <button type="button" class="btn btn-next" id="next3">Siguiente</button>
+                        </div>
+                    </div>
+
+                    <!-- Sección 4: Documentación -->
+                    <div class="form-section" id="section4" data-section="4">
+                        <h2 class="section-title">Documentación Requerida</h2>
+                        <div class="form-group">
+                            <p>Por favor, adjunte los siguientes documentos (PDF o imágenes JPG/PNG, máximo 5MB cada uno):</p>
+                            
+                            <div class="file-upload">
+                                <label for="documentos" class="btn">Seleccionar Archivos</label>
+                                <input type="file" id="documentos" name="documentos[]" multiple 
+                                       accept=".pdf,.jpg,.jpeg,.png" 
+                                       onchange="validateFiles(this)">
+                                <div class="file-list" id="fileList"></div>
+                                <div class="file-error" id="fileError"></div>
+                            </div>
+                            
+                            <div class="checkbox-group" style="margin-top: 20px;">
+                                <input type="checkbox" id="doc-identidad" name="documentos_requeridos[]" value="identidad" required>
+                                <label for="doc-identidad" class="required">Copia de identidad o pasaporte</label>
+                                <div class="error-message" id="doc-identidad-error">Debe adjuntar este documento</div>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="doc-titulo" name="documentos_requeridos[]" value="titulo" required>
+                                <label for="doc-titulo" class="required">Título de educación media (copia)</label>
+                                <div class="error-message" id="doc-titulo-error">Debe adjuntar este documento</div>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="doc-record" name="documentos_requeridos[]" value="record" required>
+                                <label for="doc-record" class="required">Record de notas (copia)</label>
+                                <div class="error-message" id="doc-record-error">Debe adjuntar este documento</div>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="doc-foto" name="documentos_requeridos[]" value="foto">
+                                <label for="doc-foto">Dos fotografías tamaño carnet</label>
+                            </div>
+                        </div>
+
+                        <div class="form-navigation">
+                            <button type="button" class="btn btn-prev" id="prev4">Anterior</button>
+                            <button type="button" class="btn btn-next" id="next4">Siguiente</button>
+                        </div>
+                    </div>
+
+                    <!-- Sección 5: Declaración -->
+                    <div class="form-section" id="section5" data-section="5">
+                        <h2 class="section-title">Declaración</h2>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="declaracion" name="declaracion" required>
+                                <label for="declaracion" class="required">Declaro que toda la información proporcionada es verídica y acepto los términos y condiciones del proceso de admisión.</label>
+                                <div class="error-message" id="declaracion-error">Debe aceptar la declaración</div>
+                            </div>
+                        </div>
+
+                        <div class="last-section-footer">
+                            <div class="form-complete-message" id="completeMessage">
+                                ¡Formulario completo! Revise sus datos antes de enviar.
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-prev" id="prev5">Anterior</button>
+                                <button type="submit" class="btn btn-submit" id="submitBtn">Enviar Solicitud</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-        <!-- Este espacio queda vacío después de quitar el campo de modalidad -->
-        <div class="form-col"></div>
     </div>
-
-    <div class="form-navigation">
-        <button type="button" class="btn btn-prev" id="prev3">Anterior</button>
-        <button type="button" class="btn btn-next" id="next3">Siguiente</button>
-    </div>
-</div>
 
     <unah-footer></unah-footer>
 

@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     setTimeout(() => {
                         // Redirigir al dashboard (simulado)
                         alert("Acceso exitoso. Redirigiendo...");
-                        window.location.href = "../estudiantes/index.php?vista=estudiante"; // Reemplaza con tu URL
+                        window.location.href = "../estudiantes/index.php?vista=estudiante"; 
                     }, 1000);
                 }, 2000);
             });

@@ -1,6 +1,4 @@
-//  Reemplaza todo el código JavaScript con este: 
-
-        // Variables globales
+// Variables globales
         let currentSection = 1;
         const totalSections = 5;
         const form = document.getElementById('admissionForm');
@@ -9,39 +7,8 @@
         const contentContainer = document.getElementById('contentContainer');
         const initialProgressBar = document.getElementById('initialProgressBar');
         
-        // Mapeo de carreras por centro regional (actualizado)
-        const carrerasPorCentro = {
-            'tegucigalpa': [
-                {value: 'medicina', text: 'Medicina'},
-                {value: 'derecho', text: 'Derecho'},
-                {value: 'ingenieria-civil', text: 'Ingeniería Civil'},
-                {value: 'arquitectura', text: 'Arquitectura'},
-                {value: 'psicologia', text: 'Psicología'},
-                {value: 'administracion', text: 'Administración de Empresas'}
-            ],
-            'san-pedro-sula': [
-                {value: 'administracion', text: 'Administración de Empresas'},
-                {value: 'contaduria', text: 'Contaduría Pública'},
-                {value: 'ingenieria-industrial', text: 'Ingeniería Industrial'},
-                {value: 'ingenieria-sistemas', text: 'Ingeniería en Sistemas'},
-                {value: 'mercadotecnia', text: 'Mercadotecnia'}
-            ],
-            'comayagua': [
-                {value: 'agronomia', text: 'Agronomía'},
-                {value: 'veterinaria', text: 'Medicina Veterinaria'},
-                {value: 'ingenieria-ambiental', text: 'Ingeniería Ambiental'},
-                {value: 'ingenieria-alimentos', text: 'Ingeniería en Alimentos'}
-            ],
-            'la-ceiba': [
-                {value: 'turismo', text: 'Turismo'},
-                {value: 'hoteleria', text: 'Hotelería'},
-                {value: 'biologia-marina', text: 'Biología Marina'}
-            ],
-            'puerto-cortes': [
-                {value: 'logistica', text: 'Logística Portuaria'},
-                {value: 'comercio-internacional', text: 'Comercio Internacional'}
-            ]
-        };
+        // Mapeo de carreras por centro regional (esto se reemplazará con llamadas a la base de datos)
+        let carrerasPorCentro = {}; // Inicialmente vacío, se llenará con datos de la base de datos
 
         // Mostrar pantalla de carga inicial
         document.addEventListener('DOMContentLoaded', function() {
@@ -49,68 +16,7 @@
             simulateInitialLoading();
             
             // Configurar eventos para el centro regional y carreras
-            document.getElementById('centro-regional').addEventListener('change', function() {
-                cargarCarreras();
-                
-                // Validación adicional para habilitar/deshabilitar los selects
-                const carreraPrimera = document.getElementById('carrera-interes');
-                const carreraSecundaria = document.getElementById('carrera-secundaria');
-                
-                if (this.value) {
-                    carreraPrimera.disabled = false;
-                    carreraSecundaria.disabled = false;
-                } else {
-                    carreraPrimera.disabled = true;
-                    carreraSecundaria.disabled = true;
-                }
-            });
-
-            // La función cargarCarreras() debe quedar así:
-            function cargarCarreras() {
-                const centroSelect = document.getElementById('centro-regional');
-                const carreraPrimera = document.getElementById('carrera-interes');
-                const carreraSecundaria = document.getElementById('carrera-secundaria');
-                
-                // Limpiar opciones actuales
-                carreraPrimera.innerHTML = '';
-                carreraSecundaria.innerHTML = '';
-                
-                if (centroSelect.value) {
-                    // Habilitar selects
-                    carreraPrimera.disabled = false;
-                    carreraSecundaria.disabled = false;
-                    
-                    const carreras = carrerasPorCentro[centroSelect.value] || [];
-                    
-                    // Agregar opción por defecto
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = '';
-                    defaultOption.textContent = 'Seleccione una carrera';
-                    carreraPrimera.appendChild(defaultOption.cloneNode(true));
-                    carreraSecundaria.appendChild(defaultOption.cloneNode(true));
-                    
-                    // Agregar carreras disponibles
-                    carreras.forEach(carrera => {
-                        const option = document.createElement('option');
-                        option.value = carrera.value;
-                        option.textContent = carrera.text;
-                        carreraPrimera.appendChild(option);
-                        
-                        const option2 = option.cloneNode(true);
-                        carreraSecundaria.appendChild(option2);
-                    });
-                } else {
-                    // Deshabilitar selects y mostrar mensaje
-                    carreraPrimera.disabled = true;
-                    carreraSecundaria.disabled = true;
-                    
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = '';
-                    defaultOption.textContent = 'Primero seleccione un centro regional';
-                    carreraPrimera.appendChild(defaultOption);
-                    carreraSecundaria.appendChild(defaultOption.cloneNode(true));
-                }
-            }
+            document.getElementById('centro-regional').addEventListener('change', cargarCarrerasDesdeBD);
             
             // Configurar evento para código de país
             document.getElementById('codigo-pais').addEventListener('change', function() {
@@ -137,12 +43,102 @@
                     errorElement.textContent = 'El formato debe ser 0000-0000-00000';
                 } else if (this.value === 'pasaporte') {
                     numeroIdentificacion.pattern = '^[A-Za-z0-9]{6,20}$';
-                    numeroIdentificacion.title = 'Ingrese su número de pasaporte';
+                    numeroIdentificacion.title = 'Ingrese su número de pasaporte (solo letras y números, sin caracteres especiales)';
                     numeroIdentificacion.placeholder = 'Número de pasaporte';
-                    errorElement.textContent = 'Ingrese un número de pasaporte válido';
+                    errorElement.textContent = 'Ingrese un número de pasaporte válido (solo letras y números, sin caracteres especiales)';
                 }
             });
+
+            // Cargar centros regionales desde la base de datos
+            cargarCentrosRegionales();
         });
+
+        // Función para cargar centros regionales desde la base de datos
+        function cargarCentrosRegionales() {
+            // Simulamos una llamada AJAX para obtener los centros regionales
+            // En una implementación real, esto sería una petición a tu backend
+            setTimeout(() => {
+                // Datos simulados - reemplazar con llamada real a la base de datos
+                const centrosRegionales = [
+                    {id: 'tegucigalpa', nombre: 'Tegucigalpa'},
+                    {id: 'san-pedro-sula', nombre: 'San Pedro Sula'},
+                    {id: 'comayagua', nombre: 'Comayagua'},
+                    {id: 'la-ceiba', nombre: 'La Ceiba'},
+                    {id: 'puerto-cortes', nombre: 'Puerto Cortés'}
+                ];
+
+                const select = document.getElementById('centro-regional');
+                centrosRegionales.forEach(centro => {
+                    const option = document.createElement('option');
+                    option.value = centro.id;
+                    option.textContent = centro.nombre;
+                    select.appendChild(option);
+                });
+
+                // También cargaríamos las carreras por centro desde la BD
+                carrerasPorCentro = {
+                    'tegucigalpa': [
+                        {value: 'medicina', text: 'Medicina'},
+                        {value: 'derecho', text: 'Derecho'},
+                        {value: 'ingenieria-civil', text: 'Ingeniería Civil'}
+                    ],
+                    'san-pedro-sula': [
+                        {value: 'administracion', text: 'Administración de Empresas'},
+                        {value: 'contaduria', text: 'Contaduría Pública'}
+                    ],
+                    // ... otros centros
+                };
+            }, 500);
+        }
+
+        // Función para cargar carreras desde la base de datos según el centro seleccionado
+        function cargarCarrerasDesdeBD() {
+            const centroSelect = document.getElementById('centro-regional');
+            const carreraPrimera = document.getElementById('carrera-interes');
+            const carreraSecundaria = document.getElementById('carrera-secundaria');
+            
+            // Limpiar opciones actuales
+            carreraPrimera.innerHTML = '';
+            carreraSecundaria.innerHTML = '';
+            
+            if (centroSelect.value) {
+                // Habilitar selects
+                carreraPrimera.disabled = false;
+                carreraSecundaria.disabled = false;
+                
+                // Agregar opción por defecto
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Seleccione una carrera';
+                carreraPrimera.appendChild(defaultOption.cloneNode(true));
+                carreraSecundaria.appendChild(defaultOption.cloneNode(true));
+                
+                // En una implementación real, haríamos una llamada AJAX aquí para obtener las carreras del centro seleccionado
+                // Por ahora usamos los datos simulados
+                const carreras = carrerasPorCentro[centroSelect.value] || [];
+                
+                // Agregar carreras disponibles
+                carreras.forEach(carrera => {
+                    const option = document.createElement('option');
+                    option.value = carrera.value;
+                    option.textContent = carrera.text;
+                    carreraPrimera.appendChild(option);
+                    
+                    const option2 = document.createElement('option');
+                    option2.value = carrera.value;
+                    option2.textContent = carrera.text;
+                    carreraSecundaria.appendChild(option2);
+                });
+            } else {
+                carreraPrimera.disabled = true;
+                carreraSecundaria.disabled = true;
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Primero seleccione un centro regional';
+                carreraPrimera.appendChild(defaultOption);
+                carreraSecundaria.appendChild(defaultOption.cloneNode(true));
+            }
+        }
 
         // Simular carga inicial
         function simulateInitialLoading() {
@@ -199,6 +195,11 @@
 
             // Cambiar sección
             function goToSection(sectionNumber) {
+                // Validar que no se pueda avanzar si la sección actual no está completa
+                if (sectionNumber > currentSection && !validarSeccion(`section${currentSection}`)) {
+                    return;
+                }
+                
                 // Ocultar sección actual
                 document.getElementById(`section${currentSection}`).classList.remove('active');
                 document.getElementById(`step${currentSection}`).classList.remove('active');
@@ -207,7 +208,7 @@
                 document.getElementById(`section${sectionNumber}`).classList.add('active');
                 document.getElementById(`step${sectionNumber}`).classList.add('active');
                 
-                // Marcar sección anterior como completada
+                // Marcar sección anterior como completada si estamos avanzando
                 if (sectionNumber > currentSection) {
                     document.getElementById(`section${currentSection}`).classList.add('completed');
                     document.getElementById(`step${currentSection}`).classList.add('completed');
@@ -331,56 +332,6 @@
                 loadingOverlay.classList.remove('active');
             }
 
-            // Función para cargar carreras según el centro regional seleccionado (CORREGIDA)
-            function cargarCarreras() {
-                const centroSelect = document.getElementById('centro-regional');
-                const carreraPrimera = document.getElementById('carrera-interes');
-                const carreraSecundaria = document.getElementById('carrera-secundaria');
-                
-                // Limpiar opciones actuales
-                carreraPrimera.innerHTML = '';
-                carreraSecundaria.innerHTML = '';
-                
-                if (centroSelect.value && carrerasPorCentro[centroSelect.value]) {
-                    // Habilitar los selects de carreras
-                    carreraPrimera.disabled = false;
-                    carreraSecundaria.disabled = false;
-                    
-                    // Obtener las carreras para el centro seleccionado
-                    const carreras = carrerasPorCentro[centroSelect.value];
-                    
-                    // Agregar opción por defecto
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = '';
-                    defaultOption.textContent = 'Seleccione una carrera';
-                    carreraPrimera.appendChild(defaultOption.cloneNode(true));
-                    carreraSecundaria.appendChild(defaultOption.cloneNode(true));
-                    
-                    // Agregar carreras disponibles a ambos selects
-                    carreras.forEach(carrera => {
-                        const option1 = document.createElement('option');
-                        option1.value = carrera.value;
-                        option1.textContent = carrera.text;
-                        carreraPrimera.appendChild(option1);
-                        
-                        const option2 = document.createElement('option');
-                        option2.value = carrera.value;
-                        option2.textContent = carrera.text;
-                        carreraSecundaria.appendChild(option2);
-                    });
-                } else {
-                    // Deshabilitar y resetear los selects si no hay centro seleccionado
-                    carreraPrimera.disabled = true;
-                    carreraSecundaria.disabled = true;
-                    
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = '';
-                    defaultOption.textContent = centroSelect.value ? 'No hay carreras disponibles' : 'Primero seleccione un centro regional';
-                    carreraPrimera.appendChild(defaultOption);
-                    carreraSecundaria.appendChild(defaultOption.cloneNode(true));
-                }
-            }
-
             // Validación de archivos adjuntos
             function validateFiles(input) {
                 const fileError = document.getElementById('fileError');
@@ -496,9 +447,33 @@
                         }
                     }
                     
-                    // Validación para carreras
-                    if (input.id === 'carrera-interes' || input.id === 'centro-regional') {
-                        if (!input.value) {
+                    // Validación para teléfono
+                    if (input.id === 'telefono') {
+                        const regex = /^\d{4}-\d{4}$/;
+                        if (!regex.test(input.value)) {
+                            input.classList.add('invalid');
+                            if (errorElement) errorElement.style.display = 'block';
+                            isValid = false;
+                            return;
+                        }
+                    }
+                    
+                    // Validación para email
+                    if (input.id === 'email') {
+                        const regex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+                        if (!regex.test(input.value)) {
+                            input.classList.add('invalid');
+                            if (errorElement) errorElement.style.display = 'block';
+                            isValid = false;
+                            return;
+                        }
+                    }
+                    
+                    // Validación para año de graduación
+                    if (input.id === 'graduacion') {
+                        const year = parseInt(input.value);
+                        const currentYear = new Date().getFullYear();
+                        if (isNaN(year) || year < 1950 || year > currentYear) {
                             input.classList.add('invalid');
                             if (errorElement) errorElement.style.display = 'block';
                             isValid = false;
@@ -589,9 +564,17 @@
             });
             
             // Validación en tiempo real
-            document.getElementById('identidad').addEventListener('input', function() {
-                const regex = /^\d{4}-\d{4}-\d{5}$/;
-                validateField(this, regex, 'identidad-error');
+            document.getElementById('numero-identificacion').addEventListener('input', function() {
+                const tipoIdentificacion = document.getElementById('tipo-identificacion').value;
+                const errorElement = document.getElementById('numero-identificacion-error');
+                
+                if (tipoIdentificacion === 'identidad') {
+                    const regex = /^\d{4}-\d{4}-\d{5}$/;
+                    validateField(this, regex, 'numero-identificacion-error');
+                } else if (tipoIdentificacion === 'pasaporte') {
+                    const regex = /^[A-Za-z0-9]{6,20}$/;
+                    validateField(this, regex, 'numero-identificacion-error');
+                }
             });
             
             document.getElementById('telefono').addEventListener('input', function() {
@@ -606,6 +589,22 @@
             });
             
             document.getElementById('email-confirm').addEventListener('input', validateEmailMatch);
+            
+            document.getElementById('graduacion').addEventListener('input', function() {
+                const year = parseInt(this.value);
+                const currentYear = new Date().getFullYear();
+                const errorElement = document.getElementById('graduacion-error');
+                
+                if (!isNaN(year) && year >= 1950 && year <= currentYear) {
+                    this.classList.add('valid');
+                    this.classList.remove('invalid');
+                    errorElement.style.display = 'none';
+                } else {
+                    this.classList.add('invalid');
+                    this.classList.remove('valid');
+                    errorElement.style.display = 'block';
+                }
+            });
             
             // Verificar cambios en los campos
             form.addEventListener('input', function() {
