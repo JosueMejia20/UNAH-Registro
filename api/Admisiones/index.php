@@ -16,39 +16,34 @@ $ruta = trim($uri, '/');
 $admisiones = new Admisiones();
 
 // Responder a las peticiones
-if ($ruta === 'api/Admisiones/usuarios' && $metodo === 'GET') {
-    $usuarios = $admisiones->getUsuarios();
-    echo json_encode($usuarios);
-    exit;
-}
 
 if ($ruta === 'api/Admisiones/estadoCivil' && $metodo === 'GET') {
-    $usuarios = $admisiones->getEstadoCivil();
-    echo json_encode($usuarios);
+    $estadosCivil = $admisiones->getEstadoCivil();
+    echo json_encode($estadosCivil);
     exit;
 }
 
 if ($ruta === 'api/Admisiones/departamentoPais' && $metodo === 'GET') {
-    $usuarios = $admisiones->getDepartamentoPais();
-    echo json_encode($usuarios);
+    $departamentosPais = $admisiones->getDepartamentoPais();
+    echo json_encode($departamentosPais);
     exit;
 }
 
 if ($ruta === 'api/Admisiones/pais' && $metodo === 'GET') {
-    $usuarios = $admisiones->getPais();
-    echo json_encode($usuarios);
+    $paises = $admisiones->getPais();
+    echo json_encode($paises);
     exit;
 }
 
 if ($ruta === 'api/Admisiones/centroRegional' && $metodo === 'GET') {
-    $usuarios = $admisiones->getCentroRegional();
-    echo json_encode($usuarios);
+    $centros = $admisiones->getCentroRegional();
+    echo json_encode($centros);
     exit;
 }
 
 if ($ruta === 'api/Admisiones/carreras' && $metodo === 'GET') {
-    $usuarios = $admisiones->getCarreras();
-    echo json_encode($usuarios);
+   // $carreras = $admisiones->getCarreras();
+    echo ($_SERVER['REQUEST_URI']);
     exit;
 }
 
