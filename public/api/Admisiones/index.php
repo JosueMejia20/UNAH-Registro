@@ -51,4 +51,5 @@ if ($ruta === 'api/Admisiones/carreras' && $metodo === 'GET') {
 
 
 // Si no coincide ninguna ruta:
-echo json_encode(['error' => 'Ruta no encontrada']);
+echo json_encode(['error' => 'Ruta no encontrada []']);
+echo $_SERVER['REQUEST_URI'];
