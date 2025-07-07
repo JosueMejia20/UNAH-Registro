@@ -1,4 +1,4 @@
-USE ProyectoIS;
+USE Registro;
 
 -- Inserts para Facultades
 INSERT INTO Facultad (nombre_facultad) VALUES ('Facultad de Ciencias');
