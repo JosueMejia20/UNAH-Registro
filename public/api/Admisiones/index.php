@@ -19,25 +19,25 @@ $admisiones = new Admisiones();
 
 // Responder a las peticiones
 
-if ($ruta === 'api/Admisiones/estadoCivil' && $metodo === 'GET') {
+if ($ruta === 'api/Admisiones/index.php/estadoCivil' && $metodo === 'GET') {
     $estadosCivil = $admisiones->getEstadoCivil();
     echo json_encode($estadosCivil);
     exit;
 }
 
-if ($ruta === 'api/Admisiones/departamentoPais' && $metodo === 'GET') {
+if ($ruta === 'api/Admisiones/index.php/departamentoPais' && $metodo === 'GET') {
     $departamentosPais = $admisiones->getDepartamentoPais();
     echo json_encode($departamentosPais);
     exit;
 }
 
-if ($ruta === 'api/Admisiones/pais' && $metodo === 'GET') {
+if ($ruta === 'api/Admisiones/index.php/pais' && $metodo === 'GET') {
     $paises = $admisiones->getPais();
     echo json_encode($paises);
     exit;
 }
 
-if ($ruta === 'api/Admisiones/centroRegional' && $metodo === 'GET') {
+if ($ruta === 'api/Admisiones/index.php/centroRegional' && $metodo === 'GET') {
     $centros = $admisiones->getCentroRegional();
     echo json_encode($centros);
     exit;
@@ -52,4 +52,3 @@ if ($ruta === 'api/Admisiones/index.php/carreras' && $metodo === 'GET') {
 
 // Si no coincide ninguna ruta:
 echo json_encode(['error' => 'Ruta no encontrada []']);
-echo $_SERVER['REQUEST_URI'];
