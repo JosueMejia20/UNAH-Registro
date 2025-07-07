@@ -10,7 +10,9 @@ $metodo = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Limpieza uri (quita el / del inicio)
-$ruta = trim($uri, '/');
+//$ruta = trim($uri, '/');
+
+$ruta = $uri;
 
 // Instancia de la clase de servicios para Admisiones
 $admisiones = new Admisiones();
@@ -41,7 +43,7 @@ if ($ruta === 'api/Admisiones/centroRegional' && $metodo === 'GET') {
     exit;
 }
 
-if ($ruta === 'api/Admisiones/carreras' && $metodo === 'GET') {
+if ($ruta === '/home/UNAH-Registro/api/Admisiones/carreras' && $metodo === 'GET') {
    // $carreras = $admisiones->getCarreras();
     echo ($_SERVER['REQUEST_URI']);
     exit;
