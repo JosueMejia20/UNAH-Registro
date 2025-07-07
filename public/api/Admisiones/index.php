@@ -10,7 +10,7 @@ $metodo = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Limpieza uri (quita el / del inicio)
-$ruta = trim($uri, '/public/');
+$ruta = trim($uri, '/');
 
 //$ruta = $uri;
 
@@ -43,7 +43,7 @@ if ($ruta === 'api/Admisiones/centroRegional' && $metodo === 'GET') {
     exit;
 }
 
-if ($ruta === 'api/Admisiones/carreras' && $metodo === 'GET') {
+if ($ruta === 'api/Admisiones/index.php/carreras' && $metodo === 'GET') {
     $carreras = $admisiones->getCarreras();
     echo json_encode($carreras);
     exit;
