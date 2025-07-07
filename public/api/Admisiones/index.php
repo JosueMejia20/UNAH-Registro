@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../../classes/Admisiones/Admisiones.php';
+require_once __DIR__ . '/../../../classes/Admisiones/Admisiones.php';
 
-require_once __DIR__ . '/../../classes/db/DataBase.php';
+require_once __DIR__ . '/../../../classes/db/DataBase.php';
 
 
 // Obtener metodo HTTP y la URI
@@ -10,7 +10,7 @@ $metodo = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Limpieza uri (quita el / del inicio)
-$ruta = trim($uri, '/');
+$ruta = trim($uri, '/public/');
 
 //$ruta = $uri;
 
