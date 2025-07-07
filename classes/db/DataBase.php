@@ -64,13 +64,13 @@ class DataBase {
         }
     }
 
-    //funcion para recuperar todos los usuarios
-    public function getUsuarios() {
+    public function executeQuery(string $query){
         try {
-            $stmt = $this->pdo->query("SELECT * FROM Usuario");
+            $stmt = $this->pdo->query($query);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e){
             return ['error' => $e->getMessage()];
         }
     }
+
 }
