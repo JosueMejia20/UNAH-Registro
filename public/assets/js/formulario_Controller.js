@@ -112,7 +112,7 @@ async function cargarCarreras(centroId) {
     const valorSelect = select.value;
 
 
-    const response = await fetch(`${BASE_URL}/get/carrerasByCentro/${valorSelect}`);
+    const response = await fetch(`${BASE_URL}/get/carrerasByCentro/index.php/${valorSelect}`);
     const data = await response.json();
 
     console.log(data);
