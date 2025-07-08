@@ -174,23 +174,7 @@
                                     <label for="departamento" class="required">Departamento de Residencia</label>
                                     <select id="departamento" name="departamento" required>
                                         <option value="">Seleccionar...</option>
-                                        <option value="francisco-morazan">Francisco Morazán</option>
-                                        <option value="cortes">Cortés</option>
-                                        <option value="comayagua">Comayagua</option>
-                                        <option value="atlantida">Atlántida</option>
-                                        <option value="colon">Colón</option>
-                                        <option value="copan">Copán</option>
-                                        <option value="choluteca">Choluteca</option>
-                                        <option value="el-paraiso">El Paraíso</option>
-                                        <option value="intibuca">Intibucá</option>
-                                        <option value="islas-de-la-bahia">Islas de la Bahía</option>
-                                        <option value="la-paz">La Paz</option>
-                                        <option value="lempira">Lempira</option>
-                                        <option value="ocotepeque">Ocotepeque</option>
-                                        <option value="olancho">Olancho</option>
-                                        <option value="santa-barbara">Santa Bárbara</option>
-                                        <option value="valle">Valle</option>
-                                        <option value="yoro">Yoro</option>
+                                        
                                     </select>
                                     <div class="error-message" id="departamento-error">Seleccione un departamento</div>
                                 </div>

@@ -91,7 +91,7 @@ async function cargarCentroRegional() {
     select.appendChild(new Option('Seleccionar centro regional...', ''));
 
     data.forEach(item => {
-      select.appendChild(new Option(item.nombre_centro, item.centro_id));
+      select.appendChild(new Option(item.nombre_centro, item.centro_regional_id));
     });
 
     // Habilitar el select
@@ -101,16 +101,21 @@ async function cargarCentroRegional() {
   }
 }
 
+
 /**
  * Cargar Carreras según centro regional
  */
 async function cargarCarreras(centroId) {
   try {
-    const response = await fetch(`${BASE_URL}/carreras`);
+
+    const select = document.getElementById('centro-regional');
+    const valorSelect = select.value;
+
+
+    const response = await fetch(`${BASE_URL}/get/carrerasByCentro/${valorSelect}`);
     const data = await response.json();
 
-    // Filtrar carreras por centro si aplica en tu backend
-    const carreras = data.filter(item => item.id_centro === centroId || centroId === '');
+    //console.log(data);
 
     const selectPrimaria = document.getElementById('carrera-interes');
     const selectSecundaria = document.getElementById('carrera-secundaria');
@@ -121,7 +126,7 @@ async function cargarCarreras(centroId) {
     selectPrimaria.appendChild(new Option('Seleccionar carrera...', ''));
     selectSecundaria.appendChild(new Option('Seleccionar carrera...', ''));
 
-    carreras.forEach(item => {
+    data.forEach(item => {
       const opt = new Option(item.nombre_carrera, item.carrera_id);
       selectPrimaria.appendChild(opt.cloneNode(true));
       selectSecundaria.appendChild(opt.cloneNode(true));
@@ -138,28 +143,25 @@ async function cargarCarreras(centroId) {
   }
 }
 
-/**
- * Evita que la carrera primaria se repita como secundaria
- */
-function filtrarCarreraSecundaria() {
-  const carreraPrimaria = document.getElementById('carrera-interes').value;
-  const selectSecundaria = document.getElementById('carrera-secundaria');
 
-  Array.from(selectSecundaria.options).forEach(opt => {
-    opt.hidden = (opt.value !== '' && opt.value === carreraPrimaria);
+// Filtrar carrera secundaria para que no se repita la principal
+function filtrarCarreraSecundaria(listaCarreras) {
+  const carreraPrincipalSeleccionada = selectCarreraPrincipal.value;
+
+  limpiarOpciones(selectCarreraSecundaria);
+  selectCarreraSecundaria.appendChild(new Option('Seleccionar carrera secundaria...', ''));
+
+  listaCarreras.forEach(item => {
+    if (item.carrera_id !== carreraPrincipalSeleccionada) {
+      const opt = new Option(item.nombre_carrera, item.carrera_id);
+      selectCarreraSecundaria.appendChild(opt);
+    }
   });
-
-  // Si la secundaria está seleccionada igual que la primaria, la reseteamos
-  if (selectSecundaria.value === carreraPrimaria) {
-    selectSecundaria.value = '';
-  }
 }
 
-/**
- * Elimina todas las opciones previas de un select
- */
-function limpiarOpciones(selectElement) {
-  while (selectElement.options.length > 0) {
-    selectElement.remove(0);
+// Función para limpiar un <select>
+function limpiarOpciones(select) {
+  while (select.firstChild) {
+    select.removeChild(select.firstChild);
   }
 }
