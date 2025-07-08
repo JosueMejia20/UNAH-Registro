@@ -180,7 +180,7 @@ CREATE TABLE Inscripcion(
     carrera_secundaria INT NOT NULL,
     estado_revision_id INT NOT NULL, -- guarda el estado de inscripcion "aprobado", "rechazado", "pendiente"
 	centro_regional_id INT NOT NULL,
-    ruta_certificado VARCHAR(255) NOT NULL,
+    imagen_certificado MEDIUMBLOB NOT NULL,
     fecha_inscripcion DATETIME NOT NULL,
     revisor_id INT DEFAULT NULL, -- a tabla de usuario. Este campo se rellenara luego con un SP
 

@@ -7,6 +7,7 @@ DROP PROCEDURE IF EXISTS getAllDepartamento_Pais;
 DROP PROCEDURE IF EXISTS getAllPais;
 DROP PROCEDURE IF EXISTS getAllCentro_Regional;
 DROP PROCEDURE IF EXISTS getAllCarrera;
+DROP PROCEDURE IF EXISTS getCarrerasByCentro;
 
 DELIMITER $$
 
@@ -45,6 +46,16 @@ END $$
 CREATE PROCEDURE getAllCarrera()
 BEGIN
 	SELECT * FROM Carrera;
+END $$
+
+CREATE PROCEDURE getCarrerasByCentro(
+	IN centro_id INT
+)
+BEGIN
+	SELECT c.carrera_id, c.nombre_carrera
+	FROM Carrera c
+	INNER JOIN Carrera_Centro_Regional cc ON c.carrera_id = cc.carrera_id
+	WHERE cc.centro_regional_id = centro_id;
 END $$
 
 DELIMITER ;

@@ -40,5 +40,10 @@
             return $db->executeQuery("CALL getAllCarrera");
         }
 
+        public function getCarrerasByCentro(int $id_centro){
+            $db = new DataBase();
+            return $db->executeQuery("CALL getCarrerasByCentro($id_centro)");
+        }
+
     }
 

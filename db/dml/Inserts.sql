@@ -55,6 +55,7 @@ INSERT INTO Departamento_Uni (nombre_departamento, facultad_id) VALUES ('Departa
 
 -- Inserts para Carreras
 INSERT INTO Carrera (departamento_id, nombre_carrera, nota_minima_PAA) VALUES (1, 'Matematicas', 1000);
+INSERT INTO Carrera (departamento_id, nombre_carrera, nota_minima_PAA) VALUES (1, 'Fisica', 1000);
 
 -- Inserts para TipoExamen
 INSERT INTO Tipo_Examen (nombre_examen, nota_minima) VALUES ('PAA', 700);
@@ -68,6 +69,8 @@ INSERT INTO Centro_Regional (nombre_centro, departamento_id) VALUES ('Campus Cor
 
 -- Inserts para Carrera_Centro_Regional
 INSERT INTO Carrera_Centro_Regional(centro_regional_id, carrera_id) VALUES (1,1);
+INSERT INTO Carrera_Centro_Regional(centro_regional_id, carrera_id) VALUES (2,2);
+INSERT INTO Carrera_Centro_Regional(centro_regional_id, carrera_id) VALUES (2,1);
 
 
 
