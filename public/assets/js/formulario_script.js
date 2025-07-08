@@ -1,676 +1,398 @@
 // Variables globales
-        let currentSection = 1;
-        const totalSections = 5;
-        const form = document.getElementById('admissionForm');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const initialLoading = document.getElementById('initialLoading');
-        const contentContainer = document.getElementById('contentContainer');
-        const initialProgressBar = document.getElementById('initialProgressBar');
-        
-        // Mapeo de carreras por centro regional (esto se reemplazará con llamadas a la base de datos)
-        let carrerasPorCentro = {}; // Inicialmente vacío, se llenará con datos de la base de datos
+let currentSection = 1;
+const totalSections = 5;
+const form = document.getElementById('admissionForm');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const initialLoading = document.getElementById('initialLoading');
+const contentContainer = document.getElementById('contentContainer');
+const initialProgressBar = document.getElementById('initialProgressBar');
 
-        // Mostrar pantalla de carga inicial
-        document.addEventListener('DOMContentLoaded', function() {
-            // Simular carga de recursos
-            simulateInitialLoading();
-            
-            // Configurar eventos para el centro regional y carreras
-            document.getElementById('centro-regional').addEventListener('change', cargarCarrerasDesdeBD);
-            
-            // Configurar validación para número de identificación según tipo
-            document.getElementById('tipo-identificacion').addEventListener('change', function() {
-                const numeroIdentificacion = document.getElementById('numero-identificacion');
-                const errorElement = document.getElementById('numero-identificacion-error');
-                
-                if (this.value === 'identidad') {
-                    numeroIdentificacion.pattern = '^\\d{4}-\\d{4}-\\d{5}$';
-                    numeroIdentificacion.title = 'Formato correcto: 0000-0000-00000';
-                    numeroIdentificacion.placeholder = '0000-0000-00000';
-                    errorElement.textContent = 'El formato debe ser 0000-0000-00000';
-                } else if (this.value === 'pasaporte') {
-                    numeroIdentificacion.pattern = '^[A-Za-z0-9]{6,20}$';
-                    numeroIdentificacion.title = 'Ingrese su número de pasaporte (solo letras y números, sin caracteres especiales)';
-                    numeroIdentificacion.placeholder = 'Número de pasaporte';
-                    errorElement.textContent = 'Ingrese un número de pasaporte válido (solo letras y números, sin caracteres especiales)';
-                }
-            });
+// Mostrar pantalla de carga inicial
+document.addEventListener('DOMContentLoaded', function () {
+    simulateInitialLoading();
 
-            // Cargar centros regionales desde la base de datos
-            cargarCentrosRegionales();
-            
-            // Validación en tiempo real para el teléfono
-            document.getElementById('telefono').addEventListener('input', function() {
-                const regex = /^[89]\d{3}-\d{4}$/;
-                validateField(this, regex, 'telefono-error');
-            });
-        });
+    // Aquí va la lógica del select de centro regional
+    document.getElementById('centro-regional').addEventListener('change', function () {
+        // Aquí va la lógica del select de carreras según el centro
+    });
 
-        // Función para cargar centros regionales desde la base de datos
-        function cargarCentrosRegionales() {
-            // Simulamos una llamada AJAX para obtener los centros regionales
-            // En una implementación real, esto sería una petición a tu backend
-            setTimeout(() => {
-                // Datos simulados - reemplazar con llamada real a la base de datos
-                const centrosRegionales = [
-                    {id: 'tegucigalpa', nombre: 'Tegucigalpa'},
-                    {id: 'san-pedro-sula', nombre: 'San Pedro Sula'},
-                    {id: 'comayagua', nombre: 'Comayagua'},
-                    {id: 'la-ceiba', nombre: 'La Ceiba'},
-                    {id: 'puerto-cortes', nombre: 'Puerto Cortés'}
-                ];
+    // Validación tipo de identificación
+    document.getElementById('tipo-identificacion').addEventListener('change', function () {
+        const numeroIdentificacion = document.getElementById('numero-identificacion');
+        const errorElement = document.getElementById('numero-identificacion-error');
 
-                const select = document.getElementById('centro-regional');
-                centrosRegionales.forEach(centro => {
-                    const option = document.createElement('option');
-                    option.value = centro.id;
-                    option.textContent = centro.nombre;
-                    select.appendChild(option);
-                });
+        if (this.value === 'identidad') {
+            numeroIdentificacion.pattern = '^\\d{4}-\\d{4}-\\d{5}$';
+            numeroIdentificacion.title = 'Formato correcto: 0000-0000-00000';
+            numeroIdentificacion.placeholder = '0000-0000-00000';
+            errorElement.textContent = 'El formato debe ser 0000-0000-00000';
+        } else if (this.value === 'pasaporte') {
+            numeroIdentificacion.pattern = '^[A-Za-z0-9]{6,20}$';
+            numeroIdentificacion.title = 'Ingrese su número de pasaporte (solo letras y números, sin caracteres especiales)';
+            numeroIdentificacion.placeholder = 'Número de pasaporte';
+            errorElement.textContent = 'Ingrese un número de pasaporte válido (solo letras y números, sin caracteres especiales)';
+        }
+    });
 
-                // También cargaríamos las carreras por centro desde la BD
-                carrerasPorCentro = {
-                    'tegucigalpa': [
-                        {value: 'medicina', text: 'Medicina'},
-                        {value: 'derecho', text: 'Derecho'},
-                        {value: 'ingenieria-civil', text: 'Ingeniería Civil'}
-                    ],
-                    'san-pedro-sula': [
-                        {value: 'administracion', text: 'Administración de Empresas'},
-                        {value: 'contaduria', text: 'Contaduría Pública'}
-                    ],
-                    // ... otros centros
-                };
+    // Validación en tiempo real para el teléfono
+    document.getElementById('telefono').addEventListener('input', function () {
+        const regex = /^[89]\d{3}-\d{4}$/;
+        validateField(this, regex, 'telefono-error');
+    });
+});
+
+// Simular carga inicial
+function simulateInitialLoading() {
+    let progress = 0;
+    const interval = setInterval(function () {
+        progress += Math.random() * 10;
+        if (progress > 100) progress = 100;
+        initialProgressBar.style.width = `${progress}%`;
+
+        if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(function () {
+                initialLoading.classList.add('hidden');
+                contentContainer.classList.add('show');
+                setupForm();
             }, 500);
         }
+    }, 300);
+}
 
-        // Función para cargar carreras desde la base de datos según el centro seleccionado
-        function cargarCarrerasDesdeBD() {
-            const centroSelect = document.getElementById('centro-regional');
-            const carreraPrimera = document.getElementById('carrera-interes');
-            const carreraSecundaria = document.getElementById('carrera-secundaria');
-            
-            // Limpiar opciones actuales
-            carreraPrimera.innerHTML = '';
-            carreraSecundaria.innerHTML = '';
-            
-            if (centroSelect.value) {
-                // Habilitar selects
-                carreraPrimera.disabled = false;
-                carreraSecundaria.disabled = false;
-                
-                // Agregar opción por defecto
-                const defaultOption = document.createElement('option');
-                defaultOption.value = '';
-                defaultOption.textContent = 'Seleccione una carrera';
-                carreraPrimera.appendChild(defaultOption.cloneNode(true));
-                carreraSecundaria.appendChild(defaultOption.cloneNode(true));
-                
-                // En una implementación real, haríamos una llamada AJAX aquí para obtener las carreras del centro seleccionado
-                // Por ahora usamos los datos simulados
-                const carreras = carrerasPorCentro[centroSelect.value] || [];
-                
-                // Agregar carreras disponibles
-                carreras.forEach(carrera => {
-                    const option = document.createElement('option');
-                    option.value = carrera.value;
-                    option.textContent = carrera.text;
-                    carreraPrimera.appendChild(option);
-                    
-                    const option2 = document.createElement('option');
-                    option2.value = carrera.value;
-                    option2.textContent = carrera.text;
-                    carreraSecundaria.appendChild(option2);
-                });
-            } else {
-                carreraPrimera.disabled = true;
-                carreraSecundaria.disabled = true;
-                const defaultOption = document.createElement('option');
-                defaultOption.value = '';
-                defaultOption.textContent = 'Primero seleccione un centro regional';
-                carreraPrimera.appendChild(defaultOption);
-                carreraSecundaria.appendChild(defaultOption.cloneNode(true));
+// Configuración del formulario
+function setupForm() {
+    function showFiles(input) {
+        const fileList = document.getElementById('fileList');
+        fileList.innerHTML = '';
+
+        if (input.files.length > 0) {
+            for (let i = 0; i < input.files.length; i++) {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <span class="file-name">${input.files[i].name}</span>
+                    <span class="remove-file" onclick="removeFile(this, ${i})">×</span>
+                `;
+                fileList.appendChild(fileItem);
             }
         }
+        checkSectionCompletion(4);
+    }
 
-        // Simular carga inicial
-        function simulateInitialLoading() {
-            let progress = 0;
-            const interval = setInterval(function() {
-                progress += Math.random() * 10;
-                if (progress > 100) progress = 100;
-                initialProgressBar.style.width = `${progress}%`;
-                
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    setTimeout(function() {
-                        initialLoading.classList.add('hidden');
-                        contentContainer.classList.add('show');
-                        setupForm();
-                    }, 500);
-                }
-            }, 300);
+    function removeFile(element, index) {
+        const input = document.getElementById('documentos');
+        const files = Array.from(input.files);
+        files.splice(index, 1);
+        const dataTransfer = new DataTransfer();
+        files.forEach(file => dataTransfer.items.add(file));
+        input.files = dataTransfer.files;
+        showFiles(input);
+    }
+
+    function goToSection(sectionNumber) {
+        if (sectionNumber > currentSection && !validarSeccion(`section${currentSection}`)) return;
+
+        document.getElementById(`section${currentSection}`).classList.remove('active');
+        document.getElementById(`step${currentSection}`).classList.remove('active');
+
+        document.getElementById(`section${sectionNumber}`).classList.add('active');
+        document.getElementById(`step${sectionNumber}`).classList.add('active');
+
+        if (sectionNumber > currentSection) {
+            document.getElementById(`section${currentSection}`).classList.add('completed');
+            document.getElementById(`step${currentSection}`).classList.add('completed');
         }
 
-        // Configurar el formulario después de que se cargue la página
-        function setupForm() {
-            // Mostrar archivos seleccionados
-            function showFiles(input) {
-                const fileList = document.getElementById('fileList');
-                fileList.innerHTML = '';
-                
-                if (input.files.length > 0) {
-                    for (let i = 0; i < input.files.length; i++) {
-                        const fileItem = document.createElement('div');
-                        fileItem.className = 'file-item';
-                        fileItem.innerHTML = `
-                            <span class="file-name">${input.files[i].name}</span>
-                            <span class="remove-file" onclick="removeFile(this, ${i})">×</span>
-                        `;
-                        fileList.appendChild(fileItem);
-                    }
-                }
-                checkSectionCompletion(4);
-            }
+        currentSection = sectionNumber;
+        updateProgressBar();
 
-            // Eliminar archivo de la lista
-            function removeFile(element, index) {
-                const input = document.getElementById('documentos');
-                const files = Array.from(input.files);
-                files.splice(index, 1);
-                
-                const dataTransfer = new DataTransfer();
-                files.forEach(file => dataTransfer.items.add(file));
-                input.files = dataTransfer.files;
-                
-                showFiles(input);
-            }
+        if (currentSection === totalSections) {
+            const allComplete = checkFormCompletion();
+            document.getElementById('completeMessage').style.display = allComplete ? 'block' : 'none';
+        }
 
-            // Cambiar sección
-            function goToSection(sectionNumber) {
-                // Validar que no se pueda avanzar si la sección actual no está completa
-                if (sectionNumber > currentSection && !validarSeccion(`section${currentSection}`)) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateProgressBar() {
+        const progress = ((currentSection - 1) / (totalSections - 1)) * 100;
+        document.getElementById('progressBar').style.width = `${progress}%`;
+    }
+
+    function validarSeccion(seccionId) {
+        let isValid = true;
+        const seccion = document.getElementById(seccionId);
+        const inputs = seccion.querySelectorAll('input[required], select[required], textarea[required]');
+
+        inputs.forEach(input => {
+            const errorElement = document.getElementById(`${input.id}-error`);
+
+            if (input.id.includes('nombre') || input.id.includes('apellido')) {
+                if (input.value && !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(input.value)) {
+                    input.classList.add('invalid');
+                    if (errorElement) errorElement.style.display = 'block';
+                    isValid = false;
                     return;
                 }
-                
-                // Ocultar sección actual
-                document.getElementById(`section${currentSection}`).classList.remove('active');
-                document.getElementById(`step${currentSection}`).classList.remove('active');
-                
-                // Mostrar nueva sección
-                document.getElementById(`section${sectionNumber}`).classList.add('active');
-                document.getElementById(`step${sectionNumber}`).classList.add('active');
-                
-                // Marcar sección anterior como completada si estamos avanzando
-                if (sectionNumber > currentSection) {
-                    document.getElementById(`section${currentSection}`).classList.add('completed');
-                    document.getElementById(`step${currentSection}`).classList.add('completed');
-                }
-                
-                currentSection = sectionNumber;
-                
-                // Actualizar barra de progreso
-                updateProgressBar();
-                
-                // Mostrar mensaje de completado en la última sección
-                if (currentSection === totalSections) {
-                    const allComplete = checkFormCompletion();
-                    document.getElementById('completeMessage').style.display = allComplete ? 'block' : 'none';
-                }
-                
-                // Desplazar hacia arriba
-                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
-            // Actualizar barra de progreso
-            function updateProgressBar() {
-                const progress = ((currentSection - 1) / (totalSections - 1)) * 100;
-                document.getElementById('progressBar').style.width = `${progress}%`;
+            if (input.id === 'email-confirm') {
+                const email = document.getElementById('email').value;
+                if (input.value !== email) {
+                    input.classList.add('invalid');
+                    if (errorElement) errorElement.style.display = 'block';
+                    isValid = false;
+                    return;
+                }
             }
 
-            // Validar sección actual
-            function validateCurrentSection() {
-                const section = document.getElementById(`section${currentSection}`);
-                const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
-                let isValid = true;
-                
-                inputs.forEach(input => {
-                    if (!input.value) {
-                        isValid = false;
-                        input.classList.add('invalid');
-                    } else {
-                        input.classList.remove('invalid');
-                    }
-                    
-                    // Validación especial para checkboxes
-                    if (input.type === 'checkbox' && !input.checked) {
-                        isValid = false;
-                        input.classList.add('invalid');
-                    } else if (input.type === 'checkbox') {
-                        input.classList.remove('invalid');
-                    }
-                });
-                
-                // Validación especial para email
-                if (currentSection === 2) {
-                    const email = document.getElementById('email');
-                    const emailConfirm = document.getElementById('email-confirm');
-                    
-                    if (email.value !== emailConfirm.value) {
-                        isValid = false;
-                        emailConfirm.classList.add('invalid');
-                        document.getElementById('email-confirm-error').style.display = 'block';
-                    } else {
-                        emailConfirm.classList.remove('invalid');
-                        document.getElementById('email-confirm-error').style.display = 'none';
-                    }
+            if (input.id === 'numero-identificacion') {
+                const tipo = document.getElementById('tipo-identificacion').value;
+                const regex = tipo === 'identidad'
+                    ? /^\d{4}-\d{4}-\d{5}$/
+                    : /^[A-Za-z0-9]{6,20}$/;
+
+                if (!regex.test(input.value)) {
+                    input.classList.add('invalid');
+                    if (errorElement) errorElement.style.display = 'block';
+                    isValid = false;
+                    return;
                 }
-                
-                return isValid;
             }
 
-            // Verificar si una sección está completa
-            function checkSectionCompletion(sectionNumber) {
-                const section = document.getElementById(`section${sectionNumber}`);
-                const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
-                let isComplete = true;
-                
-                inputs.forEach(input => {
-                    if (!input.value) {
-                        isComplete = false;
-                    }
-                    
-                    if (input.type === 'checkbox' && !input.checked) {
-                        isComplete = false;
-                    }
-                });
-                
-                // Verificación especial para archivos
-                if (sectionNumber === 4) {
-                    const fileInput = document.getElementById('documentos');
-                    if (fileInput.files.length === 0) {
-                        isComplete = false;
-                    }
-                }
-                
-                return isComplete;
+            if (input.id === 'telefono' && !/^[89]\d{3}-\d{4}$/.test(input.value)) {
+                input.classList.add('invalid');
+                if (errorElement) errorElement.style.display = 'block';
+                isValid = false;
+                return;
             }
 
-            // Verificar si todo el formulario está completo
-            function checkFormCompletion() {
-                let allSectionsComplete = true;
-                
-                for (let i = 1; i <= totalSections; i++) {
-                    if (!checkSectionCompletion(i)) {
-                        allSectionsComplete = false;
-                        break;
-                    }
-                }
-                
-                // Mostrar/ocultar mensaje en la última sección
-                if (currentSection === totalSections) {
-                    document.getElementById('completeMessage').style.display = allSectionsComplete ? 'block' : 'none';
-                }
-                
-                return allSectionsComplete;
+            if (input.id === 'email' && !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(input.value)) {
+                input.classList.add('invalid');
+                if (errorElement) errorElement.style.display = 'block';
+                isValid = false;
+                return;
             }
 
-            // Mostrar pantalla de carga
-            function showLoading() {
-                loadingOverlay.classList.add('active');
-            }
-
-            // Ocultar pantalla de carga
-            function hideLoading() {
-                loadingOverlay.classList.remove('active');
-            }
-
-            // Validación de archivos adjuntos
-            function validateFiles(input) {
-                const fileError = document.getElementById('fileError');
-                const fileList = document.getElementById('fileList');
-                const maxSize = 5 * 1024 * 1024; // 5MB
-                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
-                let isValid = true;
-                
-                fileError.textContent = '';
-                fileList.innerHTML = '';
-                
-                if (input.files.length > 0) {
-                    for (let i = 0; i < input.files.length; i++) {
-                        const file = input.files[i];
-                        const fileItem = document.createElement('div');
-                        fileItem.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-                        
-                        // Validar tipo de archivo
-                        if (!allowedTypes.includes(file.type)) {
-                            fileItem.textContent += ' - Formato no permitido';
-                            fileItem.style.color = 'red';
-                            isValid = false;
-                        }
-                        
-                        // Validar tamaño
-                        if (file.size > maxSize) {
-                            fileItem.textContent += ' - Archivo demasiado grande (máx. 5MB)';
-                            fileItem.style.color = 'red';
-                            isValid = false;
-                        }
-                        
-                        // Validar dimensiones si es imagen
-                        if (file.type.startsWith('image/') && file.type !== 'image/svg+xml') {
-                            const img = new Image();
-                            img.onload = function() {
-                                if (this.width > 2000 || this.height > 2000) {
-                                    fileItem.textContent += ' - Imagen demasiado grande (máx. 2000x2000px)';
-                                    fileItem.style.color = 'red';
-                                    isValid = false;
-                                    fileError.textContent = 'Algunos archivos no cumplen con los requisitos';
-                                }
-                            };
-                            img.src = URL.createObjectURL(file);
-                        }
-                        
-                        fileList.appendChild(fileItem);
-                    }
-                    
-                    if (!isValid) {
-                        fileError.textContent = 'Algunos archivos no cumplen con los requisitos';
-                        input.value = ''; // Limpiar selección si hay errores
-                    }
-                }
-                
-                return isValid;
-            }
-
-            // Validación de campos de nombre (sin caracteres especiales)
-            function validarNombre(input) {
-                const regex = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/;
-                return regex.test(input.value);
-            }
-
-            // Validación de sección antes de avanzar
-            function validarSeccion(seccionId) {
-                let isValid = true;
-                const seccion = document.getElementById(seccionId);
-                const inputs = seccion.querySelectorAll('input[required], select[required], textarea[required]');
-                
-                inputs.forEach(input => {
-                    const errorElement = document.getElementById(`${input.id}-error`);
-                    
-                    // Validación especial para campos de nombre
-                    if (input.id.includes('nombre') || input.id.includes('apellido')) {
-                        if (input.value && !validarNombre(input)) {
-                            input.classList.add('invalid');
-                            if (errorElement) errorElement.style.display = 'block';
-                            isValid = false;
-                            return;
-                        }
-                    }
-                    
-                    // Validación para confirmación de email
-                    if (input.id === 'email-confirm') {
-                        const email = document.getElementById('email').value;
-                        if (input.value !== email) {
-                            input.classList.add('invalid');
-                            if (errorElement) errorElement.style.display = 'block';
-                            isValid = false;
-                            return;
-                        }
-                    }
-                    
-                    // Validación para número de identificación según tipo
-                    if (input.id === 'numero-identificacion') {
-                        const tipoIdentificacion = document.getElementById('tipo-identificacion').value;
-                        if (tipoIdentificacion === 'identidad') {
-                            const regex = /^\d{4}-\d{4}-\d{5}$/;
-                            if (!regex.test(input.value)) {
-                                input.classList.add('invalid');
-                                if (errorElement) errorElement.style.display = 'block';
-                                isValid = false;
-                                return;
-                            }
-                        } else if (tipoIdentificacion === 'pasaporte') {
-                            const regex = /^[A-Za-z0-9]{6,20}$/;
-                            if (!regex.test(input.value)) {
-                                input.classList.add('invalid');
-                                if (errorElement) errorElement.style.display = 'block';
-                                isValid = false;
-                                return;
-                            }
-                        }
-                    }
-                    
-                    // Validación para teléfono (solo números hondureños)
-                    if (input.id === 'telefono') {
-                        const regex = /^[89]\d{3}-\d{4}$/;
-                        if (!regex.test(input.value)) {
-                            input.classList.add('invalid');
-                            if (errorElement) errorElement.style.display = 'block';
-                            isValid = false;
-                            return;
-                        }
-                    }
-                    
-                    // Validación para email
-                    if (input.id === 'email') {
-                        const regex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-                        if (!regex.test(input.value)) {
-                            input.classList.add('invalid');
-                            if (errorElement) errorElement.style.display = 'block';
-                            isValid = false;
-                            return;
-                        }
-                    }
-                    
-                    // Validación para año de graduación
-                    if (input.id === 'graduacion') {
-                        const year = parseInt(input.value);
-                        const currentYear = new Date().getFullYear();
-                        if (isNaN(year) || year < 1950 || year > currentYear) {
-                            input.classList.add('invalid');
-                            if (errorElement) errorElement.style.display = 'block';
-                            isValid = false;
-                            return;
-                        }
-                    }
-                    
-                    // Validación estándar
-                    if (!input.value) {
-                        input.classList.add('invalid');
-                        if (errorElement) errorElement.style.display = 'block';
-                        isValid = false;
-                    } else {
-                        input.classList.remove('invalid');
-                        input.classList.add('valid');
-                        if (errorElement) errorElement.style.display = 'none';
-                    }
-                });
-                
-                // Validación especial para archivos en la sección 4
-                if (seccionId === 'section4') {
-                    const fileInput = document.getElementById('documentos');
-                    const requiredCheckboxes = seccion.querySelectorAll('input[type="checkbox"][required]');
-                    
-                    // Validar que al menos un archivo esté adjunto para los documentos requeridos
-                    let hasFiles = fileInput.files.length > 0;
-                    if (!hasFiles) {
-                        document.getElementById('fileError').textContent = 'Debe adjuntar al menos un archivo';
-                        isValid = false;
-                    } else if (!validateFiles(fileInput)) {
-                        isValid = false;
-                    }
-                    
-                    // Validar checkboxes de documentos requeridos
-                    requiredCheckboxes.forEach(checkbox => {
-                        const errorElement = document.getElementById(`${checkbox.id}-error`);
-                        if (!checkbox.checked) {
-                            if (errorElement) errorElement.style.display = 'block';
-                            isValid = false;
-                        } else {
-                            if (errorElement) errorElement.style.display = 'none';
-                        }
-                    });
-                }
-                
-                return isValid;
-            }
-
-            // Configurar navegación
-            document.getElementById('next1').addEventListener('click', function() {
-                if (validarSeccion('section1')) {
-                    goToSection(2);
-                }
-            });
-            
-            document.getElementById('next2').addEventListener('click', function() {
-                if (validarSeccion('section2')) {
-                    goToSection(3);
-                }
-            });
-            
-            document.getElementById('next3').addEventListener('click', function() {
-                if (validarSeccion('section3')) {
-                    goToSection(4);
-                }
-            });
-            
-            document.getElementById('next4').addEventListener('click', function() {
-                if (validarSeccion('section4')) {
-                    goToSection(5);
-                }
-            });
-            
-            document.getElementById('prev2').addEventListener('click', function() {
-                goToSection(1);
-            });
-            
-            document.getElementById('prev3').addEventListener('click', function() {
-                goToSection(2);
-            });
-            
-            document.getElementById('prev4').addEventListener('click', function() {
-                goToSection(3);
-            });
-            
-            document.getElementById('prev5').addEventListener('click', function() {
-                goToSection(4);
-            });
-            
-            // Validación en tiempo real
-            document.getElementById('numero-identificacion').addEventListener('input', function() {
-                const tipoIdentificacion = document.getElementById('tipo-identificacion').value;
-                const errorElement = document.getElementById('numero-identificacion-error');
-                
-                if (tipoIdentificacion === 'identidad') {
-                    const regex = /^\d{4}-\d{4}-\d{5}$/;
-                    validateField(this, regex, 'numero-identificacion-error');
-                } else if (tipoIdentificacion === 'pasaporte') {
-                    const regex = /^[A-Za-z0-9]{6,20}$/;
-                    validateField(this, regex, 'numero-identificacion-error');
-                }
-            });
-            
-            document.getElementById('telefono').addEventListener('input', function() {
-                const regex = /^[89]\d{3}-\d{4}$/;
-                validateField(this, regex, 'telefono-error');
-            });
-            
-            document.getElementById('email').addEventListener('input', function() {
-                const regex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-                validateField(this, regex, 'email-error');
-                validateEmailMatch();
-            });
-            
-            document.getElementById('email-confirm').addEventListener('input', validateEmailMatch);
-            
-            document.getElementById('graduacion').addEventListener('input', function() {
-                const year = parseInt(this.value);
+            if (input.id === 'graduacion') {
+                const year = parseInt(input.value);
                 const currentYear = new Date().getFullYear();
-                const errorElement = document.getElementById('graduacion-error');
-                
-                if (!isNaN(year) && year >= 1950 && year <= currentYear) {
-                    this.classList.add('valid');
-                    this.classList.remove('invalid');
-                    errorElement.style.display = 'none';
-                } else {
-                    this.classList.add('invalid');
-                    this.classList.remove('valid');
-                    errorElement.style.display = 'block';
-                }
-            });
-            
-            // Verificar cambios en los campos
-            form.addEventListener('input', function() {
-                if (currentSection === totalSections) {
-                    const allComplete = checkFormCompletion();
-                    document.getElementById('completeMessage').style.display = allComplete ? 'block' : 'none';
-                }
-            });
-            
-            // Validar checkbox de declaración
-            document.getElementById('declaracion').addEventListener('change', function() {
-                if (currentSection === totalSections) {
-                    checkFormCompletion();
-                }
-            });
-            
-            // Manejar envío del formulario
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Validar todo el formulario antes de enviar
-                if (checkFormCompletion()) {
-                    showLoading();
-                    
-                    // Simular envío de datos (en un caso real sería una petición AJAX)
-                    setTimeout(function() {
-                        hideLoading();
-                        
-                        // Aquí iría el código para manejar la respuesta del servidor
-                        alert('¡Formulario enviado con éxito!');
-                        
-                        // Redireccionar o mostrar mensaje de éxito
-                        // window.location.href = 'gracias.html';
-                    }, 3000); // Simulamos un retraso de 3 segundos
-                } else {
-                    alert('Por favor complete todos los campos requeridos antes de enviar.');
-                }
-            });
-
-            // Función para validar campos con regex
-            function validateField(field, regex, errorId) {
-                const errorElement = document.getElementById(errorId);
-                
-                if (regex.test(field.value)) {
-                    field.classList.add('valid');
-                    field.classList.remove('invalid');
-                    errorElement.style.display = 'none';
-                } else {
-                    field.classList.add('invalid');
-                    field.classList.remove('valid');
-                    errorElement.style.display = 'block';
+                if (isNaN(year) || year < 1950 || year > currentYear) {
+                    input.classList.add('invalid');
+                    if (errorElement) errorElement.style.display = 'block';
+                    isValid = false;
+                    return;
                 }
             }
 
-            // Función para validar que los emails coincidan
-            function validateEmailMatch() {
-                const email = document.getElementById('email');
-                const emailConfirm = document.getElementById('email-confirm');
-                const errorElement = document.getElementById('email-confirm-error');
-                
-                if (email.value === emailConfirm.value && email.value !== '') {
-                    emailConfirm.classList.add('valid');
-                    emailConfirm.classList.remove('invalid');
-                    errorElement.style.display = 'none';
-                } else {
-                    emailConfirm.classList.add('invalid');
-                    emailConfirm.classList.remove('valid');
-                    errorElement.style.display = 'block';
-                }
+            if (!input.value) {
+                input.classList.add('invalid');
+                if (errorElement) errorElement.style.display = 'block';
+                isValid = false;
+            } else {
+                input.classList.remove('invalid');
+                input.classList.add('valid');
+                if (errorElement) errorElement.style.display = 'none';
+            }
+        });
+
+        if (seccionId === 'section4') {
+            const fileInput = document.getElementById('documentos');
+            const checkboxes = seccion.querySelectorAll('input[type="checkbox"][required]');
+            if (fileInput.files.length === 0) {
+                document.getElementById('fileError').textContent = 'Debe adjuntar al menos un archivo';
+                isValid = false;
+            } else if (!validateFiles(fileInput)) {
+                isValid = false;
             }
 
-            // Hacer funciones accesibles globalmente
-            window.showFiles = showFiles;
-            window.removeFile = removeFile;
-            window.validateFiles = validateFiles;
+            checkboxes.forEach(cb => {
+                const err = document.getElementById(`${cb.id}-error`);
+                if (!cb.checked) {
+                    if (err) err.style.display = 'block';
+                    isValid = false;
+                } else {
+                    if (err) err.style.display = 'none';
+                }
+            });
         }
+
+        return isValid;
+    }
+
+    function checkSectionCompletion(sectionNumber) {
+        const section = document.getElementById(`section${sectionNumber}`);
+        const inputs = section.querySelectorAll('input[required], select[required], textarea[required]');
+        let isComplete = true;
+
+        inputs.forEach(input => {
+            if (!input.value || (input.type === 'checkbox' && !input.checked)) {
+                isComplete = false;
+            }
+        });
+
+        if (sectionNumber === 4) {
+            const fileInput = document.getElementById('documentos');
+            if (fileInput.files.length === 0) {
+                isComplete = false;
+            }
+        }
+
+        return isComplete;
+    }
+
+    function checkFormCompletion() {
+        for (let i = 1; i <= totalSections; i++) {
+            if (!checkSectionCompletion(i)) return false;
+        }
+
+        if (currentSection === totalSections) {
+            document.getElementById('completeMessage').style.display = 'block';
+        }
+
+        return true;
+    }
+
+    function validateFiles(input) {
+        const fileError = document.getElementById('fileError');
+        const fileList = document.getElementById('fileList');
+        const maxSize = 5 * 1024 * 1024;
+        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+        let isValid = true;
+
+        fileError.textContent = '';
+        fileList.innerHTML = '';
+
+        Array.from(input.files).forEach(file => {
+            const item = document.createElement('div');
+            item.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+
+            if (!allowedTypes.includes(file.type)) {
+                item.textContent += ' - Formato no permitido';
+                item.style.color = 'red';
+                isValid = false;
+            }
+
+            if (file.size > maxSize) {
+                item.textContent += ' - Archivo demasiado grande';
+                item.style.color = 'red';
+                isValid = false;
+            }
+
+            fileList.appendChild(item);
+        });
+
+        if (!isValid) {
+            fileError.textContent = 'Algunos archivos no cumplen con los requisitos';
+            input.value = '';
+        }
+
+        return isValid;
+    }
+
+    function validateField(field, regex, errorId) {
+        const errorElement = document.getElementById(errorId);
+        if (regex.test(field.value)) {
+            field.classList.add('valid');
+            field.classList.remove('invalid');
+            errorElement.style.display = 'none';
+        } else {
+            field.classList.add('invalid');
+            field.classList.remove('valid');
+            errorElement.style.display = 'block';
+        }
+    }
+
+    function validateEmailMatch() {
+        const email = document.getElementById('email');
+        const confirm = document.getElementById('email-confirm');
+        const error = document.getElementById('email-confirm-error');
+
+        if (email.value === confirm.value && email.value !== '') {
+            confirm.classList.add('valid');
+            confirm.classList.remove('invalid');
+            error.style.display = 'none';
+        } else {
+            confirm.classList.add('invalid');
+            confirm.classList.remove('valid');
+            error.style.display = 'block';
+        }
+    }
+
+    // Botones navegación
+    document.getElementById('next1').onclick = () => validarSeccion('section1') && goToSection(2);
+    document.getElementById('next2').onclick = () => validarSeccion('section2') && goToSection(3);
+    document.getElementById('next3').onclick = () => validarSeccion('section3') && goToSection(4);
+    document.getElementById('next4').onclick = () => validarSeccion('section4') && goToSection(5);
+
+    document.getElementById('prev2').onclick = () => goToSection(1);
+    document.getElementById('prev3').onclick = () => goToSection(2);
+    document.getElementById('prev4').onclick = () => goToSection(3);
+    document.getElementById('prev5').onclick = () => goToSection(4);
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (checkFormCompletion()) {
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                alert('¡Formulario enviado con éxito!');
+            }, 3000);
+        } else {
+            alert('Por favor complete todos los campos requeridos antes de enviar.');
+        }
+    });
+
+    form.addEventListener('input', () => {
+        if (currentSection === totalSections) {
+            checkFormCompletion();
+        }
+    });
+
+    document.getElementById('declaracion').addEventListener('change', () => {
+        if (currentSection === totalSections) checkFormCompletion();
+    });
+
+    // Validaciones dinámicas
+    document.getElementById('numero-identificacion').addEventListener('input', function () {
+        const tipo = document.getElementById('tipo-identificacion').value;
+        const regex = tipo === 'identidad' ? /^\d{4}-\d{4}-\d{5}$/ : /^[A-Za-z0-9]{6,20}$/;
+        validateField(this, regex, 'numero-identificacion-error');
+    });
+
+    document.getElementById('telefono').addEventListener('input', function () {
+        const regex = /^[89]\d{3}-\d{4}$/;
+        validateField(this, regex, 'telefono-error');
+    });
+
+    document.getElementById('email').addEventListener('input', function () {
+        const regex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+        validateField(this, regex, 'email-error');
+        validateEmailMatch();
+    });
+
+    document.getElementById('email-confirm').addEventListener('input', validateEmailMatch);
+
+    document.getElementById('graduacion').addEventListener('input', function () {
+        const year = parseInt(this.value);
+        const currentYear = new Date().getFullYear();
+        const errorElement = document.getElementById('graduacion-error');
+
+        if (!isNaN(year) && year >= 1950 && year <= currentYear) {
+            this.classList.add('valid');
+            this.classList.remove('invalid');
+            errorElement.style.display = 'none';
+        } else {
+            this.classList.add('invalid');
+            this.classList.remove('valid');
+            errorElement.style.display = 'block';
+        }
+    });
+
+    // Hacer funciones globales
+    window.showFiles = showFiles;
+    window.removeFile = removeFile;
+    window.validateFiles = validateFiles;
+    window.validateField = validateField;
+}

@@ -150,11 +150,7 @@
                                     <label for="estado-civil" class="required">Estado Civil</label>
                                     <select id="estado-civil" name="estado_civil" required>
                                         <option value="">Seleccionar...</option>
-                                        <option value="soltero">Soltero(a)</option>
-                                        <option value="casado">Casado(a)</option>
-                                        <option value="divorciado">Divorciado(a)</option>
-                                        <option value="viudo">Viudo(a)</option>
-                                        <option value="union-libre">Unión Libre</option>
+                                        
                                     </select>
                                     <div class="error-message" id="estado-civil-error">Seleccione una opción</div>
                                 </div>
@@ -405,6 +401,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="../../assets/js/main.js"></script>
+    <script type="module" src="../../assets/js/formulario_Controller.js"></script>
     <script src="../../assets/js/formulario_script.js"></script>
 
 </body>
