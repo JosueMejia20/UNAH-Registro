@@ -1,4 +1,4 @@
-const BASE_URL = '/api/Admisiones/index.php';
+const BASE_URL = '/api/admisiones';
 
 document.addEventListener('DOMContentLoaded', async () => {
   await cargarEstadoCivil();
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
  */
 async function cargarEstadoCivil() {
   try {
-    const response = await fetch(`${BASE_URL}/estadoCivil`);
+    const response = await fetch(`${BASE_URL}/get/estadoCivil`);
     const data = await response.json();
     const select = document.getElementById('estado-civil');
 
@@ -43,7 +43,7 @@ async function cargarEstadoCivil() {
  */
 async function cargarDepartamentos() {
   try {
-    const response = await fetch(`${BASE_URL}/departamentoPais`);
+    const response = await fetch(`${BASE_URL}/get/departamentoPais`);
     const data = await response.json();
     const select = document.getElementById('departamento');
 
@@ -63,7 +63,7 @@ async function cargarDepartamentos() {
  */
 async function cargarPaises() {
   try {
-    const response = await fetch(`${BASE_URL}/pais`);
+    const response = await fetch(`${BASE_URL}/get/pais`);
     const data = await response.json();
     const select = document.getElementById('pais-estudio');
 
@@ -83,7 +83,7 @@ async function cargarPaises() {
  */
 async function cargarCentroRegional() {
   try {
-    const response = await fetch(`${BASE_URL}/centroRegional`);
+    const response = await fetch(`${BASE_URL}/get/centroRegional`);
     const data = await response.json();
     const select = document.getElementById('centro-regional');
 
