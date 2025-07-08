@@ -30,7 +30,8 @@ async function cargarEstadoCivil() {
     select.appendChild(new Option('Seleccionar...', ''));
 
     data.forEach(item => {
-      select.appendChild(new Option(item.nombre_estado_civil, item.id_estado_civil));
+      //console.log(item)
+      select.appendChild(new Option(item.nombre_estado_civil, item.estado_civil_id));
     });
   } catch (err) {
     console.error('Error al cargar estado civil:', err);
@@ -50,7 +51,7 @@ async function cargarDepartamentos() {
     select.appendChild(new Option('Seleccionar...', ''));
 
     data.forEach(item => {
-      select.appendChild(new Option(item.nombre_departamento, item.id_departamento));
+      select.appendChild(new Option(item.nombre_departamento, item.departamento_id));
     });
   } catch (err) {
     console.error('Error al cargar departamentos:', err);
@@ -70,7 +71,7 @@ async function cargarPaises() {
     select.appendChild(new Option('Seleccionar...', ''));
 
     data.forEach(item => {
-      select.appendChild(new Option(item.nombre_pais, item.id_pais));
+      select.appendChild(new Option(item.nombre_pais, item.pais_id));
     });
   } catch (err) {
     console.error('Error al cargar países:', err);
@@ -90,7 +91,7 @@ async function cargarCentroRegional() {
     select.appendChild(new Option('Seleccionar centro regional...', ''));
 
     data.forEach(item => {
-      select.appendChild(new Option(item.nombre_centro, item.id_centro));
+      select.appendChild(new Option(item.nombre_centro, item.centro_id));
     });
 
     // Habilitar el select
@@ -121,7 +122,7 @@ async function cargarCarreras(centroId) {
     selectSecundaria.appendChild(new Option('Seleccionar carrera...', ''));
 
     carreras.forEach(item => {
-      const opt = new Option(item.nombre_carrera, item.id_carrera);
+      const opt = new Option(item.nombre_carrera, item.carrera_id);
       selectPrimaria.appendChild(opt.cloneNode(true));
       selectSecundaria.appendChild(opt.cloneNode(true));
     });
