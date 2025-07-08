@@ -115,7 +115,8 @@ async function cargarCarreras(centroId) {
     const response = await fetch(`${BASE_URL}/get/carrerasByCentro/${valorSelect}`);
     const data = await response.json();
 
-    //console.log(data);
+    console.log(data);
+    console.log(response);
 
     const selectPrimaria = document.getElementById('carrera-interes');
     const selectSecundaria = document.getElementById('carrera-secundaria');
