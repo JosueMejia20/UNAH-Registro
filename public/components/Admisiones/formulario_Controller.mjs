@@ -85,7 +85,7 @@ export const cargarCentroRegional = async () => {
 // Cargar carreras por centro regional
 export const cargarCarreras = async (centroId) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/carrerasByCentro/${centroId}`);
+    const response = await fetch(`${BASE_URL}/get/carrerasByCentro/index.php/${centroId}`);
     const data = await response.json();
 
     const selectPrimaria = document.getElementById('carrera-interes');
