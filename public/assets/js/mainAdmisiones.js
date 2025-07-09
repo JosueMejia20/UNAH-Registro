@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       preview.textContent = JSON.stringify(datosJSON, null, 2);
     
       //Puedes enviar este JSON si así lo deseas
-      const response = await fetch(`${BASE_URL}/post/insertPostulanteInscripcion`, {
+      const response = await fetch(`${BASE_URL}/post/insertPostulanteInscripcion/index.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
