@@ -15,7 +15,7 @@
     <unah-navbar></unah-navbar>
 
    <!-- Initial Loading Screen -->
-    <div class="initial-loading" id="initialLoading">
+   <div class="initial-loading" id="initialLoading">
         <img src="https://biologia.unah.edu.hn/dmsdocument/1433-unah-logo-texto" alt="Logo UNAH" class="initial-loading-logo">
         <div class="initial-spinner"></div>
         <div class="initial-loading-text">Cargando formulario de admisión...</div>
@@ -61,41 +61,20 @@
                         <div class="form-row">
                             <div class="form-col">
                                 <div class="form-group">
-                                    <label for="primer-nombre" class="required">Primer Nombre</label>
-                                    <input type="text" id="primer-nombre" name="primer_nombre" required 
+                                    <label for="nombre-completo" class="required">Nombre(s) Completo(s)</label>
+                                    <input type="text" id="nombre-completo" name="nombre_completo" required 
                                            pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" 
-                                           title="Solo letras y espacios, sin caracteres especiales">
-                                    <div class="error-message" id="primer-nombre-error">Solo se permiten letras y espacios, sin caracteres especiales</div>
+                                           title="Ingrese su(s) nombre(s) completo(s)">
+                                    <div class="error-message" id="nombre-completo-error">Ingrese al menos un nombre válido</div>
                                 </div>
                             </div>
                             <div class="form-col">
                                 <div class="form-group">
-                                    <label for="segundo-nombre">Segundo Nombre</label>
-                                    <input type="text" id="segundo-nombre" name="segundo_nombre"
-                                           pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]*"
-                                           title="Solo letras y espacios, sin caracteres especiales">
-                                    <div class="error-message" id="segundo-nombre-error">Solo se permiten letras y espacios, sin caracteres especiales</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label for="primer-apellido" class="required">Primer Apellido</label>
-                                    <input type="text" id="primer-apellido" name="primer_apellido" required
+                                    <label for="apellido-completo" class="required">Apellido(s) Completo(s)</label>
+                                    <input type="text" id="apellido-completo" name="apellido_completo" required
                                            pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+"
-                                           title="Solo letras y espacios, sin caracteres especiales">
-                                    <div class="error-message" id="primer-apellido-error">Solo se permiten letras y espacios, sin caracteres especiales</div>
-                                </div>
-                            </div>
-                            <div class="form-col">
-                                <div class="form-group">
-                                    <label for="segundo-apellido">Segundo Apellido</label>
-                                    <input type="text" id="segundo-apellido" name="segundo_apellido"
-                                           pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]*"
-                                           title="Solo letras y espacios, sin caracteres especiales">
-                                    <div class="error-message" id="segundo-apellido-error">Solo se permiten letras y espacios, sin caracteres especiales</div>
+                                           title="Ingrese su(s) apellido(s) completo(s)">
+                                    <div class="error-message" id="apellido-completo-error">Ingrese al menos un apellido válido</div>
                                 </div>
                             </div>
                         </div>
@@ -193,9 +172,10 @@
                                 <div class="form-group">
                                     <label for="telefono" class="required">Teléfono</label>
                                     <input type="tel" id="telefono" name="telefono" required 
-                                           placeholder="8XXX-XXXX o 9XXX-XXXX" pattern="^[89]\d{3}-\d{4}$" 
-                                           title="Ingrese un número de teléfono hondureño válido (formato: 8XXX-XXXX o 9XXX-XXXX)">
-                                    <div class="error-message" id="telefono-error">El formato debe ser 8XXX-XXXX o 9XXX-XXXX (números hondureños)</div>
+                                           placeholder="3XXX-XXXX, 7XXX-XXXX, 22XX-XXXX, 8XXX-XXXX o 9XXX-XXXX" 
+                                           pattern="^(3\d{3}|7\d{3}|22\d{2}|[89]\d{3})-\d{4}$" 
+                                           title="Ingrese un número de teléfono hondureño válido">
+                                    <div class="error-message" id="telefono-error">El formato debe ser 3XXX-XXXX, 7XXX-XXXX, 22XX-XXXX, 8XXX-XXXX o 9XXX-XXXX</div>
                                 </div>
                             </div>
                             <div class="form-col">
@@ -271,8 +251,7 @@
                                 <div class="form-group">
                                     <label for="centro-regional" class="required">Centro Regional</label>
                                     <select id="centro-regional" name="centro_regional" required>
-                                        <option value="">Seleccionar centro regional...</option>
-                                        <!-- Las opciones se cargarán dinámicamente desde la base de datos -->
+                                        
                                     </select>
                                     <div class="error-message" id="centro-regional-error">Seleccione un centro regional</div>
                                 </div>
@@ -280,9 +259,8 @@
                             <div class="form-col">
                                 <div class="form-group">
                                     <label for="carrera-interes" class="required">Carrera de Interés (Primera Opción)</label>
-                                    <select id="carrera-interes" name="carrera_interes_primera" required disabled>
-                                        <option value="">Primero seleccione un centro regional</option>
-                                        <!-- Las opciones se cargarán dinámicamente desde la base de datos -->
+                                    <select id="carrera-interes" name="carrera_interes_primera" required>
+                                        
                                     </select>
                                     <div class="error-message" id="carrera-interes-error">Seleccione una carrera</div>
                                 </div>
@@ -293,9 +271,9 @@
                             <div class="form-col">
                                 <div class="form-group">
                                     <label for="carrera-secundaria">Carrera de Interés (Segunda Opción)</label>
-                                    <select id="carrera-secundaria" name="carrera_interes_secundaria" disabled>
-                                        <option value="">Primero seleccione un centro regional</option>
-                                        <!-- Las opciones se cargarán dinámicamente desde la base de datos -->
+                                    <select id="carrera-secundaria" name="carrera_interes_secundaria">
+                                        <option value="">Seleccione una carrera</option>
+                                        
                                     </select>
                                 </div>
                             </div>
@@ -314,38 +292,15 @@
                     <div class="form-section" id="section4" data-section="4">
                         <h2 class="section-title">Documentación Requerida</h2>
                         <div class="form-group">
-                            <p>Por favor, adjunte los siguientes documentos (PDF o imágenes JPG/PNG, máximo 5MB cada uno):</p>
+                            <p>Por favor, adjunte su título de educación media (PDF o imágenes JPG/PNG, máximo 5MB):</p>
                             
                             <div class="file-upload">
-                                <label for="documentos" class="btn">Seleccionar Archivos</label>
-                                <input type="file" id="documentos" name="documentos[]" multiple 
+                                <label for="documentos" class="btn">Seleccionar Archivo</label>
+                                <input type="file" id="documentos" name="documentos" 
                                        accept=".pdf,.jpg,.jpeg,.png" 
-                                       onchange="validateFiles(this)">
+                                       onchange="validateFiles(this)" required>
                                 <div class="file-list" id="fileList"></div>
                                 <div class="file-error" id="fileError"></div>
-                            </div>
-                            
-                            <div class="checkbox-group" style="margin-top: 20px;">
-                                <input type="checkbox" id="doc-identidad" name="documentos_requeridos[]" value="identidad" required>
-                                <label for="doc-identidad" class="required">Copia de identidad o pasaporte</label>
-                                <div class="error-message" id="doc-identidad-error">Debe adjuntar este documento</div>
-                            </div>
-                            
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="doc-titulo" name="documentos_requeridos[]" value="titulo" required>
-                                <label for="doc-titulo" class="required">Título de educación media (copia)</label>
-                                <div class="error-message" id="doc-titulo-error">Debe adjuntar este documento</div>
-                            </div>
-                            
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="doc-record" name="documentos_requeridos[]" value="record" required>
-                                <label for="doc-record" class="required">Record de notas (copia)</label>
-                                <div class="error-message" id="doc-record-error">Debe adjuntar este documento</div>
-                            </div>
-                            
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="doc-foto" name="documentos_requeridos[]" value="foto">
-                                <label for="doc-foto">Dos fotografías tamaño carnet</label>
                             </div>
                         </div>
 
@@ -381,12 +336,14 @@
         </div>
     </div>
 
+    <div id="previewDatos" class="alert alert-info mt-4" style="display:none; white-space: pre-wrap;"></div>
+
     <unah-footer></unah-footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="../../assets/js/main.js"></script>
-    <script type="module" src="../../assets/js/formulario_Controller.js"></script>
-    <script src="../../assets/js/formulario_script.js"></script>
+    <script type="module" src="../../assets/js/mainAdmisiones.js"></script>
+    
+    <script src="../../assets/js/Admisiones/formulario_script.js"></script>
 
 </body>
 </html>

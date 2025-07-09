@@ -1,0 +1,169 @@
+[33mcommit 422be267225651ace6d6cdf8befce6cafe9309f4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: JosueMejia20 <josuedanielm21@gmail.com>
+Date:   Tue Jul 8 09:18:11 2025 -0600
+
+    Revert "Carrera Principal ya no aparece en secundaria"
+    
+    This reverts commit 76957f65238feebc22605cda000026def66973ee.
+
+[33mcommit 76957f65238feebc22605cda000026def66973ee[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: JosueMejia20 <josuedanielm21@gmail.com>
+Date:   Tue Jul 8 09:09:33 2025 -0600
+
+    Carrera Principal ya no aparece en secundaria
+
+[33mcommit e9a226bd892fd58d0aba4857f25e7346aea99db0[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Tue Jul 8 01:39:44 2025 -0600
+
+    Prueba del endpoint
+
+[33mcommit e1b85b6ba1a052bd5f31b7a67ba79db448488e3c[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Tue Jul 8 01:27:25 2025 -0600
+
+    Testeo para prod
+
+[33mcommit 8f3bfbc4d98fd2f5ea89c881f5acd6d7e80938e9[m
+Author: JosueMejia20 <josuedanielm21@gmail.com>
+Date:   Tue Jul 8 01:21:07 2025 -0600
+
+    Consumo de endpoint en Formulario
+
+[33mcommit 3717aaace8493d5ec645de40458f2b06184e66a3[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Tue Jul 8 00:31:59 2025 -0600
+
+    Arreglo rutas fetch
+
+[33mcommit 846fca04194249d54a9f4784c9c14d98e3615c50[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Tue Jul 8 00:20:32 2025 -0600
+
+    Arreglo api, creacion carreraByCentroSP y ruta, mod BLOB
+
+[33mcommit 08cbec667baae96e29ccce05f64363411e00618d[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Mon Jul 7 23:31:27 2025 -0600
+
+    Eliminada carpeta /api
+
+[33mcommit 0d14d6561a8630f9f89fa9b4a2c6fa1847236cb4[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Mon Jul 7 22:58:39 2025 -0600
+
+    Id en formulario
+
+[33mcommit 66d42f7f114ecd5602740ae184b34baff46c71c9[m
+Author: JosueMejia20 <josuedanielm21@gmail.com>
+Date:   Mon Jul 7 22:34:57 2025 -0600
+
+    Pruebas End-Point
+
+[33mcommit 73c681d37f2b9dcc6f6ce30557ad06fcee435eb4[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Mon Jul 7 00:53:34 2025 -0600
+
+    Endpoints publicos
+
+[33mcommit 568ac247a168485cf087c902dd53c950a3fcbac2[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Mon Jul 7 00:10:31 2025 -0600
+
+    Prueba de URI
+
+[33mcommit 6b6be70e49113b781d86333174eade241be3e0fd[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Mon Jul 7 00:03:13 2025 -0600
+
+    Agregado a api publica
+
+[33mcommit 873d7b74dd3b568fc68107be8c4310a3c82316df[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Sun Jul 6 23:56:23 2025 -0600
+
+    Testeo de Api en public
+
+[33mcommit 2091ca9c2a6b1a7e6b4eb7d67379b06e839d5879[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Sun Jul 6 23:32:03 2025 -0600
+
+    Prueba
+
+[33mcommit e70d4101445ceea7d62d6feb37409d11b622c0c8[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Sun Jul 6 23:25:17 2025 -0600
+
+    Arreglo y testeo
+
+[33mcommit f7620c5dcc3d557aa921af10b99af53d444ec7d1[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Sun Jul 6 23:07:32 2025 -0600
+
+    Correccion en Inserts.sql
+
+[33mcommit 3a4a44d9777c6cb510bf27edbb40b7b30bc3e3a0[m
+Author: Saedua <saul20torresv@gmail.com>
+Date:   Sun Jul 6 22:49:57 2025 -0600
+
+    Agregado endpoints formulario admisiones, SP e inserts
+
+[33mcommit 6aa4b6ac257922b538b13ce97891183d8c43d087[m
+Author: JosueMejia20 <josuedanielm21@gmail.com>
+Date:   Sun Jul 6 10:23:22 2025 -0600
+
+    Login Revisores
+
+[33mcommit a88b93c7f8b749748fcea5545365a00f9b49e613[m
+Author: Mauricio <vemauricio20@gmail.com>
+Date:   Sun Jul 6 01:48:36 2025 -0600
+
+    conexion con base de datos en classes/db/DataBase.php
+
+[33mcommit d96e0e60035b7b60297748dc6aa6383b0c3f4dc1[m
+Author: JosueMejia20 <josuedanielm21@gmail.com>
+Date:   Sat Jul 5 19:48:23 2025 -0600
+
+    Correcion 2 formulario
+
+[33mcommit 6f8545d1516a61c26c90c7f34a541f27279fe162[m
+Author: Mauricio <vemauricio20@gmail.com>
+Date:   Sat Jul 5 18:42:27 2025 -0600
+
+    corrigiendo la base de datos con el modulo de admisiones
+
+[33mcommit 16cbc25009ad1700d1572512299a32224707bbb7[m
+Author: JosueMejia20 <josuedanielm21@gmail.com>
+Date:   Sat Jul 5 18:10:23 2025 -0600
+
+    Correcion de formulario
+
+[33mcommit cd1b8cb4fc37b603f3d33f0c105dae6de2366c63[m
+Author: JosueMejia20 <josuedanielm21@gmail.com>
+Date:   Fri Jul 4 19:40:30 2025 -0600
+
+    Reorganizacion de Carpetas
+
+[33mcommit 0273daf7234ea2df5e45141341b4148f26ea4c73[m
+Author: JosueMejia20 <josuedanielm21@gmail.com>
+Date:   Thu Jul 3 07:30:17 2025 -0600
+
+    Formulario con campo de carreras habilitados tras centro regional
+
+[33mcommit dbc072cd26100cd4ff57e2b0825474aec78875fe[m
+Author: JosueMejia20 <josuedanielm21@gmail.com>
+Date:   Wed Jul 2 15:15:20 2025 -0600
+
+    login component, se viene lo chido
+
+[33mcommit 6fbc19400e35dba8ed99a7042619e6ed076a4b4a[m
+Author: JosueMejia20 <josuedanielm21@gmail.com>
+Date:   Tue Jul 1 08:53:00 2025 -0600
+
+    Cambio de forma de componentes
+
+[33mcommit 4ea124e0020a7edcb4dbf2d4c5616a99525d4cd7[m
+Author: JosueMejia20 <josuedanielm21@gmail.com>
+Date:   Mon Jun 30 14:37:24 2025 -0600
+
+    Proyecto version UNAH Registro

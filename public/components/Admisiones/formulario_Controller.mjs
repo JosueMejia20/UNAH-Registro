@@ -1,26 +1,15 @@
 const BASE_URL = '/api/admisiones';
+let listaCarrerasActuales = [];
 
-document.addEventListener('DOMContentLoaded', async () => {
-  await cargarEstadoCivil();
-  await cargarDepartamentos();
-  await cargarPaises();
-  await cargarCentroRegional();
+// Limpiar opciones de un <select>
+const limpiarOpciones = (select) => {
+  while (select.firstChild) {
+    select.removeChild(select.firstChild);
+  }
+};
 
-  // Eventos dependientes
-  document.getElementById('centro-regional').addEventListener('change', async (e) => {
-    const centroId = e.target.value;
-    await cargarCarreras(centroId);
-  });
-
-  document.getElementById('carrera-interes').addEventListener('change', () => {
-    filtrarCarreraSecundaria();
-  });
-});
-
-/**
- * Cargar Estado Civil en el select correspondiente
- */
-async function cargarEstadoCivil() {
+// Cargar estado civil
+export const cargarEstadoCivil = async () => {
   try {
     const response = await fetch(`${BASE_URL}/get/estadoCivil`);
     const data = await response.json();
@@ -30,18 +19,15 @@ async function cargarEstadoCivil() {
     select.appendChild(new Option('Seleccionar...', ''));
 
     data.forEach(item => {
-      //console.log(item)
       select.appendChild(new Option(item.nombre_estado_civil, item.estado_civil_id));
     });
   } catch (err) {
     console.error('Error al cargar estado civil:', err);
   }
-}
+};
 
-/**
- * Cargar Departamentos
- */
-async function cargarDepartamentos() {
+// Cargar departamentos
+export const cargarDepartamentos = async () => {
   try {
     const response = await fetch(`${BASE_URL}/get/departamentoPais`);
     const data = await response.json();
@@ -56,12 +42,10 @@ async function cargarDepartamentos() {
   } catch (err) {
     console.error('Error al cargar departamentos:', err);
   }
-}
+};
 
-/**
- * Cargar Países
- */
-async function cargarPaises() {
+// Cargar países
+export const cargarPaises = async () => {
   try {
     const response = await fetch(`${BASE_URL}/get/pais`);
     const data = await response.json();
@@ -76,12 +60,10 @@ async function cargarPaises() {
   } catch (err) {
     console.error('Error al cargar países:', err);
   }
-}
+};
 
-/**
- * Cargar Centros Regionales
- */
-async function cargarCentroRegional() {
+// Cargar centros regionales
+export const cargarCentroRegional = async () => {
   try {
     const response = await fetch(`${BASE_URL}/get/centroRegional`);
     const data = await response.json();
@@ -94,29 +76,17 @@ async function cargarCentroRegional() {
       select.appendChild(new Option(item.nombre_centro, item.centro_regional_id));
     });
 
-    // Habilitar el select
     select.disabled = false;
   } catch (err) {
     console.error('Error al cargar centros regionales:', err);
   }
-}
+};
 
-
-/**
- * Cargar Carreras según centro regional
- */
-async function cargarCarreras(centroId) {
+// Cargar carreras por centro regional
+export const cargarCarreras = async (centroId) => {
   try {
-
-    const select = document.getElementById('centro-regional');
-    const valorSelect = select.value;
-
-
-    const response = await fetch(`${BASE_URL}/get/carrerasByCentro/index.php/${valorSelect}`);
+    const response = await fetch(`${BASE_URL}/get/carrerasByCentro/${centroId}`);
     const data = await response.json();
-
-    console.log(data);
-    console.log(response);
 
     const selectPrimaria = document.getElementById('carrera-interes');
     const selectSecundaria = document.getElementById('carrera-secundaria');
@@ -125,44 +95,33 @@ async function cargarCarreras(centroId) {
     limpiarOpciones(selectSecundaria);
 
     selectPrimaria.appendChild(new Option('Seleccionar carrera...', ''));
-    selectSecundaria.appendChild(new Option('Seleccionar carrera...', ''));
+    selectSecundaria.appendChild(new Option('Seleccionar carrera secundaria...', ''));
 
     data.forEach(item => {
-      const opt = new Option(item.nombre_carrera, item.carrera_id);
-      selectPrimaria.appendChild(opt.cloneNode(true));
-      selectSecundaria.appendChild(opt.cloneNode(true));
+      selectPrimaria.appendChild(new Option(item.nombre_carrera, item.carrera_id));
     });
 
-    // Habilitar ambos
+    listaCarrerasActuales = data;
+
     selectPrimaria.disabled = false;
     selectSecundaria.disabled = false;
-
-    // Aplicar filtro de carrera secundaria si ya hay una seleccionada
-    filtrarCarreraSecundaria();
   } catch (err) {
     console.error('Error al cargar carreras:', err);
   }
-}
+};
 
-
-// Filtrar carrera secundaria para que no se repita la principal
-function filtrarCarreraSecundaria(listaCarreras) {
-  const carreraPrincipalSeleccionada = selectCarreraPrincipal.value;
+// Filtrar carrera secundaria para no repetir la principal
+export const filtrarCarreraSecundaria = () => {
+  const selectCarreraPrincipal = document.getElementById('carrera-interes');
+  const selectCarreraSecundaria = document.getElementById('carrera-secundaria');
+  const carreraSeleccionada = selectCarreraPrincipal.value;
 
   limpiarOpciones(selectCarreraSecundaria);
   selectCarreraSecundaria.appendChild(new Option('Seleccionar carrera secundaria...', ''));
 
-  listaCarreras.forEach(item => {
-    if (item.carrera_id !== carreraPrincipalSeleccionada) {
-      const opt = new Option(item.nombre_carrera, item.carrera_id);
-      selectCarreraSecundaria.appendChild(opt);
+  listaCarrerasActuales.forEach(item => {
+    if (String(item.carrera_id) !== String(carreraSeleccionada)) {
+      selectCarreraSecundaria.appendChild(new Option(item.nombre_carrera, item.carrera_id));
     }
   });
-}
-
-// Función para limpiar un <select>
-function limpiarOpciones(select) {
-  while (select.firstChild) {
-    select.removeChild(select.firstChild);
-  }
-}
+};

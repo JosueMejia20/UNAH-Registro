@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Validación en tiempo real para el teléfono
     document.getElementById('telefono').addEventListener('input', function () {
-        const regex = /^[89]\d{3}-\d{4}$/;
+        const regex = /^(3\d{3}|7\d{3}|22\d{2}|[89]\d{3})-\d{4}$/;
         validateField(this, regex, 'telefono-error');
     });
 });
@@ -128,7 +128,7 @@ function setupForm() {
         inputs.forEach(input => {
             const errorElement = document.getElementById(`${input.id}-error`);
 
-            if (input.id.includes('nombre') || input.id.includes('apellido')) {
+            if (input.id.includes('nombre-completo') || input.id.includes('apellido-completo')) {
                 if (input.value && !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(input.value)) {
                     input.classList.add('invalid');
                     if (errorElement) errorElement.style.display = 'block';
@@ -161,7 +161,7 @@ function setupForm() {
                 }
             }
 
-            if (input.id === 'telefono' && !/^[89]\d{3}-\d{4}$/.test(input.value)) {
+            if (input.id === 'telefono' && !/^(3\d{3}|7\d{3}|22\d{2}|[89]\d{3})-\d{4}$/.test(input.value)) {
                 input.classList.add('invalid');
                 if (errorElement) errorElement.style.display = 'block';
                 isValid = false;
@@ -199,23 +199,12 @@ function setupForm() {
 
         if (seccionId === 'section4') {
             const fileInput = document.getElementById('documentos');
-            const checkboxes = seccion.querySelectorAll('input[type="checkbox"][required]');
             if (fileInput.files.length === 0) {
-                document.getElementById('fileError').textContent = 'Debe adjuntar al menos un archivo';
+                document.getElementById('fileError').textContent = 'Debe adjuntar el archivo del título';
                 isValid = false;
             } else if (!validateFiles(fileInput)) {
                 isValid = false;
             }
-
-            checkboxes.forEach(cb => {
-                const err = document.getElementById(`${cb.id}-error`);
-                if (!cb.checked) {
-                    if (err) err.style.display = 'block';
-                    isValid = false;
-                } else {
-                    if (err) err.style.display = 'none';
-                }
-            });
         }
 
         return isValid;
@@ -284,7 +273,7 @@ function setupForm() {
         });
 
         if (!isValid) {
-            fileError.textContent = 'Algunos archivos no cumplen con los requisitos';
+            fileError.textContent = 'El archivo no cumple con los requisitos (PDF, JPG o PNG, máximo 5MB)';
             input.value = '';
         }
 
@@ -362,7 +351,7 @@ function setupForm() {
     });
 
     document.getElementById('telefono').addEventListener('input', function () {
-        const regex = /^[89]\d{3}-\d{4}$/;
+        const regex = /^(3\d{3}|7\d{3}|22\d{2}|[89]\d{3})-\d{4}$/;
         validateField(this, regex, 'telefono-error');
     });
 
@@ -395,4 +384,12 @@ function setupForm() {
     window.removeFile = removeFile;
     window.validateFiles = validateFiles;
     window.validateField = validateField;
+}
+
+function showLoading() {
+    loadingOverlay.classList.add('active');
+}
+
+function hideLoading() {
+    loadingOverlay.classList.remove('active');
 }
