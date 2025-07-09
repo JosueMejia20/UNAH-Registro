@@ -82,8 +82,7 @@ CREATE PROCEDURE InsertarPostulanteEInscripcion(
     IN p_carrera_primaria INT,
     IN p_carrera_secundaria INT,
     IN p_centro_regional_id INT,
-    IN p_imagen_certificado MEDIUMBLOB,
-    IN p_revisor_id INT
+    IN p_imagen_certificado MEDIUMBLOB
 )
 BEGIN
     DECLARE v_direccion_id INT;
@@ -112,12 +111,12 @@ BEGIN
     INSERT INTO Inscripcion(
         postulante_id, carrera_primaria, carrera_secundaria,
         estado_revision_id, centro_regional_id,
-        imagen_certificado, fecha_inscripcion, revisor_id
+        imagen_certificado, fecha_inscripcion
     )
     VALUES (
         p_dni, p_carrera_primaria, p_carrera_secundaria,
         1, p_centro_regional_id,
-        p_imagen_certificado, NOW(), p_revisor_id
+        p_imagen_certificado, NOW()
     );
 
 END $$
