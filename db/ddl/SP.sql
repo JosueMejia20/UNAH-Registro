@@ -8,6 +8,7 @@ DROP PROCEDURE IF EXISTS getAllPais;
 DROP PROCEDURE IF EXISTS getAllCentro_Regional;
 DROP PROCEDURE IF EXISTS getAllCarrera;
 DROP PROCEDURE IF EXISTS getCarrerasByCentro;
+DROP PROCEDURE IF EXISTS InsertarPostulanteEInscripcion;
 
 DELIMITER $$
 
