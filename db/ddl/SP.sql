@@ -81,7 +81,6 @@ CREATE PROCEDURE InsertarPostulanteEInscripcion(
     -- Inscripción
     IN p_carrera_primaria INT,
     IN p_carrera_secundaria INT,
-    IN p_estado_revision_id INT,
     IN p_centro_regional_id INT,
     IN p_imagen_certificado MEDIUMBLOB,
     IN p_revisor_id INT
@@ -117,7 +116,7 @@ BEGIN
     )
     VALUES (
         p_dni, p_carrera_primaria, p_carrera_secundaria,
-        p_estado_revision_id, p_centro_regional_id,
+        1, p_centro_regional_id,
         p_imagen_certificado, NOW(), p_revisor_id
     );
 
