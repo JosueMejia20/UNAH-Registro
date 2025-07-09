@@ -72,6 +72,18 @@ INSERT INTO Carrera_Centro_Regional(centro_regional_id, carrera_id) VALUES (1,1)
 INSERT INTO Carrera_Centro_Regional(centro_regional_id, carrera_id) VALUES (2,2);
 INSERT INTO Carrera_Centro_Regional(centro_regional_id, carrera_id) VALUES (2,1);
 
+-- Inserts para Rol
+INSERT INTO Rol (nombre_rol) VALUES ('Revisor');
+INSERT INTO Rol (nombre_rol) VALUES ('Estudiante');
+INSERT INTO Rol (nombre_rol) VALUES ('Docente');
+INSERT INTO Rol (nombre_rol) VALUES ('Coordinador');
+INSERT INTO Rol (nombre_rol) VALUES ('JefeDept');
+INSERT INTO Rol (nombre_rol) VALUES ('Administrador');
+
+-- Inserts para Estado_Revision
+INSERT INTO Estado_Revision (nombre_estado) VALUES ('Pendiente');
+INSERT INTO Estado_Revision (nombre_estado) VALUES ('Aprobado');
+INSERT INTO Estado_Revision (nombre_estado) VALUES ('Rechazado');
 
 
 

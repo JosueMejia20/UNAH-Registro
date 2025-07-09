@@ -58,6 +58,70 @@ BEGIN
 	WHERE cc.centro_regional_id = centro_id;
 END $$
 
+
+CREATE PROCEDURE InsertarPostulanteEInscripcion(
+    -- Dirección
+    IN p_departamento_id INT,
+    IN p_descripcion_direccion VARCHAR(250),
+
+    -- Postulante
+    IN p_dni VARCHAR(25),
+    IN p_nombre_completo VARCHAR(70),
+    IN p_apellido_completo VARCHAR(70),
+    IN p_numero_telefono VARCHAR(20),
+    IN p_correo_personal VARCHAR(50),
+    IN p_genero CHAR(1),
+    IN p_fecha_nacimiento DATE,
+    IN p_estado_civil_id INT,
+    IN p_instituto_educ_media VARCHAR(80),
+    IN p_anio_graduacion YEAR,
+    IN p_pais_estudio_id INT,
+
+    -- Inscripción
+    IN p_carrera_primaria INT,
+    IN p_carrera_secundaria INT,
+    IN p_estado_revision_id INT,
+    IN p_centro_regional_id INT,
+    IN p_imagen_certificado MEDIUMBLOB,
+    IN p_revisor_id INT
+)
+BEGIN
+    DECLARE v_direccion_id INT;
+
+    -- 1. Insertar Dirección
+    INSERT INTO Direccion(departamento_id, descripcion)
+    VALUES (p_departamento_id, p_descripcion_direccion);
+    
+    SET v_direccion_id = LAST_INSERT_ID();
+
+    -- 2. Insertar Postulante
+    INSERT INTO Postulante(
+        dni, nombre_completo, apellido_completo,
+        numero_telefono, correo_personal, direccion_id,
+        genero, fecha_nacimiento, estado_civil_id,
+        instituto_educ_media, anio_graduacion, pais_estudio_id
+    )
+    VALUES (
+        p_dni, p_nombre_completo, p_apellido_completo,
+        p_numero_telefono, p_correo_personal, v_direccion_id,
+        p_genero, p_fecha_nacimiento, p_estado_civil_id,
+        p_instituto_educ_media, p_anio_graduacion, p_pais_estudio_id
+    );
+
+    -- 3. Insertar Inscripción
+    INSERT INTO Inscripcion(
+        postulante_id, carrera_primaria, carrera_secundaria,
+        estado_revision_id, centro_regional_id,
+        imagen_certificado, fecha_inscripcion, revisor_id
+    )
+    VALUES (
+        p_dni, p_carrera_primaria, p_carrera_secundaria,
+        p_estado_revision_id, p_centro_regional_id,
+        p_imagen_certificado, NOW(), p_revisor_id
+    );
+
+END $$
+
 DELIMITER ;
 
 
