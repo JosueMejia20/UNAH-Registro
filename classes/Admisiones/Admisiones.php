@@ -102,5 +102,27 @@
             echo "Error al insertar postulante: " . $e->getMessage();
         }
     }
+
+    public function getInscripcionesByRevisor(int $id_revisor){
+        $db = new DataBase();
+        return $db->executeQuery("CALL getAllSolicitudesByRevisor($id_revisor)");
+    }
+
+    public function asignarRevisores(){
+        $db = new DataBase();
+        return $db->executeQuery("CALL AsignarRevisores()");
+    }
+
+    public function cambiarEstadoInscripcion(int $inscripcionId, int $valor){
+        $db = new DataBase();
+        $pdo = $db->connect();
+
+        $stmt = $pdo->prepare("CALL CambiarEstadoRevision(:inscripcion_id, :valor)");
+
+        $stmt->bindParam(':inscripcion_id', $inscripcionId, PDO::PARAM_INT);
+        $stmt->bindParam(':valor', $valor, PDO::PARAM_INT);
+
+        $stmt->execute();
+    }
 }
 
