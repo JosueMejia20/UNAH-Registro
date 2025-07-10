@@ -5,6 +5,10 @@ customElements.define("unah-navbar", UnahNavbar);
 import { UnahFooter } from "../../components/footer.mjs";
 customElements.define("unah-footer", UnahFooter);
 
+import { Cargando, loadingEvent } from "../../components/loading.mjs";
+customElements.define("pantalla-de-carga", Cargando);
+loadingEvent();
+
 import {
   cargarEstadoCivil,
   cargarDepartamentos,
@@ -96,3 +100,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     initRevisores();
   }
 });
+
+import { verDetalles,
+  responderSolicitud,
+  cargarSolicitudesPaginadas } from "../../components/Admisiones/revisores_controller.mjs"; 
+
+// Ejemplo: cargar solicitudes del revisor con ID 3
+const idRevisor = 1;
+cargarSolicitudesPaginadas(idRevisor);
+
+window.verDetalles = verDetalles;
+
+window.showRejectionReason = () => {
+  document.getElementById('rejectionReason').style.display = 'block';
+  document.getElementById('confirmRejectBtn').style.display = 'inline-block';
+};
+
+window.approveRequest = () => responderSolicitud('Aprobada');
+
+window.rejectRequest = () => {
+  const razon = document.getElementById('reasonText').value.trim();
+  if (!razon) return alert('Debe ingresar una razón para rechazar.');
+  responderSolicitud('Rechazada', razon);
+};
+
+window.closeModal = () => {
+  document.getElementById('requestModal').style.display = 'none';
+};

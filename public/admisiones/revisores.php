@@ -14,11 +14,9 @@
     <pantalla-de-carga></pantalla-de-carga>
     <unah-navbar></unah-navbar>
 
-    <!-- Contenido principal -->
-    <!-- Contenido principal -->
     <header>
         <div class="container header-content">
-            <img src="https://via.placeholder.com/200x50/FFFFFF/005F87?text=UNAH+Admisiones" alt="Logo UNAH" class="logo">
+            <img src="https://lepidopterahonduras.wordpress.com/wp-content/uploads/2015/04/cropped-escudo-unah-22.png" alt="Logo UNAH" class="logo">
             <div class="user-info">
                 <span>Bienvenido, Revisor</span>
                 <div class="user-avatar">R</div>
@@ -29,7 +27,9 @@
     <div class="container">
         <h1 class="main-title">Revisión de Solicitudes de Admisión</h1>
         
-        <div class="requests-count">Total de solicitudes pendientes: <span id="pending-count">4</span></div>
+        <div class="requests-info">
+            <div class="requests-count">Solicitudes pendientes: <span id="pendingCount">4</span></div>
+        </div>
 
         <!-- Tabla de solicitudes -->
         <table class="requests-table">
@@ -43,77 +43,66 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="requests-body">
-                <!-- Las solicitudes se cargarán aquí dinámicamente -->
+            <tbody id="requestsTableBody">
+                <!-- Las solicitudes se cargarán dinámicamente con JavaScript -->
             </tbody>
         </table>
 
         <!-- Paginación -->
         <div class="pagination" id="pagination">
-            <!-- Los botones de paginación se generarán aquí -->
+            <button id="prevPage" disabled>Anterior</button>
+            <!-- Los números de página se generarán dinámicamente -->
+            <button id="nextPage">Siguiente</button>
         </div>
     </div>
 
-    <!-- Modal de detalles -->
-    <div class="modal" id="detailsModal">
+    <!-- Modal de detalles de solicitud -->
+    <div class="modal" id="requestModal">
         <div class="modal-content">
-            <h3 class="modal-title">Detalles de la Solicitud <span id="modal-request-id"></span></h3>
+            <h3 class="modal-title">Solicitud de Admisión <span id="modalRequestId"></span></h3>
             <div class="modal-body">
                 <div class="request-details">
-                    <div class="request-image">
-                        <img src="https://via.placeholder.com/400x500?text=Documento+del+Estudiante" alt="Documento del estudiante" id="request-document">
-                        <p>Documento adjunto</p>
-                    </div>
                     <div class="request-info">
-                        <div class="info-item">
-                            <span class="info-label">Nombre:</span>
-                            <span id="info-name">Juan Pérez López</span>
+                        <div class="info-group">
+                            <label>Nombre del Estudiante:</label>
+                            <p id="studentName"></p>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">Carrera:</span>
-                            <span id="info-career">Medicina</span>
+                        <div class="info-group">
+                            <label>Carrera:</label>
+                            <p id="studentCareer"></p>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">Fecha de solicitud:</span>
-                            <span id="info-date">15/05/2023</span>
+                        <div class="info-group">
+                            <label>Fecha de Solicitud:</label>
+                            <p id="requestDate"></p>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">Estado:</span>
-                            <span id="info-status" class="status-pending">Pendiente</span>
+                        <div class="info-group">
+                            <label>Estado:</label>
+                            <p id="requestStatus"></p>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">Correo electrónico:</span>
-                            <span id="info-email">juan.perez@example.com</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Teléfono:</span>
-                            <span id="info-phone">+504 9876-5432</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Notas adicionales:</span>
-                            <span id="info-notes">Ninguna</span>
-                        </div>
+                    </div>
+                    <div class="request-document">
+                        <h4>Documento Adjunto</h4>
+                        <img src="" alt="Documento de solicitud" id="documentImage">
                     </div>
                 </div>
                 
-                <div id="rejection-section" style="margin-top: 20px; display: none;">
-                    <div class="form-group">
-                        <label for="reasonText">Razón de rechazo:</label>
-                        <textarea id="reasonText" placeholder="Describa la razón por la cual rechaza esta solicitud..."></textarea>
-                    </div>
+                <div class="rejection-reason" id="rejectionReason">
+                    <label>Razón de rechazo:</label>
+                    <textarea id="reasonText" placeholder="Describa la razón por la cual rechaza esta solicitud..."></textarea>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn" onclick="closeModal()">Cerrar</button>
-                <button class="btn btn-approve" id="approve-btn">Aprobar</button>
-                <button class="btn btn-reject" id="reject-btn">Rechazar</button>
+                <button class="btn btn-reject" id="rejectBtn" onclick="showRejectionReason()">Rechazar</button>
+                <button class="btn btn-approve" id="approveBtn" onclick="approveRequest()">Aprobar</button>
+                <button class="btn btn-reject" id="confirmRejectBtn" onclick="rejectRequest()">Confirmar Rechazo</button>
             </div>
         </div>
     </div>
     <unah-footer></unah-footer>
 
 
-    <script type="module" src="/assets/js/mainAdmisiones.js"></script>
-    <script type="module" src="/assets/js/Admisiones/revisores.js"></script>
+    <script type="module" src="../../assets/js/mainAdmisiones.js"></script>
+    
 </body>
 </html>

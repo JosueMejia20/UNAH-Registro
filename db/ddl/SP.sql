@@ -141,7 +141,7 @@ BEGIN
 		i.inscripcion_id,
 		i.fecha_inscripcion,
         p.dni AS postulante_dni,
-        CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_postulante,
+        CONCAT(p.nombre_completo, "", p.apellido_completo) AS nombre_postulante,
         cp.nombre_carrera AS carrera_primaria,
         er.nombre_estado AS estado_revision
         
@@ -150,7 +150,7 @@ BEGIN
     INNER JOIN Carrera cp ON i.carrera_primaria = cp.carrera_id
     INNER JOIN Estado_Revision er ON i.estado_revision_id = er.estado_revision_id
     
-    WHERE i.revisor_id = p_revisor_id AND er.estado_revision_id = 1;
+    WHERE i.revisor_id = p_revisor_id AND er.estado_revision_id = 1
     ORDER BY i.fecha_inscripcion ASC;
 END $$
 
@@ -217,7 +217,7 @@ BEGIN
 
         SET idx = idx + 1;
     END WHILE;
-END $$;
+END $$
 
 CREATE PROCEDURE CambiarEstadoRevision(
     IN p_inscripcion_id INT,
@@ -238,7 +238,7 @@ BEGIN
         SIGNAL SQLSTATE '45000' 
         SET MESSAGE_TEXT = 'Valor inválido. Solo se permite 0 o 1.';
     END IF;
-END $$;
+END $$
 
 DELIMITER ;
 
