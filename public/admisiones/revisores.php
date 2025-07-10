@@ -15,6 +15,7 @@
     <unah-navbar></unah-navbar>
 
     <!-- Contenido principal -->
+    <!-- Contenido principal -->
     <header>
         <div class="container header-content">
             <img src="https://via.placeholder.com/200x50/FFFFFF/005F87?text=UNAH+Admisiones" alt="Logo UNAH" class="logo">
@@ -27,36 +28,8 @@
 
     <div class="container">
         <h1 class="main-title">Revisión de Solicitudes de Admisión</h1>
-
-        <!-- Filtros -->
-        <div class="filters">
-            <div class="filter-group">
-                <label for="filter-carrera">Carrera</label>
-                <select id="filter-carrera">
-                    <option value="">Todas las carreras</option>
-                    <option value="medicina">Medicina</option>
-                    <option value="derecho">Derecho</option>
-                    <option value="ingenieria">Ingeniería</option>
-                    <option value="administracion">Administración</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="filter-status">Estado</label>
-                <select id="filter-status">
-                    <option value="">Todos los estados</option>
-                    <option value="pendiente">Pendiente</option>
-                    <option value="aprobado">Aprobado</option>
-                    <option value="rechazado">Rechazado</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label for="filter-search">Buscar</label>
-                <input type="text" id="filter-search" placeholder="Nombre o número de solicitud">
-            </div>
-            <div class="filter-group" style="align-self: flex-end;">
-                <button class="btn btn-primary">Aplicar filtros</button>
-            </div>
-        </div>
+        
+        <div class="requests-count">Total de solicitudes pendientes: <span id="pending-count">4</span></div>
 
         <!-- Tabla de solicitudes -->
         <table class="requests-table">
@@ -70,62 +43,60 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>2023-001</td>
-                    <td>Juan Pérez López</td>
-                    <td>Medicina</td>
-                    <td>15/05/2023</td>
-                    <td class="status-pending">Pendiente</td>
-                    <td>
-                        <button class="action-btn btn-view">Ver</button>
-                        <button class="action-btn btn-approve" onclick="showConfirmationModal('approve', '2023-001')">Aprobar</button>
-                        <button class="action-btn btn-reject" onclick="showConfirmationModal('reject', '2023-001')">Rechazar</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2023-002</td>
-                    <td>María González Ramírez</td>
-                    <td>Derecho</td>
-                    <td>16/05/2023</td>
-                    <td class="status-pending">Pendiente</td>
-                    <td>
-                        <button class="action-btn btn-view">Ver</button>
-                        <button class="action-btn btn-approve" onclick="showConfirmationModal('approve', '2023-002')">Aprobar</button>
-                        <button class="action-btn btn-reject" onclick="showConfirmationModal('reject', '2023-002')">Rechazar</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2023-003</td>
-                    <td>Carlos Martínez Flores</td>
-                    <td>Ingeniería</td>
-                    <td>17/05/2023</td>
-                    <td class="status-approved">Aprobado</td>
-                    <td>
-                        <button class="action-btn btn-view">Ver</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2023-004</td>
-                    <td>Ana Rodríguez Sánchez</td>
-                    <td>Administración</td>
-                    <td>18/05/2023</td>
-                    <td class="status-rejected">Rechazado</td>
-                    <td>
-                        <button class="action-btn btn-view">Ver</button>
-                    </td>
-                </tr>
+            <tbody id="requests-body">
+                <!-- Las solicitudes se cargarán aquí dinámicamente -->
             </tbody>
         </table>
+
+        <!-- Paginación -->
+        <div class="pagination" id="pagination">
+            <!-- Los botones de paginación se generarán aquí -->
+        </div>
     </div>
 
-    <!-- Modal de confirmación -->
-    <div class="modal" id="confirmationModal">
+    <!-- Modal de detalles -->
+    <div class="modal" id="detailsModal">
         <div class="modal-content">
-            <h3 class="modal-title" id="modalTitle">Confirmar acción</h3>
+            <h3 class="modal-title">Detalles de la Solicitud <span id="modal-request-id"></span></h3>
             <div class="modal-body">
-                <p id="modalMessage">¿Está seguro que desea aprobar la solicitud 2023-001?</p>
-                <div id="rejectionReason" style="display: none;">
+                <div class="request-details">
+                    <div class="request-image">
+                        <img src="https://via.placeholder.com/400x500?text=Documento+del+Estudiante" alt="Documento del estudiante" id="request-document">
+                        <p>Documento adjunto</p>
+                    </div>
+                    <div class="request-info">
+                        <div class="info-item">
+                            <span class="info-label">Nombre:</span>
+                            <span id="info-name">Juan Pérez López</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Carrera:</span>
+                            <span id="info-career">Medicina</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Fecha de solicitud:</span>
+                            <span id="info-date">15/05/2023</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Estado:</span>
+                            <span id="info-status" class="status-pending">Pendiente</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Correo electrónico:</span>
+                            <span id="info-email">juan.perez@example.com</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Teléfono:</span>
+                            <span id="info-phone">+504 9876-5432</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Notas adicionales:</span>
+                            <span id="info-notes">Ninguna</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="rejection-section" style="margin-top: 20px; display: none;">
                     <div class="form-group">
                         <label for="reasonText">Razón de rechazo:</label>
                         <textarea id="reasonText" placeholder="Describa la razón por la cual rechaza esta solicitud..."></textarea>
@@ -133,14 +104,15 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn" onclick="closeModal()">Cancelar</button>
-                <button class="btn btn-primary" id="confirmActionBtn">Confirmar</button>
+                <button class="btn" onclick="closeModal()">Cerrar</button>
+                <button class="btn btn-approve" id="approve-btn">Aprobar</button>
+                <button class="btn btn-reject" id="reject-btn">Rechazar</button>
             </div>
         </div>
     </div>
     <unah-footer></unah-footer>
 
-    <script src="/../../assets/js/revisores.js"></script>
+    <script src="/../../assets/js/Admisiones/revisores.js"></script>
     <script type="module" src="../../assets/js/main.js"></script>
 </body>
 </html>
