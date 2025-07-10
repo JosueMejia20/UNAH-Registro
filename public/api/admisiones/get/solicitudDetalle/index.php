@@ -14,4 +14,5 @@ $idInscripcion = intval(explode("/",$_SERVER["PATH_INFO"])[1]);
 header("Content-Type: application/json");
 
 $solicitud = $admisiones->getInscripcionById($idInscripcion);
+
 echo json_encode($solicitud);

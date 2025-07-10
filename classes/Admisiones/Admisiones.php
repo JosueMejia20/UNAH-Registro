@@ -127,7 +127,10 @@
 
     public function getInscripcionById(int $id_inscripcion){
         $db = new DataBase();
-        return $db->executeQuery("CALL getInscripcionById($id_inscripcion)");
+
+        $datos = $db->executeQuery("CALL getInscripcionById($id_inscripcion)");
+        $datos[0]["documento_adjunto"] = Utilities::obtenerBase64($datos[0]["documento_adjunto"]);
+       return $datos;
     }
 }
 

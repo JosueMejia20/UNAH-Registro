@@ -24,4 +24,10 @@ class Utilities
         // Verificar que la decodificación fue exitosa
         return $binario !== false ? $binario : null;
     }
+
+    public static function obtenerBase64(string $binario){
+        $base64 = base64_encode($binario);
+
+        return $base64;
+    }
 }

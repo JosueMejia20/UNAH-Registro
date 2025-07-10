@@ -12,7 +12,6 @@
 </head>
 <body>
     <pantalla-de-carga></pantalla-de-carga>
-    <unah-navbar></unah-navbar>
 
     <header>
         <div class="container header-content">

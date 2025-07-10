@@ -7,7 +7,6 @@ export const itemsPerPage = 5; // Puedes cambiar este número
 // Obtener todas las solicitudes y renderizar la tabla + paginación
 export const cargarSolicitudesPaginadas = async (idRevisor) => {
   try {
-    idRevisor = 3;
     const response = await fetch(`${BASE_URL}/get/solicitudesByRevisor/${idRevisor}`);
     solicitudesGlobal = await response.json();
     currentPage = 1;
@@ -115,21 +114,25 @@ export const verDetalles = async (inscripcion_id) => {
 
     const datos = await response.json();
 
+    const datosObtenidos = datos[0];
+
+    console.log(datos);
+
     // Llenar modal
-    document.getElementById('modalRequestId').textContent = datos.inscripcion_id;
-    document.getElementById('studentName').textContent = datos.nombre_postulante;
-    document.getElementById('studentCareer').textContent = datos.carrera_primaria;
-    document.getElementById('requestDate').textContent = datos.fecha_inscripcion;
-    document.getElementById('requestStatus').textContent = datos.estado_revision;
+    document.getElementById('modalRequestId').textContent = datosObtenidos.inscripcion_id;
+    document.getElementById('studentName').innerHTML = datosObtenidos.nombre_postulante;
+    document.getElementById('studentCareer').innerHTML = datosObtenidos.carrera_primaria;
+    document.getElementById('requestDate').innerHTML = datosObtenidos.fecha_inscripcion;
+    document.getElementById('requestStatus').innerHTML = datosObtenidos.estado_revision;
 
     // Documento (si hay)
     const documentImg = document.getElementById('documentImage');
-    documentImg.src = datos.documento_adjunto
-      ? datos.documento_adjunto
+    documentImg.src = datosObtenidos.documento_adjunto
+      ? `data:image/jpeg;base64,${datosObtenidos.documento_adjunto}`
       : 'https://via.placeholder.com/300x400?text=Sin+Documento';
 
     // Mostrar modal
-    document.getElementById('requestModal').style.display = 'block';
+    document.getElementById('requestModal').style.display = 'flex';
 
     // Ocultar sección de rechazo por defecto
     document.getElementById('reasonText').value = '';
@@ -148,12 +151,20 @@ export const verDetalles = async (inscripcion_id) => {
 export const responderSolicitud = async (estado) => {
   try {
     const id = window.idSolicitudActual;
+    console.log(document.getElementById('requestModal'));
+    // Convertir estado de texto a valor numérico esperado por el backend
+    const valor = estado === 'Aprobada' ? 1 : 0; // 1 Si esta aprobada, 0 si esta rechazado
 
-    // Convertimos estado de texto a valor numérico esperado por el backend
-    const valor = estado === 'Aprobada' ? 1 : 2; // Puedes cambiar esto si usas otros valores
-
-    const response = await fetch(`/api/Admisiones/cambiarEstado/${id}/${valor}`, {
-      method: 'PUT'
+    const response = await fetch(`/api/admisiones/put/cambiarEstadoSolicitud/${id}/${valor}`, {
+      method: 'PUT',
+      headers:{
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        idInscripcion: id,
+        valorInscripcion: valor
+          
+      })
     });
 
     if (!response.ok) throw new Error('Error al actualizar estado');

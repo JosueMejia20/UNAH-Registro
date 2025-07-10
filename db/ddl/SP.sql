@@ -250,7 +250,8 @@ BEGIN
 		CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_postulante,
 		cp.nombre_carrera AS carrera_primaria,
 		i.fecha_inscripcion,
-        er.nombre_estado AS estado_revision
+        er.nombre_estado AS estado_revision,
+        i.imagen_certificado AS documento_adjunto
         
 	FROM Inscripcion i
     INNER JOIN Postulante p ON i.postulante_id = p.dni
