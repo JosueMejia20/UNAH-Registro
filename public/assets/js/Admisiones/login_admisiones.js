@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     setTimeout(() => {
                         // Redirigir al dashboard (simulado)
                         alert("Acceso exitoso. Redirigiendo...");
-                        window.location.href = "../admisiones/revisores.php"; 
+                        window.location.href = "../../../../admisiones/revisores.php"; 
                     }, 1000);
                 }, 2000);
             });
