@@ -112,7 +112,8 @@
     </div>
     <unah-footer></unah-footer>
 
-    <script src="/../../assets/js/Admisiones/revisores.js"></script>
-    <script type="module" src="../../assets/js/main.js"></script>
+
+    <script type="module" src="/assets/js/mainAdmisiones.js"></script>
+    <script type="module" src="/assets/js/Admisiones/revisores.js"></script>
 </body>
 </html>

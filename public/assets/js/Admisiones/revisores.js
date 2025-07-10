@@ -1,122 +1,105 @@
-import {
-    obtenerSolicitudes,
-    obtenerSolicitudPorId,
-    aprobarSolicitud,
-    rechazarSolicitud
-  } from './revisoresController.mjs';
-  
+import { obtenerSolicitudesPorRevisor } from '../../revisores_controller.mjs';
+
+export const initRevisores = async () => {
   let currentPage = 1;
   const itemsPerPage = 5;
   let solicitudes = [];
-  let currentRequestId = null;
-  
-  // Cargar solicitudes y renderizar tabla
-  async function loadRequests() {
-    solicitudes = await obtenerSolicitudes();
-    renderTable();
-    updatePagination();
-    updatePendingCount();
-  }
-  
-  // Renderizar tabla de solicitudes
+  let currentRequestId = '';
+  const idRevisor = 1; // dinámicamente con sesión
+
+  const tbody = document.getElementById('requests-body');
+  const pagination = document.getElementById('pagination');
+  const pendingCount = document.getElementById('pending-count');
+
+  solicitudes = await obtenerSolicitudesPorRevisor(idRevisor);
+  renderTable();
+  updatePagination();
+  updatePendingCount();
+
   function renderTable() {
-    const tbody = document.getElementById('requests-body');
     tbody.innerHTML = '';
-  
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const paginatedData = solicitudes.slice(startIndex, startIndex + itemsPerPage);
-  
-    paginatedData.forEach(request => {
-      const row = document.createElement('tr');
-  
-      row.innerHTML = `
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageItems = solicitudes.slice(start, end);
+
+    for (const request of pageItems) {
+      const tr = document.createElement('tr');
+      const statusClass = {
+        Aprobado: 'status-approved',
+        Rechazado: 'status-rejected',
+        Pendiente: 'status-pending'
+      }[request.status] || '';
+
+      tr.innerHTML = `
         <td>${request.id}</td>
         <td>${request.name}</td>
         <td>${request.career}</td>
         <td>${request.date}</td>
-        <td><span class="status-label ${request.status.toLowerCase()}">${request.status}</span></td>
-        <td><button class="btn btn-sm btn-primary" onclick="showDetailsModal(${request.id})">Ver</button></td>
+        <td class="${statusClass}">${request.status}</td>
+        <td><button class="action-btn btn-view" data-id="${request.id}">Ver</button></td>
       `;
-  
-      tbody.appendChild(row);
+      tbody.appendChild(tr);
+    }
+
+    tbody.querySelectorAll('.btn-view').forEach(btn => {
+      btn.addEventListener('click', () => showDetailsModal(btn.dataset.id));
     });
   }
-  
-  // Actualizar contador de solicitudes pendientes
-  function updatePendingCount() {
-    const count = solicitudes.filter(r => r.status === 'Pendiente').length;
-    document.getElementById('pending-count').textContent = count;
-  }
-  
-  // Actualizar paginación
+
   function updatePagination() {
-    const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
-  
     const totalPages = Math.ceil(solicitudes.length / itemsPerPage);
-  
-    const prevBtn = document.createElement('button');
-    prevBtn.className = 'page-btn';
-    prevBtn.textContent = 'Anterior';
-    prevBtn.disabled = currentPage === 1;
-    prevBtn.addEventListener('click', () => {
-      currentPage--;
-      renderTable();
-      updatePagination();
-    });
-    pagination.appendChild(prevBtn);
-  
-    for (let i = 1; i <= totalPages; i++) {
-      const pageBtn = document.createElement('button');
-      pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-      pageBtn.textContent = i;
-      pageBtn.addEventListener('click', () => {
-        currentPage = i;
+
+    const createBtn = (text, page) => {
+      const btn = document.createElement('button');
+      btn.className = `page-btn${page === currentPage ? ' active' : ''}`;
+      btn.textContent = text;
+      btn.disabled = page === currentPage;
+      btn.addEventListener('click', () => {
+        currentPage = page;
         renderTable();
         updatePagination();
       });
-      pagination.appendChild(pageBtn);
-    }
-  
-    const nextBtn = document.createElement('button');
-    nextBtn.className = 'page-btn';
-    nextBtn.textContent = 'Siguiente';
-    nextBtn.disabled = currentPage === totalPages;
-    nextBtn.addEventListener('click', () => {
-      currentPage++;
-      renderTable();
-      updatePagination();
-    });
-    pagination.appendChild(nextBtn);
+      return btn;
+    };
+
+    if (currentPage > 1) pagination.appendChild(createBtn('Anterior', currentPage - 1));
+    for (let i = 1; i <= totalPages; i++) pagination.appendChild(createBtn(i, i));
+    if (currentPage < totalPages) pagination.appendChild(createBtn('Siguiente', currentPage + 1));
   }
-  
-  // Mostrar modal de detalles
-  window.showDetailsModal = async function(requestId) {
-    currentRequestId = requestId;
-    const request = await obtenerSolicitudPorId(requestId);
+
+  function updatePendingCount() {
+    const count = solicitudes.filter(r => r.status === 'Pendiente').length;
+    pendingCount.textContent = count;
+  }
+
+  function showDetailsModal(id) {
+    currentRequestId = id;
+    const request = solicitudes.find(r => r.id == id);
     if (!request) return;
-  
+
     document.getElementById('modal-request-id').textContent = request.id;
     document.getElementById('info-name').textContent = request.name;
     document.getElementById('info-career').textContent = request.career;
     document.getElementById('info-date').textContent = request.date;
     document.getElementById('info-email').textContent = request.email;
     document.getElementById('info-phone').textContent = request.phone;
-    document.getElementById('info-notes').textContent = request.notes || 'Ninguna';
+    document.getElementById('info-notes').textContent = request.notes;
     document.getElementById('request-document').src = request.document;
-  
-    const statusElement = document.getElementById('info-status');
-    statusElement.textContent = request.status;
-    statusElement.className = '';
-  
-    if (request.status === 'Aprobado') statusElement.classList.add('status-approved');
-    else if (request.status === 'Rechazado') statusElement.classList.add('status-rejected');
-    else statusElement.classList.add('status-pending');
-  
+
+    const status = document.getElementById('info-status');
+    status.textContent = request.status;
+    status.className = '';
+    status.classList.add(
+      request.status === 'Aprobado' ? 'status-approved' :
+      request.status === 'Rechazado' ? 'status-rejected' :
+      'status-pending'
+    );
+
     const approveBtn = document.getElementById('approve-btn');
     const rejectBtn = document.getElementById('reject-btn');
     const rejectionSection = document.getElementById('rejection-section');
-  
+
     if (request.status === 'Pendiente') {
       approveBtn.style.display = 'inline-block';
       rejectBtn.style.display = 'inline-block';
@@ -126,73 +109,56 @@ import {
       rejectBtn.style.display = 'none';
       rejectionSection.style.display = 'none';
     }
-  
+
     document.getElementById('detailsModal').style.display = 'flex';
+
+    approveBtn.onclick = () => {
+      if (confirm(`¿Aprobar solicitud ${id}?`)) {
+        request.status = 'Aprobado';
+        renderTable();
+        updatePendingCount();
+        closeModal();
+        alert('Solicitud aprobada');
+      }
+    };
+
+    rejectBtn.onclick = () => {
+      rejectionSection.style.display = 'block';
+
+      const confirmBtn = document.createElement('button');
+      confirmBtn.className = 'btn btn-reject';
+      confirmBtn.textContent = 'Confirmar Rechazo';
+      confirmBtn.onclick = () => {
+        const reason = document.getElementById('reasonText').value.trim();
+        if (!reason) return alert('Ingrese la razón del rechazo');
+        if (confirm(`¿Rechazar solicitud ${id}?`)) {
+          request.status = 'Rechazado';
+          request.notes = `Rechazado: ${reason}`;
+          renderTable();
+          updatePendingCount();
+          closeModal();
+          alert('Solicitud rechazada');
+        }
+      };
+
+      const modalFooter = document.querySelector('.modal-footer');
+      modalFooter.insertBefore(confirmBtn, rejectBtn);
+      approveBtn.style.display = 'none';
+      rejectBtn.style.display = 'none';
+    };
   }
-  
-  // Cerrar modal
-  window.closeModal = function () {
+
+  function closeModal() {
     document.getElementById('detailsModal').style.display = 'none';
     document.getElementById('rejection-section').style.display = 'none';
     document.getElementById('reasonText').value = '';
-  
-    const existingBtn = document.querySelector('#confirm-reject-btn');
-    if (existingBtn) existingBtn.remove();
   }
-  
-  // Aprobar solicitud
-  document.getElementById('approve-btn').addEventListener('click', async () => {
-    if (confirm(`¿Está seguro que desea aprobar la solicitud ${currentRequestId}?`)) {
-      const result = await aprobarSolicitud(currentRequestId);
-      if (result?.success) {
-        await loadRequests();
-        closeModal();
-        alert('Solicitud aprobada exitosamente');
-      } else {
-        alert('Error al aprobar la solicitud');
-      }
-    }
+
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    // Puedes añadir lógica de logout real aquí
+    alert('Sesión cerrada');
   });
-  
-  // Rechazar solicitud
-  document.getElementById('reject-btn').addEventListener('click', () => {
-    const rejectionSection = document.getElementById('rejection-section');
-    rejectionSection.style.display = 'block';
-  
-    const existingBtn = document.querySelector('#confirm-reject-btn');
-    if (existingBtn) return;
-  
-    const confirmRejectBtn = document.createElement('button');
-    confirmRejectBtn.id = 'confirm-reject-btn';
-    confirmRejectBtn.className = 'btn btn-reject';
-    confirmRejectBtn.textContent = 'Confirmar Rechazo';
-    confirmRejectBtn.style.marginLeft = '10px';
-  
-    confirmRejectBtn.addEventListener('click', async () => {
-      const reason = document.getElementById('reasonText').value.trim();
-      if (!reason) {
-        alert('Por favor ingrese la razón del rechazo.');
-        return;
-      }
-  
-      if (confirm(`¿Está seguro que desea rechazar la solicitud ${currentRequestId}?`)) {
-        const result = await rechazarSolicitud(currentRequestId, reason);
-        if (result?.success) {
-          await loadRequests();
-          closeModal();
-          alert('Solicitud rechazada exitosamente');
-        } else {
-          alert('Error al rechazar la solicitud');
-        }
-      }
-    });
-  
-    const modalFooter = document.querySelector('.modal-footer');
-    modalFooter.insertBefore(confirmRejectBtn, document.getElementById('reject-btn'));
-    document.getElementById('approve-btn').style.display = 'none';
-    document.getElementById('reject-btn').style.display = 'none';
-  });
-  
-  // Cargar datos al iniciar
-  window.addEventListener('DOMContentLoaded', loadRequests);
-  
+
+  // Cerrar modal
+  window.closeModal = closeModal;
+};

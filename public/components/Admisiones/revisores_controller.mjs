@@ -1,13 +1,12 @@
 const BASE_URL = '/api/admisiones';
 
-// Obtener todas las solicitudes de admisión
-export const obtenerSolicitudes = async () => {
+export const obtenerSolicitudesPorRevisor = async (idRevisor) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/solicitudes`);
+    const response = await fetch(`${BASE_URL}/get/solicitudes/${idRevisor}`);
     if (!response.ok) throw new Error('Error al obtener las solicitudes');
     return await response.json();
   } catch (error) {
-    console.error('Error al obtener solicitudes:', error);
+    console.error('Error al consumir solicitudes:', error);
     return [];
   }
 };
@@ -24,25 +23,11 @@ export const obtenerSolicitudPorId = async (id) => {
   }
 };
 
-// Aprobar una solicitud por ID
-export const aprobarSolicitud = async (id) => {
-  try {
-    const response = await fetch(`${BASE_URL}/post/aprobarSolicitud`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id })
-    });
-    return await response.json();
-  } catch (error) {
-    console.error(`Error al aprobar solicitud ${id}:`, error);
-    return null;
-  }
-};
 
-// Rechazar una solicitud con ID y razón
-export const rechazarSolicitud = async (id, razon) => {
+// Rechazar una solicitud con ID y razón -CAMBIAR A PUT-
+export const cambiarEstadoSolicitud = async (id, razon, valor) => {
   try {
-    const response = await fetch(`${BASE_URL}/post/rechazarSolicitud`, {
+    const response = await fetch(`${BASE_URL}/put/cambiarEstadoSolicitud/${id}/${valor}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id, razon })
