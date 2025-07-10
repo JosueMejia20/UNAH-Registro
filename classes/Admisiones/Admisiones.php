@@ -97,6 +97,8 @@
 
             $stmt->execute();
 
+            Utilities::enviarCorreo("Su solicitud ha sido recibida, por favor estar pendiente de su correo ya que en los próximos días se hará su revisión.\n\nAtentamente, UNAH.", $correo);
+
         } catch (PDOException $e) {
             // Manejo de error
             echo "Error al insertar postulante: " . $e->getMessage();

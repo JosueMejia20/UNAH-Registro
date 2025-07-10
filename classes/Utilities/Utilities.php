@@ -1,4 +1,10 @@
 <?php
+require 'src/PHPMailer.php';
+require 'src/SMTP.php';
+require 'src/Exception.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class Utilities
 {
@@ -29,5 +35,37 @@ class Utilities
         $base64 = base64_encode($binario);
 
         return $base64;
+    }
+
+    public static function enviarCorreo(string $mensaje, string $correoPersonal): bool
+    {
+        // Crear una instancia
+        $mail = new PHPMailer(true);
+
+        try {
+            // Configuración del servidor SMTP
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';      // Por ejemplo: smtp.gmail.com
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'vemauricio20@gmail.com';    // Correo remitente
+            $mail->Password   = 'iwlw tdfd nphd gjjr';            // Contraseña del correo
+            $mail->SMTPSecure = 'tls';                      // Puede ser 'tls' o 'ssl'
+            $mail->Port       = 587;                        // 587 para TLS, 465 para SSL
+
+            // Datos del mensaje
+            $mail->setFrom('vemauricio20@gmail.com', 'UNAH');
+            $mail->addAddress($correoPersonal);
+
+            $mail->isHTML(false);
+            $mail->Subject = 'Solicitud de Admision UNAH';
+            $mail->Body    = $mensaje;
+
+            $mail->send();
+            echo 'Mensaje enviado correctamente';
+            return true;
+        } catch (Exception $e) {
+            echo "Error al enviar el mensaje: {$e->getMessage()}";
+            return false;
+        }
     }
 }
