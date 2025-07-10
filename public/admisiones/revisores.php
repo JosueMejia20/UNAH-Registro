@@ -35,7 +35,7 @@
             <thead>
                 <tr>
                     <th>N° Solicitud</th>
-                    <th>Nombre del Estudiante</th>
+                    <th>Nombre del Postulante</th>
                     <th>Carrera</th>
                     <th>Fecha</th>
                     <th>Estado</th>
@@ -63,7 +63,7 @@
                 <div class="request-details">
                     <div class="request-info">
                         <div class="info-group">
-                            <label>Nombre del Estudiante:</label>
+                            <label>Nombre del Postulante:</label>
                             <p id="studentName"></p>
                         </div>
                         <div class="info-group">

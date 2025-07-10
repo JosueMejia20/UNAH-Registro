@@ -106,7 +106,7 @@ import { verDetalles,
   cargarSolicitudesPaginadas } from "../../components/Admisiones/revisores_controller.mjs"; 
 
 // Ejemplo: cargar solicitudes del revisor con ID 3
-const idRevisor = 1;
+const idRevisor = 3;
 cargarSolicitudesPaginadas(idRevisor);
 
 window.verDetalles = verDetalles;

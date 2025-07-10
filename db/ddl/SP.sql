@@ -142,7 +142,7 @@ BEGIN
 		i.inscripcion_id,
 		i.fecha_inscripcion,
         p.dni AS postulante_dni,
-        CONCAT(p.nombre_completo, "", p.apellido_completo) AS nombre_postulante,
+        CONCAT(p.nombre_completo, " ", p.apellido_completo) AS nombre_postulante,
         cp.nombre_carrera AS carrera_primaria,
         er.nombre_estado AS estado_revision
         
@@ -246,16 +246,29 @@ CREATE PROCEDURE getInscripcionById(
 )
 BEGIN
 	SELECT
+		i.dni AS identidad_postulante,
+        i.numero_telefono  AS telefono,
+        i.correo_personal,
+        i.genero,
+        i.instituto_educ_media AS instituto_educacion_media,
+        i.anio_graduacion,
+        pa.pais_id AS pais_estudio,
+        i.fecha_nacimiento,
 		i.inscripcion_id,
 		CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_postulante,
 		cp.nombre_carrera AS carrera_primaria,
+        cs.nombre_carrera AS carrera_secundaria,
 		i.fecha_inscripcion,
+        cr.nombre_centro AS centro_regional,
         er.nombre_estado AS estado_revision,
         i.imagen_certificado AS documento_adjunto
         
 	FROM Inscripcion i
     INNER JOIN Postulante p ON i.postulante_id = p.dni
+    INNER JOIN Pais pa ON i.pais_estudio_id = pa.pais_id
+    INNER JOIN Centro_Regional cr ON i.centro_regional_id = cr.centro_regional_id
     INNER JOIN Carrera cp ON i.carrera_primaria = cp.carrera_id
+    INNER JOIN Carrera cs ON i.carrera_secundaria = cs.carrera_id
     INNER JOIN Estado_Revision er ON i.estado_revision_id = er.estado_revision_id
     
     WHERE i.inscripcion_id = f_inscripcion_id;
