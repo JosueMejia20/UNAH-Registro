@@ -7,6 +7,7 @@ export const itemsPerPage = 5; // Puedes cambiar este número
 // Obtener todas las solicitudes y renderizar la tabla + paginación
 export const cargarSolicitudesPaginadas = async (idRevisor) => {
   try {
+    idRevisor = 3;
     const response = await fetch(`${BASE_URL}/get/solicitudesByRevisor/${idRevisor}`);
     solicitudesGlobal = await response.json();
     currentPage = 1;
@@ -109,7 +110,7 @@ export const actualizarPaginacion = () => {
 //Ver Detalles
 export const verDetalles = async (inscripcion_id) => {
   try {
-    const response = await fetch(`/api/Admisiones/get/solicitudDetalle/${inscripcion_id}`);
+    const response = await fetch(`/api/admisiones/get/solicitudDetalle/${inscripcion_id}`);
     if (!response.ok) throw new Error('No se pudo obtener la solicitud');
 
     const datos = await response.json();

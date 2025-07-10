@@ -124,5 +124,10 @@
 
         $stmt->execute();
     }
+
+    public function getInscripcionById(int $id_inscripcion){
+        $db = new DataBase();
+        return $db->executeQuery("CALL getInscripcionById($id_inscripcion)");
+    }
 }
 

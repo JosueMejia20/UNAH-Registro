@@ -12,6 +12,7 @@ DROP PROCEDURE IF EXISTS InsertarPostulanteEInscripcion;
 DROP PROCEDURE IF EXISTS getAllSolicitudesByRevisor;
 DROP PROCEDURE IF EXISTS AsignarRevisores;
 DROP PROCEDURE IF EXISTS CambiarEstadoRevision;
+DROP PROCEDURE IF EXISTS getInscripcionById;
 
 DELIMITER $$
 
@@ -238,6 +239,25 @@ BEGIN
         SIGNAL SQLSTATE '45000' 
         SET MESSAGE_TEXT = 'Valor inválido. Solo se permite 0 o 1.';
     END IF;
+END $$
+
+CREATE PROCEDURE getInscripcionById(
+	IN f_inscripcion_id INT
+)
+BEGIN
+	SELECT
+		i.inscripcion_id,
+		CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_postulante,
+		cp.nombre_carrera AS carrera_primaria,
+		i.fecha_inscripcion,
+        er.nombre_estado AS estado_revision
+        
+	FROM Inscripcion i
+    INNER JOIN Postulante p ON i.postulante_id = p.dni
+    INNER JOIN Carrera cp ON i.carrera_primaria = cp.carrera_id
+    INNER JOIN Estado_Revision er ON i.estado_revision_id = er.estado_revision_id
+    
+    WHERE i.inscripcion_id = f_inscripcion_id;
 END $$
 
 DELIMITER ;
