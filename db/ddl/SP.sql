@@ -86,7 +86,12 @@ CREATE PROCEDURE InsertarPostulanteEInscripcion(
 )
 BEGIN
     DECLARE v_direccion_id INT;
+    DECLARE v_existe Int;
+    
+    SELECT COUNT(*) INTO v_existe FROM Postulante
+    WHERE dni = p_dni;
 
+	IF v_existe = 0 THEN
     -- 1. Insertar Dirección
     INSERT INTO Direccion(departamento_id, descripcion)
     VALUES (p_departamento_id, p_descripcion_direccion);
@@ -118,8 +123,12 @@ BEGIN
         1, p_centro_regional_id,
         p_imagen_certificado, NOW()
     );
+    ELSE
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Ya existe un postulante con ese DNI';
+    END IF;
 
-END $$
+END$$
 
 DELIMITER ;
 

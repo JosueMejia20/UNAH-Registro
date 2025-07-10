@@ -97,11 +97,9 @@
 
             $stmt->execute();
 
-            // Si el procedimiento devuelve datos, puedes hacer fetch aquí
-
         } catch (PDOException $e) {
             // Manejo de error
-            die("Error al insertar postulante: " . $e->getMessage());
+            echo "Error al insertar postulante: " . $e->getMessage();
         }
     }
 }
