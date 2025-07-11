@@ -109,7 +109,7 @@ export const actualizarPaginacion = () => {
 //Ver Detalles
 export const verDetalles = async (inscripcion_id) => {
   try {
-    const response = await fetch(`/api/admisiones/get/solicitudDetalle/${inscripcion_id}`);
+    const response = await fetch(`/api/admisiones/get/solicitudDetalle/index.php/${inscripcion_id}`);
     if (!response.ok) throw new Error('No se pudo obtener la solicitud');
 
     const datos = await response.json();
