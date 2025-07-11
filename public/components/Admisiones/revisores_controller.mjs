@@ -166,7 +166,7 @@ export const responderSolicitud = async (estado) => {
     // Convertir estado de texto a valor numérico esperado por el backend
     const valor = estado === 'Aprobada' ? 1 : 0; // 1 Si esta aprobada, 0 si esta rechazado
 
-    const response = await fetch(`/api/admisiones/put/cambiarEstadoSolicitud/${idInscripcionModal}/${valor}`, {
+    const response = await fetch(`/api/admisiones/put/cambiarEstadoSolicitud/index.php/${idInscripcionModal}/${valor}`, {
       method: 'PUT',
       headers:{
         'Content-Type': 'application/json',
