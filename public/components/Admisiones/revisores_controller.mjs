@@ -109,6 +109,7 @@ export const actualizarPaginacion = () => {
 //Ver Detalles
 export const verDetalles = async (inscripcion_id) => {
   try {
+    // agregar index.php en despliegue y push
     const response = await fetch(`/api/admisiones/get/solicitudDetalle/index.php/${inscripcion_id}`);
     if (!response.ok) throw new Error('No se pudo obtener la solicitud');
 
@@ -140,7 +141,9 @@ export const verDetalles = async (inscripcion_id) => {
     document.getElementById('confirmRejectBtn').style.display = 'none';
 
     // Guardar ID global para usar en aprobación/rechazo
-    window.idSolicitudActual = datos.inscripcion_id;
+    window.idSolicitudActual = datosObtenidos.inscripcion_id;
+    window.correoPostulante = datosObtenidos.correo_personal;
+
 
   } catch (error) {
     console.error('Error al cargar detalles:', error);
@@ -151,19 +154,28 @@ export const verDetalles = async (inscripcion_id) => {
 export const responderSolicitud = async (estado) => {
   try {
     const id = window.idSolicitudActual;
-    console.log(document.getElementById('requestModal'));
+    const correo = window.correoPostulante;
+   // console.log(document.getElementById('requestModal'));
+    //console.log(id);
+
+    const idInscripcionModal = document.getElementById('modalRequestId').innerHTML;
+    const mensajeJustificacion = document.getElementById('reasonText').value;
+
+    console.log(mensajeJustificacion);
+    //console.log(valorInscripcionModal);
     // Convertir estado de texto a valor numérico esperado por el backend
     const valor = estado === 'Aprobada' ? 1 : 0; // 1 Si esta aprobada, 0 si esta rechazado
 
-    const response = await fetch(`/api/admisiones/put/cambiarEstadoSolicitud/${id}/${valor}`, {
+    const response = await fetch(`/api/admisiones/put/cambiarEstadoSolicitud/${idInscripcionModal}/${valor}`, {
       method: 'PUT',
       headers:{
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        idInscripcion: id,
-        valorInscripcion: valor
-          
+        idInscripcion: idInscripcionModal,
+        valorInscripcion: valor,
+        justificacion: mensajeJustificacion,
+        correo: correo
       })
     });
 
@@ -174,9 +186,9 @@ export const responderSolicitud = async (estado) => {
     if (resultado.success) {
       alert(`Solicitud ${estado === 'Aprobada' ? 'aprobada' : 'rechazada'} correctamente`);
       document.getElementById('requestModal').style.display = 'none';
-
-      const idRevisor = parseInt(localStorage.getItem('idRevisor'));
-      await cargarSolicitudesPaginadas(idRevisor);
+      window.location.href = window.location.href;
+    //  const idRevisor = parseInt(localStorage.getItem('idRevisor'));
+    //  await cargarSolicitudesPaginadas(idRevisor);
     } else {
       throw new Error(resultado.message || 'Error al actualizar');
     }

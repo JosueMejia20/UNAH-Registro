@@ -45,15 +45,15 @@ class Utilities
         try {
             // Configuración del servidor SMTP
             $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';      // Por ejemplo: smtp.gmail.com
+            $mail->Host       = 'smtp.gmail.com';      
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'vemauricio20@gmail.com';    // Correo remitente
-            $mail->Password   = 'iwlw tdfd nphd gjjr';            // Contraseña del correo
-            $mail->SMTPSecure = 'tls';                      // Puede ser 'tls' o 'ssl'
-            $mail->Port       = 587;                        // 587 para TLS, 465 para SSL
+            $mail->Username   = 'unahcorreos@gmail.com';    // Correo remitente
+            $mail->Password   = 'nupu xtow fkav gkoy';            // Contraseña del correo
+            $mail->SMTPSecure = 'tls';                      
+            $mail->Port       = 587;                        // 587 para TLS
 
             // Datos del mensaje
-            $mail->setFrom('vemauricio20@gmail.com', 'UNAH');
+            $mail->setFrom('unahcorreos@gmail.com', 'UNAH');
             $mail->addAddress($correoPersonal);
 
             $mail->isHTML(false);
@@ -61,10 +61,10 @@ class Utilities
             $mail->Body    = $mensaje;
 
             $mail->send();
-            echo 'Mensaje enviado correctamente';
+         //   echo 'Mensaje enviado correctamente';
             return true;
         } catch (Exception $e) {
-            echo "Error al enviar el mensaje: {$e->getMessage()}";
+        //    echo "Error al enviar el mensaje: {$e->getMessage()}";
             return false;
         }
     }

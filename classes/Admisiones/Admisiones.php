@@ -115,16 +115,29 @@
         return $db->executeQuery("CALL AsignarRevisores()");
     }
 
-    public function cambiarEstadoInscripcion(int $inscripcionId, int $valor){
-        $db = new DataBase();
-        $pdo = $db->connect();
+    public function cambiarEstadoInscripcion(int $inscripcionId, int $valor, string $justificacion, string $correo){
+        try{
+            $db = new DataBase();
+            $pdo = $db->connect();
 
-        $stmt = $pdo->prepare("CALL CambiarEstadoRevision(:inscripcion_id, :valor)");
+            $stmt = $pdo->prepare("CALL CambiarEstadoRevision(:inscripcion_id, :valor)");
 
-        $stmt->bindParam(':inscripcion_id', $inscripcionId, PDO::PARAM_INT);
-        $stmt->bindParam(':valor', $valor, PDO::PARAM_INT);
+            $stmt->bindParam(':inscripcion_id', $inscripcionId, PDO::PARAM_INT);
+            $stmt->bindParam(':valor', $valor, PDO::PARAM_INT);
 
-        $stmt->execute();
+            $resultado = $stmt->execute();
+
+            if($valor==0){
+                Utilities::enviarCorreo($justificacion, $correo);
+            } else{
+
+            }
+
+            return $resultado;
+        } catch(PDOException $e){
+            return "Error en la base de datos: ".$e->getMessage();
+        }
+        
     }
 
     public function getInscripcionById(int $id_inscripcion){
