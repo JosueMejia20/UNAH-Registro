@@ -130,7 +130,7 @@
             if($valor==0){
                 Utilities::enviarCorreo($justificacion, $correo);
             } else{
-
+                Utilities::enviarCorreo("Inscripcion aceptada. Insertar examenes por hacer", $correo);
             }
 
             return $resultado;
