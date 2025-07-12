@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // 🔐 Login del revisor UNIFICADO
+
   const loginForm = document.getElementById('loginForm');
   const btnLogin = document.querySelector('.btn-login');
   const btnText = document.querySelector('.btn-text');
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // 🗂️ Si ya estás en revisores.php, carga las solicitudes
+
   if (document.getElementById('requestsTableBody')) {
     const idRevisor = localStorage.getItem('idRevisor');
     if (idRevisor) {
