@@ -180,7 +180,7 @@
 
             $resultado = $stmt->execute();
 
-            return $resultado["resultado"];
+            return $resultado;
         } catch(PDOException $e){
             return "Error en la base de datos: ".$e->getMessage();
         }
