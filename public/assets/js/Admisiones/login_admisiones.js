@@ -17,17 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Validación y envío
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                if (!loginForm.checkValidity()) {
-                    e.stopPropagation();
-                    loginForm.classList.add('was-validated');
-                    return;
-                }
-
-                btnText.textContent = "Verificando...";
-                spinner.classList.remove('d-none');
-                btnLogin.disabled = true;
-
+              /*  
                 setTimeout(() => {
                     btnLogin.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Bienvenido';
                     btnLogin.classList.add('btn-success');
@@ -37,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         alert("Acceso exitoso. Redirigiendo...");
                         window.location.href = "../../../../admisiones/revisores.php"; 
                     }, 1000);
-                }, 2000);
+                }, 2000);*/
             });
 
             // Efectos hover

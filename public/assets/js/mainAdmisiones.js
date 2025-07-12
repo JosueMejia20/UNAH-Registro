@@ -18,6 +18,13 @@ import {
   filtrarCarreraSecundaria
 } from "/../../components/Admisiones/formulario_Controller.mjs";
 
+import {
+  verDetalles,
+  responderSolicitud,
+  cargarSolicitudesPaginadas,
+  loginRevisor
+} from "../../components/Admisiones/revisores_controller.mjs";
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Formulario de admisiones
   const selectCarreraInteres = document.getElementById('carrera-interes');
@@ -86,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       preview.style.display = 'block';
       preview.textContent = JSON.stringify(datosJSON, null, 2);
 
-      const response = await fetch(`${BASE_URL}/post/insertPostulanteInscripcion/index.php`, {
+      await fetch(`${BASE_URL}/post/insertPostulanteInscripcion/index.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(datosJSON)
@@ -94,36 +101,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // 📦 Carga dinámica del módulo de revisores si detecta elementos
-  if (document.getElementById('requests-body')) {
-    const { initRevisores } = await import('/Admisiones/revisores.js');
-    initRevisores();
-  }
-});
+  // 🔐 Login del revisor UNIFICADO
+  const loginForm = document.getElementById('loginForm');
+  const btnLogin = document.querySelector('.btn-login');
+  const btnText = document.querySelector('.btn-text');
+  const spinner = document.querySelector('.spinner-border');
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
 
-import { verDetalles,
-  responderSolicitud,
-  cargarSolicitudesPaginadas,
-  loginRevisor } from "../../components/Admisiones/revisores_controller.mjs"; 
+  if (loginForm) {
+    // Mostrar/ocultar contraseña
+    if (togglePassword && passwordInput) {
+      togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.querySelector('i').classList.toggle('bi-eye-fill');
+        this.querySelector('i').classList.toggle('bi-eye-slash-fill');
+      });
+    }
 
-// Ejemplo: cargar solicitudes del revisor con ID 3
-/*
-const btnLogin = document.querySelector('.btn-login');
-const loginForm = document.getElementById('loginForm');
-
-loginForm.addEventListener('submit', function(e) {
-  loginRevisor();
-});*/
-
-const loginForm = document.getElementById('loginForm');
-const btnLogin = document.querySelector('.btn-login');
-const btnText = document.querySelector('.btn-text');
-const spinner = document.querySelector('.spinner-border');
-
-
- if (loginForm) {
+    // Validación y envío del login
     loginForm.addEventListener('submit', async function (e) {
       e.preventDefault();
+
       if (!loginForm.checkValidity()) {
         e.stopPropagation();
         loginForm.classList.add('was-validated');
@@ -136,47 +136,70 @@ const spinner = document.querySelector('.spinner-border');
 
       const exito = await loginRevisor();
 
+      console.log(exito);
+
       if (exito) {
-        const idRevisor = 3;
-
-        console.log('antes')
-
-        // Cargar solicitudes y redirigir
-        await cargarSolicitudesPaginadas(idRevisor);
-
-        console.log('despues')
+        btnLogin.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Bienvenido';
+        btnLogin.classList.add('btn-success');
 
         setTimeout(() => {
-          window.location.href = "../../../admisiones/revisores.php"; 
+          alert("Acceso exitoso. Redirigiendo...");
+          window.location.href = "../../../admisiones/revisores.php";
         }, 1000);
       } else {
         btnText.textContent = "Ingresar";
         spinner.classList.add('d-none');
         btnLogin.disabled = false;
+        alert("Credenciales incorrectas. Intente de nuevo.");
       }
+    });
+
+    // Efectos hover en inputs
+    document.querySelectorAll('.input-animate').forEach(input => {
+      input.addEventListener('mouseenter', () => {
+        const groupText = input.parentElement.querySelector('.input-group-text');
+        if (groupText) groupText.style.transform = 'scale(1.1)';
+      });
+      input.addEventListener('mouseleave', () => {
+        const groupText = input.parentElement.querySelector('.input-group-text');
+        if (groupText) groupText.style.transform = 'scale(1)';
+      });
     });
   }
 
-//const idRevisor = 3;
-//cargarSolicitudesPaginadas(idRevisor);
+  // 🗂️ Si ya estás en revisores.php, carga las solicitudes
+  if (document.getElementById('requestsTableBody')) {
+    const idRevisor = localStorage.getItem('idRevisor');
+    if (idRevisor) {
+      await cargarSolicitudesPaginadas(parseInt(idRevisor));
+    } else {
+      alert("Debes iniciar sesión");
+      window.location.href = "../login.php";
+    }
+  }
 
+  if (document.getElementById('requests-body')) {
+    const { initRevisores } = await import('/Admisiones/revisores.js');
+    initRevisores();
+  }
 
+  // Funciones globales para manejar solicitudes
+  window.verDetalles = verDetalles;
 
-window.verDetalles = verDetalles;
+  window.showRejectionReason = () => {
+    document.getElementById('rejectionReason').style.display = 'block';
+    document.getElementById('confirmRejectBtn').style.display = 'inline-block';
+  };
 
-window.showRejectionReason = () => {
-  document.getElementById('rejectionReason').style.display = 'block';
-  document.getElementById('confirmRejectBtn').style.display = 'inline-block';
-};
+  window.approveRequest = () => responderSolicitud('Aprobada');
 
-window.approveRequest = () => responderSolicitud('Aprobada');
+  window.rejectRequest = () => {
+    const razon = document.getElementById('reasonText').value.trim();
+    if (!razon) return alert('Debe ingresar una razón para rechazar.');
+    responderSolicitud('Rechazada', razon);
+  };
 
-window.rejectRequest = () => {
-  const razon = document.getElementById('reasonText').value.trim();
-  if (!razon) return alert('Debe ingresar una razón para rechazar.');
-  responderSolicitud('Rechazada', razon);
-};
-
-window.closeModal = () => {
-  document.getElementById('requestModal').style.display = 'none';
-};
+  window.closeModal = () => {
+    document.getElementById('requestModal').style.display = 'none';
+  };
+});

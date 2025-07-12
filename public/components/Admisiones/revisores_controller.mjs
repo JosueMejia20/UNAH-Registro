@@ -219,13 +219,15 @@ export const loginRevisor = async () => {
 
     const datos = await response.json();
 
-    if(datos.success){
+    if(datos.success === true && datos.idRevisor){
       //console.log('Login exitoso', datos);
       //AQUI VERIFICAR COMO SE LLAMARA EN EL JSON DE RESPUESTA
       localStorage.setItem('idRevisor', datos.idRevisor);
+      return true;
 
     } else{
       alert('Credenciales incorrectas o error');
+      return false;
     }
 
     //console.log(datos);
