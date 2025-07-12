@@ -103,11 +103,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 import { verDetalles,
   responderSolicitud,
-  cargarSolicitudesPaginadas } from "../../components/Admisiones/revisores_controller.mjs"; 
+  cargarSolicitudesPaginadas,
+  loginRevisor } from "../../components/Admisiones/revisores_controller.mjs"; 
 
 // Ejemplo: cargar solicitudes del revisor con ID 3
-const idRevisor = 1;
-cargarSolicitudesPaginadas(idRevisor);
+/*
+const btnLogin = document.querySelector('.btn-login');
+const loginForm = document.getElementById('loginForm');
+
+loginForm.addEventListener('submit', function(e) {
+  loginRevisor();
+});*/
+
+const idRevisor = localStorage.getItem('idRevisor');
+cargarSolicitudesPaginadas(parseInt(idRevisor));
 
 window.verDetalles = verDetalles;
 

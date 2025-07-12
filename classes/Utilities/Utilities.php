@@ -68,4 +68,23 @@ class Utilities
             return false;
         }
     }
+
+    public function login(string $username, string $password){
+        try{
+            $db = new DataBase();
+            $pdo = $db->connect();
+
+            //VER COMO SE VA A LLAMAR EL SP
+            $stmt = $pdo->prepare("SELECT autenticarUsuario(:username, :password AS resultado)");
+
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+
+            $idUsuario = $stmt->execute();
+
+            return $idUsuario["resultado"];
+        } catch(PDOException $e){
+            return "Error en la base de datos: ".$e->getMessage();
+        }
+    }
 }

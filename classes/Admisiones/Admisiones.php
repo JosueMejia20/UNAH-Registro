@@ -147,5 +147,43 @@
         $datos[0]["documento_adjunto"] = Utilities::obtenerBase64($datos[0]["documento_adjunto"]);
        return $datos;
     }
+
+    /*
+    public function loginRevisor(string $username, string $password){
+        try{
+            $db = new DataBase();
+            $pdo = $db->connect();
+
+            //VER COMO SE VA A LLAMAR EL SP
+            $stmt = $pdo->prepare("SELECT autenticarUsuario(:username, :password)");
+
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+
+            $resultado = $stmt->execute();
+
+            return $resultado;
+        } catch(PDOException $e){
+            return "Error en la base de datos: ".$e->getMessage();
+        }
+    }
+*/
+    public function verificarUsuarioRevisor(int $idRevisor){
+        try{
+            $db = new DataBase();
+            $pdo = $db->connect();
+
+            //VER COMO SE VA A LLAMAR EL SP
+            $stmt = $pdo->prepare("SELECT isRevisor(:idRevisor) AS resultado");
+
+            $stmt->bindParam(':idRevisor', $idRevisor, PDO::PARAM_INT);
+
+            $resultado = $stmt->execute();
+
+            return $resultado["resultado"];
+        } catch(PDOException $e){
+            return "Error en la base de datos: ".$e->getMessage();
+        }
+    }
 }
 

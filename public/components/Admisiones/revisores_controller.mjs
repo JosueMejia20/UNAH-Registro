@@ -199,3 +199,39 @@ export const responderSolicitud = async (estado) => {
   }
 };
 
+//Login del revisor
+export const loginRevisor = async () => {
+  const user = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+  try {
+    // agregar index.php en despliegue y push
+    const response = await fetch(`/api/admisiones/post/loginRevisor/index.php`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: user,
+        password: password
+      })
+    });
+    if (!response.ok) throw new Error('No se pudo obtener la solicitud');
+
+    const datos = await response.json();
+
+    if(datos.success){
+      console.log('Login exitoso', datos);
+      //AQUI VERIFICAR COMO SE LLAMARA EN EL JSON DE RESPUESTA
+      localStorage.setItem('idRevisor', datos.idRevisor);
+    } else{
+      alert('Credenciales incorrectas o error');
+    }
+
+    console.log(datos);
+
+  } catch (error) {
+    console.error('Error al cargar detalles:', error);
+    alert('Ocurrió un error al mostrar los detalles de la solicitud.');
+  }
+};
+
