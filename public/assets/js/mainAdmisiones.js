@@ -115,8 +115,52 @@ loginForm.addEventListener('submit', function(e) {
   loginRevisor();
 });*/
 
-const idRevisor = localStorage.getItem('idRevisor');
-cargarSolicitudesPaginadas(parseInt(idRevisor));
+const loginForm = document.getElementById('loginForm');
+const btnLogin = document.querySelector('.btn-login');
+const btnText = document.querySelector('.btn-text');
+const spinner = document.querySelector('.spinner-border');
+
+
+ if (loginForm) {
+    loginForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      if (!loginForm.checkValidity()) {
+        e.stopPropagation();
+        loginForm.classList.add('was-validated');
+        return;
+      }
+
+      btnText.textContent = "Verificando...";
+      spinner.classList.remove('d-none');
+      btnLogin.disabled = true;
+
+      const exito = await loginRevisor();
+
+      if (exito) {
+        const idRevisor = 3;
+
+        console.log('antes')
+
+        // Cargar solicitudes y redirigir
+        await cargarSolicitudesPaginadas(idRevisor);
+
+        console.log('despues')
+
+        setTimeout(() => {
+          window.location.href = "../../../admisiones/revisores.php"; 
+        }, 1000);
+      } else {
+        btnText.textContent = "Ingresar";
+        spinner.classList.add('d-none');
+        btnLogin.disabled = false;
+      }
+    });
+  }
+
+//const idRevisor = 3;
+//cargarSolicitudesPaginadas(idRevisor);
+
+
 
 window.verDetalles = verDetalles;
 

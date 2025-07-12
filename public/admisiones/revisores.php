@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -103,5 +106,13 @@
 
     <script type="module" src="../../assets/js/mainAdmisiones.js"></script>
     
+    <script>
+        const id = localStorage.getItem('idRevisor');
+        if (!id) {
+            alert("Debes iniciar sesión");
+            window.location.href = "../login.php";
+        }
+    </script>
+
 </body>
 </html>

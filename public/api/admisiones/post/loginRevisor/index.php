@@ -22,12 +22,14 @@ $password = $data['password'] ?? null;
 
 header("Content-Type: application/json");
 
+//echo $data['password'];
 
 
 try{
     //VER COMO OBTENGO DE RESULTADOLOGIN EL OUT DEL SP
-    $resultadoLogin->Utilities::login($username, $password);
+    $resultadoLogin = Utilities::login($username, $password);
     if($resultadoLogin){
+        
         if($admisiones->verificarUsuarioRevisor($resultadoLogin)){
             echo json_encode([
             'success'=> true,
@@ -40,10 +42,12 @@ try{
                 'message'=> 'El usuario ingresado no es un revisor'
             ]);
         }
+       // echo $resultadoLogin;
     } else{
         echo json_encode([
             'success'=>false,
-            'message'=>'Error al iniciar sesion'
+            'message'=>'Error al iniciar sesion',
+            'test'=>$resultadoLogin
         ]);
     }
 } catch(Exception $e){

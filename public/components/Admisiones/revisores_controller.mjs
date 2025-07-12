@@ -220,14 +220,15 @@ export const loginRevisor = async () => {
     const datos = await response.json();
 
     if(datos.success){
-      console.log('Login exitoso', datos);
+      //console.log('Login exitoso', datos);
       //AQUI VERIFICAR COMO SE LLAMARA EN EL JSON DE RESPUESTA
       localStorage.setItem('idRevisor', datos.idRevisor);
+
     } else{
       alert('Credenciales incorrectas o error');
     }
 
-    console.log(datos);
+    //console.log(datos);
 
   } catch (error) {
     console.error('Error al cargar detalles:', error);
