@@ -6,7 +6,6 @@ class UnahSidebar extends HTMLElement {
         this.innerHTML = `
             <div class="sidebar d-flex flex-column flex-shrink-0 p-3">
                 <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                    <img src="https://www.unah.edu.hn/themes/portalunah/assets/images/logo-unah.png" alt="UNAH Logo" style="height: 40px;">
                     <span class="fs-5 ms-2">Portal Estudiantil</span>
                 </div>
                 <hr>
