@@ -1,14 +1,12 @@
 class UnahSidebar extends HTMLElement {
     connectedCallback() {
-        // Obtener los elementos del menú desde el atributo
         const menu = JSON.parse(this.getAttribute("menu-items") || "[]");
 
         this.innerHTML = `
-            <div class="sidebar d-flex flex-column flex-shrink-0 p-3">
-                <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <div class="sidebar d-flex flex-column flex-shrink-0">
+                <div class="d-flex align-items-center mb-4 text-white text-decoration-none">
                     <span class="fs-5 ms-2">Portal Estudiantil</span>
                 </div>
-                <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     ${menu.map((item, i) => `
                         <li class="nav-item">
@@ -18,16 +16,15 @@ class UnahSidebar extends HTMLElement {
                         </li>
                     `).join("")}
                 </ul>
-                <hr>
-                <div class="dropdown">
-                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="dropdown mt-auto">
+                    <div class="d-flex align-items-center text-white text-decoration-none" id="dropdownUser1">
                         <strong>Estudiante UNAH</strong>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                         <li><a class="dropdown-item" href="#">Perfil</a></li>
                         <li><a class="dropdown-item" href="#">Configuración</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                        <li><a class="dropdown-item" href="#" id="cerrarSesionBtn">Cerrar sesión</a></li>
                     </ul>
                 </div>
             </div>
