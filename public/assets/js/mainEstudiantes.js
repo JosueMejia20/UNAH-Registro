@@ -1,57 +1,62 @@
 import {
   obtenerPerfilEstudiante,
-  renderPerfilEstudiante,
-} from "/../../components/Estudiantes/perfil_Controller.mjs";
+  mostrarPerfilEnVista,
+  cargarFormularioEdicion,
+  actualizarPerfil,
+  obtenerMateriasActuales,
+  mostrarMateriasEnTabla
+} from '../../components/Estudiantes/perfil_Controller.mjs';
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const matricula = "20201003849";
-  const datos = await obtenerPerfilEstudiante(matricula);
+document.addEventListener('DOMContentLoaded', async () => {
+  const matriculaEstudiante = obtenerMatriculaDesdeSesion();
 
-  if (datos) {
-    renderPerfilEstudiante(datos);
-    guardarPerfilEnMemoria(datos); // para llenar el modal
+  // 1. Cargar perfil
+  const perfil = await obtenerPerfilEstudiante(matriculaEstudiante);
+  if (perfil) {
+    mostrarPerfilEnVista(perfil);
   }
 
-  document.querySelector("#btn-editar-perfil").addEventListener("click", () => {
-    cargarDatosEnFormularioPerfil();
-    const modal = new bootstrap.Modal(document.getElementById("modalEditarPerfil"));
-    modal.show();
+  // 2. Cargar materias actuales
+  const materias = await obtenerMateriasActuales(matriculaEstudiante);
+  mostrarMateriasEnTabla(materias);
+
+  // 3. Botón para abrir modal de edición
+  const btnEditar = document.getElementById('btn-editar-perfil');
+  btnEditar.addEventListener('click', () => {
+    if (perfil) {
+      cargarFormularioEdicion(perfil);
+      const modal = new bootstrap.Modal(document.getElementById('modalEditarPerfil'));
+      modal.show();
+    }
   });
 
-  document.querySelector("#formEditarPerfil").addEventListener("submit", async (e) => {
+  // 4. Formulario de actualización
+  const form = document.getElementById('formEditarPerfil');
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const datosActualizados = Object.fromEntries(formData);
 
-    // TODO: enviar al backend con fetch PUT o POST
-    console.log("Datos a guardar:", datosActualizados);
+    const formData = {
+      identidad: document.getElementById('identidad').value,
+      correo: document.getElementById('correo').value,
+      telefono: document.getElementById('telefono').value,
+      direccion: document.getElementById('direccion').value,
+      fecha_nacimiento: document.getElementById('fecha_nacimiento').value
+    };
 
-    alert("Cambios guardados (simulado)");
-    document.getElementById("modalEditarPerfil").classList.remove("show");
-    document.body.classList.remove("modal-open");
-    document.querySelector(".modal-backdrop")?.remove();
+    const resultado = await actualizarPerfil(formData);
+    if (resultado && resultado.success) {
+      alert('Perfil actualizado correctamente');
+      const nuevoPerfil = await obtenerPerfilEstudiante(matriculaEstudiante);
+      mostrarPerfilEnVista(nuevoPerfil);
+      bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil')).hide();
+    } else {
+      alert('Error al actualizar el perfil');
+    }
   });
 });
 
-let datosPerfilGlobal = null;
-
-function guardarPerfilEnMemoria(data) {
-  datosPerfilGlobal = data;
-}
-
-function cargarDatosEnFormularioPerfil() {
-  const dp = datosPerfilGlobal.datosPersonales;
-  if (!dp) return;
-
-  document.getElementById("correo").value = dp.correo || "";
-  document.getElementById("telefono").value = dp.telefono || "";
-  document.getElementById("direccion").value = dp.direccion || "";
-  document.getElementById("fecha_nacimiento").value = formatearFechaInput(dp.fecha_nacimiento);
-  document.getElementById("identidad").value = dp.identidad || "";
-}
-
-function formatearFechaInput(fecha) {
-  // Convierte "15/03/2000" -> "2000-03-15"
-  const [dia, mes, anio] = fecha.split("/");
-  return `${anio}-${mes}-${dia}`;
+// Puedes adaptar esta función a como guardas la sesión (localStorage, variable global, etc.)
+function obtenerMatriculaDesdeSesion() {
+  // Por ahora, valor fijo para pruebas
+  return '201810010001';
 }
