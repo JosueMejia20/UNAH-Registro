@@ -230,6 +230,383 @@ CREATE TABLE Resultados(
         ON UPDATE CASCADE
 );
 
+CREATE TABLE Estudiante(
+	numero_cuenta VARCHAR(11) PRIMARY KEY,
+    -- persona_id INT NOT NULL, Ya esta en USUARIOID
+    carrera_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    centro_reg_id INT NOT NULL,
+    anio_ingreso YEAR NOT NULL,
+    estado TINYINT NOT NULL,
+    foto_perfil BLOB,
+    
+   /* FOREIGN KEY (personaId) REFERENCES Persona(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,*/
+        
+	FOREIGN KEY (carrera_id) REFERENCES Carrera(carrera_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (centro_reg_id) REFERENCES Centro_Regional(centro_regional_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Periodo_Academico(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(40) NOT NULL,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE NOT NULL,
+    bool_actual TINYINT(1) DEFAULT 0
+);
+
+-- Los insert seran manuales
+CREATE TABLE Periodo_Matricula(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    periodo_acad_id INT NOT NULL,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE NOT NULL,
+    
+    FOREIGN KEY (periodo_acad_id) REFERENCES Periodo_Academico(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Clase(
+	clase_id INT AUTO_INCREMENT PRIMARY KEY,
+    departamento_id INT NOT NULL,
+    unidades_valorativas INT NOT NULL,
+    codigo VARCHAR(10) NOT NULL UNIQUE,
+    clase_requisito_id INT,
+    
+    FOREIGN KEY (departamento_id) REFERENCES Departamento_Uni(departamento_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (clase_requisito_id) REFERENCES Clase(clase_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- RECONSIDERAR SOLAMENTE DEJAR LA TABLA DE DOCENTES Y NO EMPLEADOS
+CREATE TABLE Docente(
+	numero_empleado INT PRIMARY KEY,
+	persona_id VARCHAR(25) NOT NULL,
+    centro_reg_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+	departamento_id INT NOT NULL,
+    foto BLOB NOT NULL, -- para guardar la ruta de la foto
+    
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    
+    FOREIGN KEY (persona_id) REFERENCES Persona(dni)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (centro_reg_id) REFERENCES Centro_Regional(centro_regional_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	
+	FOREIGN KEY (departamento_id) REFERENCES Departamento_Uni(departamento_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- catalogo
+CREATE TABLE Edificio(
+	edificio_id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(40) NOT NULL,
+    centro_reg_id INT NOT NULL,
+    
+    FOREIGN KEY (centro_reg_id) REFERENCES Centro_Regional(centro_regional_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- catalogo
+CREATE TABLE Aula_Edificio(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(40) NOT NULL,
+    edificio_id INT NOT NULL,
+    
+    FOREIGN KEY (edificio_id) REFERENCES Edificio(edificio_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Seccion(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo_seccion VARCHAR(10) NOT NULL,
+    hora_inicio TIME NOT NULL,
+    hora_fin TIME NOT NULL,
+    clase_id INT NOT NULL,
+    docente_id INT NOT NULL,
+    cupos INT NOT NULL,
+    periodo_acad_id INT NOT NULL,
+    dias VARCHAR(20),
+    aula_id INT NOT NULL,
+    
+    FOREIGN KEY (clase_id) REFERENCES Clase(clase_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	
+    FOREIGN KEY (docente_id) REFERENCES Docente(numero_empleado)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (periodo_acad_id) REFERENCES Periodo_Academico(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (aula_id) REFERENCES Aula_Edificio(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Estados_Clase(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(20) NOT NULL
+);
+
+-- tabla intermedia
+CREATE TABLE Estudiantes_Secciones(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    estudiante_id VARCHAR(11) NOT NULL,
+    seccion_id INT NOT NULL,
+    nota INT DEFAULT NULL,
+    estado_clase_id INT NOT NULL,
+    UNIQUE(estudiante_id, seccion_id),
+    
+    FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (seccion_id) REFERENCES Seccion(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (estado_clase_id) REFERENCES Estados_Clase(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- tabla bitacora. Trigger on delete de tabla estudiantes seccion
+CREATE TABLE Estudiante_Seccion_Cancelada(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    estudiante_id VARCHAR(11) NOT NULL,
+    seccion_id INT NOT NULL,
+    
+    FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (seccion_id) REFERENCES Seccion(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- tabla intermedia. Se rellenara manualmente. Es el plan de estudios
+CREATE TABLE Clases_Carrera(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    clase_id INT NOT NULL,
+    carrera_id INT NOT NULL,
+    UNIQUE(clase_id, carrera_id),
+    
+    FOREIGN KEY (clase_id) REFERENCES Clase(clase_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (carrera_id) REFERENCES Carrera(carrera_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Matricula_Indice(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    periodo_matricula_id INT NOT NULL,
+    dia DATETIME NOT NULL,
+    indice_minimo DECIMAL(5,2) NOT NULL,
+    indice_maximo DECIMAL(5,2) NOT NULL,
+    
+    FOREIGN KEY (periodo_matricula_id) REFERENCES Periodo_Matricula(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Indices_Estudiantes(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    estudiante_id VARCHAR(11) NOT NULL,
+    periodo_acad_id INT NOT NULL,
+    indice_periodo DECIMAL(5,2),
+    indice_global DECIMAL(5,2),
+    fecha_calculo DATETIME,
+    
+    FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (periodo_acad_id) REFERENCES Periodo_Academico(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Contactos(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    estudiante_1_id VARCHAR(11) NOT NULL,
+    estudiante_2_id VARCHAR(11) NOT NULL,
+    fecha_contacto DATETIME,
+    
+    UNIQUE(estudiante_1_id, estudiante_2_id),
+    
+    FOREIGN KEY (estudiante_1_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (estudiante_2_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Estado_Solicitud_Contacto(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(30) NOT NULL
+);
+
+-- TALVEZ SE DEBERIA DE QUITAR, YA QUE SE HACE CON LA SOLICITUD AL CORREO
+CREATE TABLE Solicitudes_Contacto(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    emisor_id VARCHAR(11) NOT NULL,
+    receptor_id VARCHAR(11) NOT NULL,
+    estado_solicitud_id INT NOT NULL,
+    fecha_solicitud DATETIME,
+    
+    UNIQUE(emisor_id,receptor_id),
+    
+    FOREIGN KEY (emisor_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	
+    FOREIGN KEY (receptor_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (estado_solicitud_id) REFERENCES Estado_Solicitud_Contacto(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Mensaje(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    emisor_id VARCHAR(11) NOT NULL,
+    receptor_id VARCHAR(11) NOT NULL,
+    contenido VARCHAR(255),
+    fecha_envio DATETIME,
+    
+    FOREIGN KEY (emisor_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	
+    FOREIGN KEY (receptor_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Evaluacion_Docente(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    estudiante_id VARCHAR(11) NOT NULL,
+    seccion_id INT NOT NULL,
+    observacion VARCHAR(255),
+    fecha_evaluacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(estudiante_id, seccion_id),
+    
+    FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (seccion_id) REFERENCES Seccion(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+    
+);
+
+-- catalogo
+CREATE TABLE Estado_Pago_Reposicion(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE Solicitud_Pago_Reposicion(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    estudiante_id VARCHAR(11) NOT NULL,
+    periodo_acad_id INT NOT NULL,
+    fecha_solicitud DATETIME NOT NULL DEFAULT current_timestamp,
+    observacion VARCHAR(255) NOT NULL,
+    estado_pago_reposicion_id INT NOT NULL,
+    
+    FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (periodo_acad_id) REFERENCES Periodo_Academico(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (estado_pago_reposicion_id) REFERENCES Estado_Pago_Reposicion(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+    
+);
+
+CREATE TABLE Solicitud_Cancelacion_Excepc(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    estudiante_id VARCHAR(11) NOT NULL,
+    periodo_acad_id INT NOT NULL,
+    justificacion VARCHAR(255) NOT NULL,
+    archivoPDF VARCHAR(255) NOT NULL, -- ver si se guarda la ruta
+    seccion_id INT NOT NULL,
+   -- coordinadorId INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
+    
+    FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (periodo_acad_id) REFERENCES Periodo_Academico(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	/*
+	FOREIGN KEY (coordinadorId) REFERENCES CoordinadoresCarrera(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,*/
+	FOREIGN KEY (seccion_id) REFERENCES Seccion(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE SolicitudCambiosCarrera(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    estudiante_id VARCHAR(11) NOT NULL,
+    carrera_nueva_id INT NOT NULL,
+    observacion VARCHAR(255),
+    -- coordinador_id INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
+    
+    FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (carrera_nueva_id) REFERENCES Carrera(carrera_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+        /*
+	FOREIGN KEY (coordinadorId) REFERENCES CoordinadoresCarrera(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE*/
+);
+
+
+
 
 
 
