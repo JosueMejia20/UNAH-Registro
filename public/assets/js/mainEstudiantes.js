@@ -15,7 +15,6 @@ import {
   obtenerPerfilEstudiante,
   mostrarPerfilEnVista,
   cargarFormularioEdicion,
-  actualizarPerfil,
   obtenerMateriasActuales,
   mostrarMateriasEnTabla
 } from '../../components/Estudiantes/perfil_Controller.mjs';
@@ -43,41 +42,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  // 4. Formulario de actualización
+  // 4. Formulario de actualización (con imagen de perfil)
   const form = document.getElementById('formEditarPerfil');
   form.addEventListener('submit', async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const formData = new FormData();
-  formData.append('correo', document.getElementById('correo').value);
-  formData.append('telefono', document.getElementById('telefono').value);
-  formData.append('direccion', document.getElementById('direccion').value);
-  formData.append('fecha_nacimiento', document.getElementById('fecha_nacimiento').value);
+    const formData = new FormData();
+    formData.append('correo', document.getElementById('correo').value);
+    formData.append('telefono', document.getElementById('telefono').value);
+    formData.append('direccion', document.getElementById('direccion').value);
+    formData.append('fecha_nacimiento', document.getElementById('fecha_nacimiento').value);
 
-  const archivo = document.getElementById('foto_perfil').files[0];
-  if (archivo) {
-    formData.append('foto_perfil', archivo);
-  }
-
-  try {
-    const response = await fetch('/api/estudiantes/post/updatePerfil', {
-      method: 'POST',
-      body: formData
-    });
-
-    const resultado = await response.json();
-    if (resultado.success) {
-      alert('Perfil actualizado correctamente');
-      const nuevoPerfil = await obtenerPerfilEstudiante(matriculaEstudiante);
-      mostrarPerfilEnVista(nuevoPerfil);
-      bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil')).hide();
-    } else {
-      alert('Error al actualizar perfil');
+    const archivo = document.getElementById('foto_perfil').files[0];
+    if (archivo) {
+      formData.append('foto_perfil', archivo);
     }
-  } catch (error) {
-    console.error('Error al enviar perfil:', error);
-    alert('Ocurrió un error en la conexión con el servidor.');
-  }
+
+    try {
+      const response = await fetch('/api/estudiantes/post/updatePerfil', {
+        method: 'POST',
+        body: formData
+      });
+
+      const resultado = await response.json();
+      if (resultado.success) {
+        alert('Perfil actualizado correctamente');
+        const nuevoPerfil = await obtenerPerfilEstudiante(matriculaEstudiante);
+        mostrarPerfilEnVista(nuevoPerfil);
+        bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil')).hide();
+      } else {
+        alert('Error al actualizar el perfil');
+      }
+    } catch (error) {
+      console.error('Error al enviar perfil:', error);
+      alert('Ocurrió un error en la conexión con el servidor.');
+    }
   });
 });
 
