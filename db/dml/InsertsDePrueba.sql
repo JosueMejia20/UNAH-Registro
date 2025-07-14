@@ -33,4 +33,7 @@ INSERT INTO Usuario_Rol (usuario_id, rol_id) VALUES
 (4, 1),
 (5, 1);
 
+-- Estudiante de prueba
+INSERT INTO Estudiante (numero_cuenta, carrera_id,usuario_id,centro_reg_id,anio_ingreso,estado) VALUES (20201003849, 1,1,1,'2019',1);
+
 

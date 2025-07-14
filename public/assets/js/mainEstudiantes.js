@@ -58,5 +58,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Puedes adaptar esta función a como guardas la sesión (localStorage, variable global, etc.)
 function obtenerMatriculaDesdeSesion() {
   // Por ahora, valor fijo para pruebas
-  return '201810010001';
+  return '20201003849';
 }

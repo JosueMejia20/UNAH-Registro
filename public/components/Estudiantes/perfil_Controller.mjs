@@ -5,7 +5,7 @@ const MATERIAS_URL = '/api/estudiantes/get/materiasActuales'; // Suponiendo este
 
 export const obtenerPerfilEstudiante = async (matricula) => {
   try {
-    const response = await fetch(`${PERFIL_URL}?matricula=${encodeURIComponent(matricula)}`);
+    const response = await fetch(`${BASE_URL}/getInfoEstudiante?matricula=${matricula}`);
     if (!response.ok) throw new Error('Error al obtener perfil del estudiante');
     return await response.json();
   } catch (error) {
@@ -17,29 +17,30 @@ export const obtenerPerfilEstudiante = async (matricula) => {
 export const mostrarPerfilEnVista = (datos) => {
   if (!datos) return;
 
-  document.querySelector('[data-field="nombre_completo"]').textContent = datos.nombre_completo;
-  document.querySelector('[data-field="carrera_resumen"]').textContent = datos.carrera_resumen;
-  document.querySelector('[data-field="matricula"]').textContent = datos.matricula;
-  document.querySelector('[data-field="correo"]').textContent = datos.correo;
-  document.querySelector('[data-field="telefono"]').textContent = datos.telefono;
-  document.querySelector('[data-field="direccion"]').textContent = datos.direccion;
-  document.querySelector('[data-field="fecha_nacimiento"]').textContent = datos.fecha_nacimiento;
-  document.querySelector('[data-field="identidad"]').textContent = datos.identidad;
+  document.querySelector('[data-field="nombre_completo"]').textContent = datos[0].nombre_estudiante;
+  document.querySelector('[data-field="carrera_resumen"]').textContent = datos[0].carrera_estudiante;
+  document.querySelector('[data-field="matricula"]').textContent = datos[0].numero_cuenta;
+  document.querySelector('[data-field="correo"]').textContent = datos[0].correo_institucional;
+  document.querySelector('[data-field="telefono"]').textContent = datos[0].telefono;
+  document.querySelector('[data-field="direccion"]').textContent = datos[0].direccion;
+  document.querySelector('[data-field="fecha_nacimiento"]').textContent = datos[0].fecha_nacimiento;
+  document.querySelector('[data-field="identidad"]').textContent = datos[0].identidad_estudiante;
 
-  document.querySelector('[data-field="carrera"]').textContent = datos.carrera;
-  document.querySelector('[data-field="centro"]').textContent = datos.centro;
-  document.querySelector('[data-field="facultad"]').textContent = datos.facultad;
-  document.querySelector('[data-field="ingreso"]').textContent = datos.ingreso;
-  document.querySelector('[data-field="estado"]').innerHTML = `<span class="badge bg-${datos.estado === 'Activo' ? 'success' : 'secondary'}">${datos.estado}</span>`;
-  document.querySelector('[data-field="tipo"]').textContent = datos.tipo;
+  document.querySelector('[data-field="carrera"]').textContent = datos[0].carrera_estudiante;
+  document.querySelector('[data-field="centro"]').textContent = datos[0].centro_regional;
+  document.querySelector('[data-field="facultad"]').textContent = datos[0].facultad_estudiante;
+  document.querySelector('[data-field="ingreso"]').textContent = datos[0].anio_ingreso;
+  document.querySelector('[data-field="estado"]').innerHTML = 
+  `<span class="badge bg-${datos[0].estado_estudiante == 1 ? 'success' : 'secondary'}">${datos[0].estado_estudiante == 1 ? 'Activo' : 'Inactivo'}</span>`;
+  document.querySelector('[data-field="tipo"]').textContent = datos[0].tipo;
 };
 
 export const cargarFormularioEdicion = (datos) => {
-  document.getElementById('correo').value = datos.correo;
-  document.getElementById('telefono').value = datos.telefono;
-  document.getElementById('direccion').value = datos.direccion;
-  document.getElementById('fecha_nacimiento').value = datos.fecha_nacimiento;
-  document.getElementById('identidad').value = datos.identidad;
+  document.getElementById('correo').value = datos[0].correo_institucional;
+  document.getElementById('telefono').value = datos[0].telefono;
+  document.getElementById('direccion').value = datos[0].direccion;
+  document.getElementById('fecha_nacimiento').value = datos[0].fecha_nacimiento;
+  document.getElementById('identidad').value = datos[0].identidad;
 };
 
 export const actualizarPerfil = async (formData) => {
