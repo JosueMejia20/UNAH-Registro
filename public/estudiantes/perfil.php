@@ -1,7 +1,7 @@
 <div class="profile-header">
     <div class="row align-items-center">
         <div class="col-md-2 text-center">
-            <img src="https://via.placeholder.com/150" alt="Foto de perfil" class="profile-pic">
+            <img src="" alt="Foto de perfil" class="profile-pic">
         </div>
         <div class="col-md-6">
             <h2 data-field="nombre_completo">Juan Carlos Pérez López</h2>

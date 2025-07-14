@@ -19,69 +19,69 @@ import {
   mostrarMateriasEnTabla
 } from '../../components/Estudiantes/perfil_Controller.mjs';
 
+let perfilGlobal = null;
+
 document.addEventListener('DOMContentLoaded', async () => {
-  const matriculaEstudiante = obtenerMatriculaDesdeSesion();
+  // Esperar a que el contenedor principal tenga la vista cargada
+  const observer = new MutationObserver(async (mutations, obs) => {
+    const btnEditar = document.getElementById('btn-editar-perfil');
+    const form = document.getElementById('formEditarPerfil');
 
-  // 1. Cargar perfil
-  const perfil = await obtenerPerfilEstudiante(matriculaEstudiante);
-  if (perfil) {
-    mostrarPerfilEnVista(perfil);
-  }
+    if (btnEditar && form) {
+      obs.disconnect(); // Ya está cargado
 
-  // 2. Cargar materias actuales
-  const materias = await obtenerMateriasActuales(matriculaEstudiante);
-  mostrarMateriasEnTabla(materias);
+      const matriculaEstudiante = obtenerMatriculaDesdeSesion();
+      perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
+      if (perfilGlobal) {
+        mostrarPerfilEnVista(perfilGlobal);
+      }
 
-  // 3. Botón para abrir modal de edición
-  const btnEditar = document.getElementById('btn-editar-perfil');
-  btnEditar.addEventListener('click', () => {
-    if (perfil) {
-      cargarFormularioEdicion(perfil);
-      const modal = new bootstrap.Modal(document.getElementById('modalEditarPerfil'));
-      modal.show();
-    }
-  });
+      const materias = await obtenerMateriasActuales(matriculaEstudiante);
+      mostrarMateriasEnTabla(materias);
 
-  // 4. Formulario de actualización (con imagen de perfil)
-  const form = document.getElementById('formEditarPerfil');
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append('correo', document.getElementById('correo').value);
-    formData.append('telefono', document.getElementById('telefono').value);
-    formData.append('direccion', document.getElementById('direccion').value);
-    formData.append('fecha_nacimiento', document.getElementById('fecha_nacimiento').value);
-
-    const archivo = document.getElementById('foto_perfil').files[0];
-    if (archivo) {
-      formData.append('foto_perfil', archivo);
-    }
-
-    try {
-      const response = await fetch('/api/estudiantes/post/updatePerfil', {
-        method: 'POST',
-        body: formData
+      // Botón para abrir modal
+      btnEditar.addEventListener('click', () => {
+        cargarFormularioEdicion(perfilGlobal);
+        const modal = new bootstrap.Modal(document.getElementById('modalEditarPerfil'));
+        modal.show();
       });
 
-      const resultado = await response.json();
-      if (resultado.success) {
-        alert('Perfil actualizado correctamente');
-        const nuevoPerfil = await obtenerPerfilEstudiante(matriculaEstudiante);
-        mostrarPerfilEnVista(nuevoPerfil);
-        bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil')).hide();
-      } else {
-        alert('Error al actualizar el perfil');
-      }
-    } catch (error) {
-      console.error('Error al enviar perfil:', error);
-      alert('Ocurrió un error en la conexión con el servidor.');
+      // Envío del formulario
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const archivo = document.getElementById('foto_perfil').files[0];
+        if (archivo) formData.append('foto_perfil', archivo);
+
+        try {
+          const response = await fetch('/api/estudiantes/post/updatePerfil', {
+            method: 'POST',
+            body: formData
+          });
+          const resultado = await response.json();
+          if (resultado.success) {
+            alert('Perfil actualizado correctamente');
+            perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
+            mostrarPerfilEnVista(perfilGlobal);
+            bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil')).hide();
+          } else {
+            alert('Error al actualizar perfil');
+          }
+        } catch (error) {
+          console.error('Error al enviar perfil:', error);
+          alert('Error de conexión al actualizar perfil.');
+        }
+      });
     }
   });
+
+  // Observar cambios en el contenedor de vistas
+  const contenedor = document.getElementById('main-content');
+  observer.observe(contenedor, { childList: true, subtree: true });
 });
 
-// Puedes adaptar esta función a como guardas la sesión (localStorage, variable global, etc.)
+// Utiliza sessionStorage si está disponible
 function obtenerMatriculaDesdeSesion() {
-  // Por ahora, valor fijo para pruebas
-  return '20201003849';
+  return sessionStorage.getItem('matricula') || '20201003849';
 }

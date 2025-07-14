@@ -24,7 +24,7 @@
             <p class="hero-subtitle">La institución de educación superior más importante de Honduras, formando profesionales de excelencia desde 1847</p>
             <div class="btn-group">
                 <a href="/admisiones/index.php?vista=admision_formulario" class="btn btn-unah-primary">Admisiones 2025</a>
-                <a href="/Proyecto/views/revisores.php" class="btn btn-unah-secondary">Conoce nuestras carreras</a>
+                <a href="/admisiones/index.php?vista=solicitudes" class="btn btn-unah-secondary">Conoce nuestras carreras</a>
             </div>
         </div>
     </section>

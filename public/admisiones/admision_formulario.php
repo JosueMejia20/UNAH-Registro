@@ -336,7 +336,8 @@
         </div>
     </div>
 
-    <div id="previewDatos" class="alert alert-info mt-4" style="display:none; white-space: pre-wrap;"></div>
+    <!-- Es para revisar si la informacion se recibe correctamente -->
+    <!-- <div id="previewDatos" class="alert alert-info mt-4" style="display:none; white-space: pre-wrap;"></div> -->
 
     <unah-footer></unah-footer>
 

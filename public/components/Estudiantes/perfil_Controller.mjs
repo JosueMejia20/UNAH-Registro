@@ -32,7 +32,7 @@ export const mostrarPerfilEnVista = (datos) => {
   document.querySelector('[data-field="ingreso"]').textContent = datos[0].anio_ingreso;
   document.querySelector('[data-field="estado"]').innerHTML = 
   `<span class="badge bg-${datos[0].estado_estudiante == 1 ? 'success' : 'secondary'}">${datos[0].estado_estudiante == 1 ? 'Activo' : 'Inactivo'}</span>`;
-  document.querySelector('[data-field="tipo"]').textContent = datos[0].tipo;
+  
 };
 
 export const cargarFormularioEdicion = (datos) => {
@@ -40,7 +40,6 @@ export const cargarFormularioEdicion = (datos) => {
   document.getElementById('telefono').value = datos[0].telefono;
   document.getElementById('direccion').value = datos[0].direccion;
   document.getElementById('fecha_nacimiento').value = datos[0].fecha_nacimiento;
-  document.getElementById('identidad').value = datos[0].identidad;
 };
 
 export const actualizarPerfil = async (formData) => {
