@@ -243,6 +243,71 @@ INSERT INTO Estado_Revision (nombre_estado) VALUES ('Pendiente');
 INSERT INTO Estado_Revision (nombre_estado) VALUES ('Aprobado');
 INSERT INTO Estado_Revision (nombre_estado) VALUES ('Rechazado');
 
+-- INSERTS PARA PERIODOS ACADEMICOS
+-- Periodos 2023
+INSERT INTO Periodo_Academico (nombre, fecha_inicio, fecha_fin, bool_actual) VALUES
+('I PAC 2023',  '2023-01-16', '2023-04-28', 0),
+('II PAC 2023', '2023-05-08', '2023-08-18', 0),
+('III PAC 2023','2023-09-04', '2023-12-15', 0);
+
+-- Periodos 2024
+INSERT INTO Periodo_Academico (nombre, fecha_inicio, fecha_fin, bool_actual) VALUES
+('I PAC 2024',  '2024-01-15', '2024-04-30', 0),
+('II PAC 2024', '2024-05-13', '2024-08-23', 0),
+('III PAC 2024','2024-09-02', '2024-12-13', 0);
+
+-- Periodos 2025
+INSERT INTO Periodo_Academico (nombre, fecha_inicio, fecha_fin, bool_actual) VALUES
+('I PAC 2025',  '2025-01-15', '2025-04-30', 0),
+('II PAC 2025', '2025-05-10', '2025-08-20', 1),
+('III PAC 2025','2025-09-01', '2025-12-15', 0);
+
+-- Periodos 2026
+INSERT INTO Periodo_Academico (nombre, fecha_inicio, fecha_fin, bool_actual) VALUES
+('I PAC 2026',  '2026-01-15', '2026-04-30', 0),
+('II PAC 2026', '2026-05-10', '2026-08-20', 0),
+('III PAC 2026','2026-09-01', '2026-12-15', 0);
+
+-- Periodos 2027
+INSERT INTO Periodo_Academico (nombre, fecha_inicio, fecha_fin, bool_actual) VALUES
+('I PAC 2027',  '2027-01-15', '2027-04-30', 0),
+('II PAC 2027', '2027-05-10', '2027-08-20', 0),
+('III PAC 2027','2027-09-01', '2027-12-15', 0);
+
+-- INSERTS PARA PeriodosMatricula
+INSERT INTO Periodo_Matricula (periodo_acad_id, fecha_inicio, fecha_fin) VALUES
+-- I PAC 2025: matrícula del 15 al 20 de enero
+(7, '2025-01-15', '2025-01-20'),
+
+-- II PAC 2025: matrícula del 10 al 15 de mayo
+(8, '2025-05-10', '2025-05-15'),
+
+-- III PAC 2025: matrícula del 1 al 6 de septiembre
+(9, '2025-09-01', '2025-09-06');
+
+
+-- INSERTS PARA CLASES
+-- Departamento de Matematicas
+INSERT INTO Clase (departamento_id, unidades_valorativas, nombre_clase, codigo) VALUES
+(1, 5, 'Matematicas I', 'MM110'),
+(1, 5, 'Geometria y Trigonometria', 'MM111'),
+(1, 4, 'Introduccion a la Computacion', 'MM116');
+INSERT INTO Clase (departamento_id, unidades_valorativas, nombre_clase, codigo, clase_requisito_id) VALUES
+(1, 4, 'Calculo I', 'MM201', 1),
+(1, 4, 'Vectores y Matrices', 'MM211', 2),
+(1, 4, 'Programacion I', 'MM314', 5),
+(1, 4, 'Calculo II', 'MM202', 4),
+(1, 4, 'Estadistica', 'MM401', 4),  
+(1, 4, 'Ecuaciones Diferenciales', 'MM411', 7),  
+(1, 4, 'Variable Compleja', 'MM502', 7), 
+(1, 4, 'Analisis Numerico', 'MM412', 9),  
+(1, 4, 'Matematica Discreta', 'MM420', 1);  
+
+
+
+
+
+
 
 
 

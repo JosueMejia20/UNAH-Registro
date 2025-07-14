@@ -281,6 +281,7 @@ CREATE TABLE Clase(
 	clase_id INT AUTO_INCREMENT PRIMARY KEY,
     departamento_id INT NOT NULL,
     unidades_valorativas INT NOT NULL,
+    nombre_clase VARCHAR(70) NOT NULL,
     codigo VARCHAR(10) NOT NULL UNIQUE,
     clase_requisito_id INT,
     

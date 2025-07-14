@@ -43,4 +43,24 @@ BEGIN
     RETURN IF(v_existe > 0, 1, 0);
 END$$
 
+
+CREATE FUNCTION obtener_examenes_postulante(p_dni VARCHAR(25))
+RETURNS VARCHAR(1000)
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE lista_examenes VARCHAR(1000);
+
+    SELECT 
+        GROUP_CONCAT(DISTINCT te.nombre_examen ORDER BY te.nombre_examen SEPARATOR ', ')
+    INTO lista_examenes
+    FROM Inscripcion i
+    JOIN Carrera c ON c.carrera_id IN (i.carrera_primaria, i.carrera_secundaria)
+    JOIN Examen_Carrera ec ON ec.carrera_id = c.carrera_id
+    JOIN Tipo_Examen te ON te.tipo_examen_id = ec.tipo_examen_id
+    WHERE i.postulante_id = p_dni;
+
+    RETURN lista_examenes;
+END$$
+
 DELIMITER ;
