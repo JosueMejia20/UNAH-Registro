@@ -19,4 +19,20 @@ BEGIN
 
 END $$
 
+
+CREATE TRIGGER antes_insertar_usuario
+BEFORE INSERT ON Usuario
+FOR EACH ROW
+BEGIN
+    DECLARE correo_generado VARCHAR(50);
+    DECLARE contrasenia_generada VARCHAR(20);
+    
+    CALL generar_correo_institucional(NEW.persona_id, correo_generado);
+    SET NEW.correo_institucional = correo_generado;
+    
+    CALL generar_contrasenia_random(contrasenia_generada);
+    SET NEW.contrasenia = contrasenia_generada;
+END$$
+
+
 DELIMITER ;

@@ -13,6 +13,7 @@ DROP PROCEDURE IF EXISTS getAllSolicitudesByRevisor;
 DROP PROCEDURE IF EXISTS AsignarRevisores;
 DROP PROCEDURE IF EXISTS CambiarEstadoRevision;
 DROP PROCEDURE IF EXISTS getInscripcionById;
+DROP PROCEDURE IF EXISTS getEstudianteInfo;
 
 DELIMITER $$
 
@@ -273,6 +274,88 @@ BEGIN
     
     WHERE i.inscripcion_id = f_inscripcion_id;
 END $$
+
+CREATE PROCEDURE getEstudianteInfo(
+	IN f_estudiante_id VARCHAR(11)
+)
+BEGIN
+	SELECT
+		CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_estudiante,
+        c.nombre_carrera AS carrera_estudiante,
+        e.numero_cuenta AS numero_cuenta,
+        u.correo_institucional AS correo_institucional,
+        p.numero_telefono AS telefono,
+        d.descripcion AS direccion,
+        p.fecha_nacimiento AS fecha_nacimiento,
+        p.dni AS identidad_estudiante,
+        cr.nombre_centro AS centro_regional,
+        f.nombre_facultad AS facultad_estudiante,
+        e.anio_ingreso AS anio_ingreso,
+        e.estado AS estado_estudiante
+        FROM Estudiante e
+        INNER JOIN Usuario u ON e.usuario_id = u.usuario_id
+        INNER JOIN Persona p ON p.dni = u.persona_id
+        INNER JOIN Carrera c ON e.carrera_id = c.carrera_id
+        INNER JOIN Direccion d ON p.direccion_id = d.direccion_id
+        INNER JOIN Centro_Regional cr ON e.centro_reg_id = cr.centro_regional_id
+        INNER JOIN Departamento_Uni du ON c.departamento_id = du.departamento_id
+        INNER JOIN Facultad f ON du.facultad_id = f.facultad_id
+        
+        WHERE e.numero_cuenta = f_estudiante_id;
+END $$
+
+
+CREATE PROCEDURE generar_correo_institucional(
+    IN p_persona_id VARCHAR(25),
+    OUT p_correo VARCHAR(50)
+)
+BEGIN
+    DECLARE nombre VARCHAR(70);
+    DECLARE apellido VARCHAR(70);
+    DECLARE base_correo VARCHAR(50);
+    DECLARE sufijo INT DEFAULT 0;
+
+    -- Obtener nombres y apellidos
+    SELECT nombre_completo, apellido_completo
+    INTO nombre, apellido
+    FROM Persona
+    WHERE dni = p_persona_id;
+
+    -- Construir base del correo
+    SET base_correo = CONCAT(
+        LOWER(LEFT(nombre, 2)),
+        LOWER(SUBSTRING_INDEX(apellido, ' ', 1)),
+        LOWER(LEFT(SUBSTRING_INDEX(apellido, ' ', -1), 1))
+    );
+
+    -- Generar sufijo para que el correo sea único
+    REPEAT
+        IF sufijo = 0 THEN
+            SET p_correo = CONCAT(base_correo, '@unah.hn');
+        ELSE
+            SET p_correo = CONCAT(base_correo, sufijo, '@unah.hn');
+        END IF;
+        SET sufijo = sufijo + 1;
+    UNTIL NOT EXISTS (
+        SELECT 1 FROM Usuario WHERE correo_institucional = p_correo
+    )
+    END REPEAT;
+
+END$$
+
+
+CREATE PROCEDURE generar_contrasenia_random(
+    OUT p_contrasenia VARCHAR(20)
+)
+BEGIN
+    SET p_contrasenia = SUBSTRING(
+        CONCAT(
+            SHA2(UUID(), 512),
+            SHA2(RAND(), 512)
+        ), 1, 10
+    );
+END$$
+
 
 DELIMITER ;
 

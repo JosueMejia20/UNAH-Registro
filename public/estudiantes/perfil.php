@@ -5,7 +5,7 @@
         <img src="https://via.placeholder.com/150" alt="Foto de perfil" class="profile-pic">
     </div>
     <div class="col-md-6">
-        <h2>Juan Carlos Pérez López</h2>
+        <h2></h2>
         <p class="mb-1">Estudiante de Ingeniería en Sistemas</p>
         <p class="mb-0">Matrícula: 201810010001</p>
     </div>

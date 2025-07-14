@@ -5,7 +5,7 @@ const BASE_URL = "/api/estudiantes";
  */
 export const obtenerPerfilEstudiante = async (matricula) => {
   try {
-    const response = await fetch(`${BASE_URL}/perfil?matricula=${matricula}`);
+    const response = await fetch(`${BASE_URL}/get/getInfoEstudiante?matricula=${matricula}`);
     if (!response.ok) throw new Error("No se pudo obtener el perfil del estudiante");
     return await response.json();
   } catch (error) {

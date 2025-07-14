@@ -4,7 +4,7 @@ import {
 } from "/../../components/Estudiantes/perfil_Controller.mjs";
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const matricula = "201810010001";
+  const matricula = "20201003849";
   const datos = await obtenerPerfilEstudiante(matricula);
 
   if (datos) {
