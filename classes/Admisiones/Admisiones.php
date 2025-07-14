@@ -130,7 +130,10 @@
             if($valor==0){
                 Utilities::enviarCorreo($justificacion, $correo);
             } else{
-                Utilities::enviarCorreo("Inscripcion aceptada. Insertar examenes por hacer", $correo);
+                $resultDni = $db->executeQuery("SELECT obtener_dni_de_inscripcion($inscripcionId) AS dni");
+                $dni = strval($resultDni[0]['dni']);
+                $examenes = $db->executeQuery("SELECT obtener_examenes_postulante('$dni') AS examenes");
+                Utilities::enviarCorreo("Su solicitud ha sido aceptada, por favor asistir a hacer los siguientes examenes:".$examenes[0]['examenes'], $correo);
             }
 
             return $resultado;

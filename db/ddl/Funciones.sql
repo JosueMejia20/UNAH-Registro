@@ -2,6 +2,8 @@ use Registro;
 
 DROP FUNCTION IF EXISTS autenticarUsuario;
 DROP FUNCTION IF EXISTS isRevisor;
+DROP FUNCTION IF EXISTS obtener_examenes_postulante;
+DROP FUNCTION IF EXISTS obtener_dni_de_inscripcion;
 
 DELIMITER $$
 
@@ -61,6 +63,22 @@ BEGIN
     WHERE i.postulante_id = p_dni;
 
     RETURN lista_examenes;
+END$$
+
+CREATE FUNCTION obtener_dni_de_inscripcion(v_inscripcion_id VARCHAR(25))
+RETURNS VARCHAR(25)
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE dni VARCHAR(25);
+
+    SELECT 
+        postulante_id
+    INTO dni
+    FROM Inscripcion
+    WHERE inscripcion_id = v_inscripcion_id;
+
+    RETURN dni;
 END$$
 
 DELIMITER ;
