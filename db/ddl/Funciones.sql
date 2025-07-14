@@ -1,5 +1,8 @@
 use Registro;
 
+DROP FUNCTION IF EXISTS autenticarUsuario;
+DROP FUNCTION IF EXISTS isRevisor;
+
 DELIMITER $$
 
 -- Funcion que retorna el id del usuario si existe en la tabla usuario sino retorna null
