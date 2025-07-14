@@ -44,41 +44,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Tarjeta de estadísticas académicas (sin cambios) -->
-        <div class="card mt-4">
-            <div class="card-header">
-                <h5 class="mb-0">Estadísticas Académicas</h5>
-            </div>
-            <div class="card-body">
-                <div class="row text-center">
-                    <div class="col-md-6 mb-3">
-                        <div class="stats-card">
-                            <div class="stats-number">3.8</div>
-                            <div class="stats-label">Índice Académico</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="stats-card">
-                            <div class="stats-number">85%</div>
-                            <div class="stats-label">Asistencia</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="stats-card">
-                            <div class="stats-number">45</div>
-                            <div class="stats-label">Créditos</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="stats-card">
-                            <div class="stats-number">5</div>
-                            <div class="stats-label">Períodos</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Información académica -->
@@ -111,10 +76,6 @@
                         <div class="info-item">
                             <div class="info-label">Estado</div>
                             <div class="info-value" data-field="estado"><span class="badge bg-success">Activo</span></div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Tipo de Estudiante</div>
-                            <div class="info-value" data-field="tipo">Regular</div>
                         </div>
                     </div>
                 </div>
@@ -157,7 +118,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
-        <form id="formEditarPerfil">
+        <form id="formEditarPerfil" enctype="multipart/form-data">
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="correo" class="form-label">Correo Electrónico</label>
@@ -176,8 +137,8 @@
               <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
             </div>
             <div class="col-md-6 mb-3">
-              <label for="identidad" class="form-label">Identidad</label>
-              <input type="text" class="form-control" id="identidad" name="identidad" readonly>
+              <label for="foto_perfil" class="form-label">Foto de Perfil</label>
+              <input type="file" class="form-control" id="foto_perfil" name="foto_perfil" accept="image/*">
             </div>
           </div>
           <div class="text-end">
