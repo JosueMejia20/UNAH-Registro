@@ -65,10 +65,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Submit del formulario
   const form = document.getElementById('admissionForm');
-  const preview = document.getElementById('previewDatos');
+  //const preview = document.getElementById('previewDatos');
   const submitBtn = document.getElementById('submitBtn');
 
-  if (form && submitBtn && preview) {
+  if (form && submitBtn) {
     submitBtn.addEventListener('click', async (e) => {
       e.preventDefault();
 
@@ -90,8 +90,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
 
-      preview.style.display = 'block';
-      preview.textContent = JSON.stringify(datosJSON, null, 2);
+     // preview.style.display = 'block';
+     // preview.textContent = JSON.stringify(datosJSON, null, 2);
 
       await fetch(`${BASE_URL}/post/insertPostulanteInscripcion/index.php`, {
         method: 'POST',

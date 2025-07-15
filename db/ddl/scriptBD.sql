@@ -175,6 +175,7 @@ CREATE TABLE Estado_Revision(
 
 CREATE TABLE Inscripcion(
 	inscripcion_id INT AUTO_INCREMENT PRIMARY KEY, -- numero de solicitud
+    numero_solicitud VARCHAR(8) UNIQUE,
     postulante_id VARCHAR(25) NOT NULL,
     carrera_primaria INT NOT NULL,
     carrera_secundaria INT NOT NULL,
