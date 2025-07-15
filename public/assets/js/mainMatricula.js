@@ -15,13 +15,13 @@ import { UnahSidebar } from "/../../components/sidebar.mjs";
 customElements.define("unah-sidebar", UnahSidebar);
 
 // -------- Controlador del PERFIL --------
-import {
+/*import {
   obtenerPerfilEstudiante,
   mostrarPerfilEnVista,
   cargarFormularioEdicion,
   obtenerMateriasActuales,
   mostrarMateriasEnTabla
-} from '../../components/Estudiantes/perfil_Controller.mjs';
+} from '../../components/Estudiantes/perfil_Controller.mjs';*/
 
 // -------- Controlador de MATRÍCULA --------
 import {
@@ -40,76 +40,20 @@ function obtenerMatriculaDesdeSesion() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  inicializarVistaMatricula();
-  const observer = new MutationObserver(async (mutations, obs) => {
-    const seccionPerfil = document.querySelector('.profile-header');
-    const form = document.getElementById('formEditarPerfil');
+  
     const seccionMatricula = document.getElementById('matricula');
 
-    // =============================
-    // ==== VISTA DE PERFIL ========
-    // =============================
-    if (seccionPerfil && form) {
-      obs.disconnect();
-      const matriculaEstudiante = obtenerMatriculaDesdeSesion();
-      
-      perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
-      if (perfilGlobal) {
-        mostrarPerfilEnVista(perfilGlobal);
-        const materias = await obtenerMateriasActuales(matriculaEstudiante);
-        mostrarMateriasEnTabla(materias);
-      }
-
-      // Abrir modal al hacer clic
-      const btnEditar = document.getElementById('btn-editar-perfil');
-      btnEditar?.addEventListener('click', () => {
-        cargarFormularioEdicion(perfilGlobal);
-        const modal = new bootstrap.Modal(document.getElementById('modalEditarPerfil'));
-        modal.show();
-      });
-
-      // Enviar formulario
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const formData = new FormData(form);
-        const archivo = document.getElementById('foto_perfil')?.files[0];
-        if (archivo) formData.append('foto_perfil', archivo);
-        formData.append('matricula', matriculaEstudiante);
-
-        try {
-          const response = await fetch('/api/estudiantes/post/updatePerfil', {
-            method: 'POST',
-            body: formData
-          });
-          const resultado = await response.json();
-          if (resultado.success) {
-            alert('Perfil actualizado correctamente');
-            perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
-            mostrarPerfilEnVista(perfilGlobal);
-            bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil'))?.hide();
-          } else {
-            alert('Error al actualizar perfil');
-          }
-        } catch (error) {
-          console.error('Error al enviar perfil:', error);
-          alert('Error de conexión al actualizar perfil.');
-        }
-      });
-    }
+   
 
     // =============================
     // ==== VISTA DE MATRÍCULA =====
     // =============================
-    /*if (seccionMatricula) {
-      setTimeout(() => {
-        inicializarVistaMatricula();
-      }, 300);
-    }*/
+   // if (seccionMatricula) {
+      inicializarVistaMatricula();
+  //  }
 
-  });
-
-  const contenedor = document.getElementById('main-content');
-  observer.observe(contenedor, { childList: true, subtree: true });
+  //const contenedor = document.getElementById('main-content');
+  //observer.observe(contenedor, { childList: true, subtree: true });
 });
 
 // ==========================

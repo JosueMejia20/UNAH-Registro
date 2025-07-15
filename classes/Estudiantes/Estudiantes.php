@@ -16,4 +16,16 @@
             return "Error en la base de datos: ".$e->getMessage();
         }
         }
+
+        public function getDeptPorClaseCarrera(string $id){
+            try{
+            $db = new DataBase();
+
+            $datos = $db->executeQuery("CALL ObtenerDepartamentosPorClaseCarrera($id)");
+           
+            return $datos;
+        } catch(PDOException $e){
+            return "Error en la base de datos: ".$e->getMessage();
+        }
+        }
     }

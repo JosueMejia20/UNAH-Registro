@@ -60,7 +60,8 @@ CREATE TABLE Carrera(
 CREATE TABLE Tipo_Examen(
 	tipo_examen_id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_examen VARCHAR(60),
-    nota_minima SMALLINT UNSIGNED NOT NULL
+    nota_minima SMALLINT UNSIGNED NOT NULL,
+    nota_maxima SMALLINT UNSIGNED NOT NULL
 );
 
 CREATE TABLE Examen_Carrera(
@@ -223,10 +224,14 @@ CREATE TABLE Inscripciones_Tipo_Examen(
 
 CREATE TABLE Resultados(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-    inscripcion_tipo_examen_id INT NOT NULL UNIQUE,
+    dni VARCHAR(25) NOT NULL,
+	tipo_examen_id INT NOT NULL,
     resultado INT NOT NULL,
     
-    FOREIGN KEY (inscripcion_tipo_examen_id) REFERENCES Inscripciones_Tipo_Examen(id)
+    FOREIGN KEY (dni) REFERENCES Postulante(dni)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (tipo_examen_id) REFERENCES Tipo_Examen(tipo_examen_id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -302,7 +307,7 @@ CREATE TABLE Docente(
     centro_reg_id INT NOT NULL,
     usuario_id INT NOT NULL,
 	departamento_id INT NOT NULL,
-    foto BLOB NOT NULL, -- para guardar la ruta de la foto
+    foto BLOB, -- para guardar la ruta de la foto
     
     FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id)
 		ON DELETE CASCADE

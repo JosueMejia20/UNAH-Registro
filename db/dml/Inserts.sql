@@ -169,9 +169,9 @@ INSERT INTO Carrera (departamento_id, nombre_carrera, nota_minima_PAA) VALUES (3
 
 
 -- ******************Inserts para TipoExamen***********************
-INSERT INTO Tipo_Examen (nombre_examen, nota_minima) VALUES ('PAA', 700);
-INSERT INTO Tipo_Examen (nombre_examen, nota_minima) VALUES ('PCCNS', 400);
-INSERT INTO Tipo_Examen (nombre_examen, nota_minima) VALUES ('PAM', 400);
+INSERT INTO Tipo_Examen (nombre_examen, nota_minima, nota_maxima) VALUES ('PAA', 700, 1600);
+INSERT INTO Tipo_Examen (nombre_examen, nota_minima, nota_maxima) VALUES ('PCCNS', 400, 800);
+INSERT INTO Tipo_Examen (nombre_examen, nota_minima, nota_maxima) VALUES ('PAM', 400, 800);
 
 -- *****************Inserts para ExamenCarrera***************************
 -- PAA
@@ -303,6 +303,83 @@ INSERT INTO Clase (departamento_id, unidades_valorativas, nombre_clase, codigo, 
 (1, 4, 'Analisis Numerico', 'MM412', 9),  
 (1, 4, 'Matematica Discreta', 'MM420', 1);  
 
+-- INSERTS PARA EDIFICIOS
+INSERT INTO Edificio (nombre, centro_reg_id) VALUES
+('A1', 1),
+('A2', 1),
+('B1', 1),
+('B2', 1),
+('C1', 1),
+('C2', 1),
+('C3', 1),
+('D1', 1),
+('E1', 1),
+('F1', 1),
+('G1', 1),
+('H1', 1),
+('I1', 1),
+('J1', 1),
+('K1', 1),
+('K2', 1);
+
+-- INSERTS PARA AULAS
+INSERT INTO Aula_Edificio (nombre, edificio_id) VALUES
+-- A1 (edificio_id = 1)
+('101', 1), ('102', 1), ('103', 1), ('104', 1), ('105', 1),
+
+-- A2 (edificio_id = 2)
+('101', 2), ('102', 2), ('103', 2), ('104', 2), ('105', 2),
+
+-- B1 (edificio_id = 3)
+('101', 3), ('102', 3), ('103', 3), ('104', 3), ('105', 3),
+
+-- B2 (edificio_id = 4)
+('101', 4), ('102', 4), ('103', 4), ('104', 4), ('105', 4),
+
+-- C1 (edificio_id = 5)
+('101', 5), ('102', 5), ('103', 5), ('104', 5), ('105', 5),
+
+-- C2 (edificio_id = 6)
+('101', 6), ('102', 6), ('103', 6), ('104', 6), ('105', 6),
+
+-- C3 (edificio_id = 7)
+('101', 7), ('102', 7), ('103', 7), ('104', 7), ('105', 7),
+
+-- D1 (edificio_id = 8)
+('101', 8), ('102', 8), ('103', 8), ('104', 8), ('105', 8),
+
+-- E1 (edificio_id = 9)
+('101', 9), ('102', 9), ('103', 9), ('104', 9), ('105', 9),
+
+-- F1 (edificio_id = 10)
+('101', 10), ('102', 10), ('103', 10), ('104', 10), ('105', 10);
+
+-- INSERTS PARA EstadosClase
+INSERT INTO Estados_Clase (nombre) VALUES
+('Aprobada'),
+('Reprobada'),
+('Abandonada'),
+('No se presento');
+
+-- INSERTS PARA Clases_Carrera
+-- Carrera de matematicas id=1 (HAY QUE AGREGAR MAS CLASES)
+-- Asignar todas las clases a la carrera_id = 1
+
+INSERT INTO Clases_Carrera (clase_id, carrera_id) VALUES
+(1, 1),
+(2, 1),
+(3, 1),
+(4, 1),
+(5, 1),
+(6, 1),
+(7, 1),
+(8, 1),
+(9, 1),
+(10, 1),
+(11, 1),
+(12, 1);
+
+-- AGREGAR A Indice_Matricula y verificar que el dia este dentro de los del PeriodoMatricula
 
 
 

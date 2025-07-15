@@ -1,9 +1,20 @@
-const API_BASE = '/api/estudiantes/matricula';
+const API_BASE = '/api/estudiantes';
 
 // Obtener asignaturas según clasificación
-export const obtenerAsignaturasPorClasificacion = async (clasificacion) => {
+export const obtenerDepartamentosPorClases = async (estudiante) => {
     try {
-        const response = await fetch(`${API_BASE}/asignaturas?clasificacion=${encodeURIComponent(clasificacion)}`);
+        const response = await fetch(`${API_BASE}/get/getDeptPorClaseCarrera?estudiante=${estudiante}`);
+        if (!response.ok) throw new Error('Error al obtener asignaturas');
+        return await response.json();
+    } catch (error) {
+        console.error('Error:', error);
+        return [];
+    }
+};
+
+export const obtenerAsignaturasPorClasificacion = async (estudiante) => {
+    try {
+        const response = await fetch(`${API_BASE}/get/getDeptPorClaseCarrera?estudiante=${estudiante}`);
         if (!response.ok) throw new Error('Error al obtener asignaturas');
         return await response.json();
     } catch (error) {

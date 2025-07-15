@@ -17,6 +17,7 @@ DROP PROCEDURE IF EXISTS getEstudianteInfo;
 DROP PROCEDURE IF EXISTS generar_codigo_solicitud;
 DROP PROCEDURE IF EXISTS generar_correo_institucional;
 DROP PROCEDURE IF EXISTS generar_contrasenia_random;
+DROP PROCEDURE IF EXISTS ObtenerDepartamentosPorClaseCarrera;
 
 DELIMITER $$
 
@@ -388,6 +389,24 @@ BEGIN
     END REPEAT;
 
     SET codigo_generado = generado;
+END$$
+
+CREATE PROCEDURE ObtenerDepartamentosPorClaseCarrera(IN p_estudiante_id VARCHAR(11))
+BEGIN
+    DECLARE v_carrera_id INT;
+
+    -- Obtener la carrera del estudiante
+    SELECT carrera_id INTO v_carrera_id
+    FROM Estudiante
+    WHERE numero_cuenta = p_estudiante_id;
+
+        -- Consultar departamentos de las clases de la malla curricular
+        SELECT DISTINCT d.departamento_id, d.nombre_departamento
+        FROM Clases_Carrera cc
+        INNER JOIN Clase c ON cc.clase_id = c.clase_id
+        INNER JOIN Departamento_Uni d ON c.departamento_id = d.departamento_id
+        WHERE cc.carrera_id = v_carrera_id;
+
 END$$
 
 DELIMITER ;

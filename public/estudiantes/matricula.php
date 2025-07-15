@@ -24,13 +24,8 @@
                             <!-- Clasificación -->
                             <div class="col-md-4 mb-4">
                                 <label class="form-label fw-bold">Clasificación de Asignatura</label>
-                                <select class="form-select" size="15">
-                                    <option selected>Selecciona una clasificación</option>
-                                    <option>Obligatoria</option>
-                                    <option>Electiva</option>
-                                    <option>General</option>
-                                    <option>Prerrequisito</option>
-                                    <option>Complementaria</option>
+                                <select id="departamentosClases" class="form-select" size="15">
+                                    <option selected disabled>Selecciona una clasificación</option>
                                 </select>
                             </div>
 
@@ -181,3 +176,5 @@
         </div> <!-- /.card -->
     </div> <!-- /.col-md-12 -->
 </div> <!-- /.row -->
+<script src="../../assets/js/Estudiantes/estudiante.js"></script>
+<script type="module" src="../../assets/js/mainEstudiantes.js"></script>
