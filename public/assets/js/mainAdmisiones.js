@@ -203,3 +203,118 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('requestModal').style.display = 'none';
   };
 });
+
+import {
+    buscarSolicitudPorId,
+    actualizarSolicitud,
+    renderizarSolicitud
+} from "./controllers/solicitudController.mjs";
+
+// Elementos del DOM
+const formBuscar = document.getElementById("searchForm");
+const inputSolicitudId = document.getElementById("solicitudId");
+const resultCard = document.getElementById("resultCard");
+const spinner = document.getElementById("loadingSpinner");
+const alertaNoEncontrado = document.getElementById("notFoundAlert");
+const mensajeExito = document.getElementById("updateSuccess");
+const mensajeError = document.getElementById("updateError");
+const botonActualizar = document.getElementById("updateBtn");
+
+// Evento de búsqueda
+formBuscar.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const id = inputSolicitudId.value.trim();
+    if (!id) return;
+
+    mostrarSpinner(true);
+    ocultarMensajes();
+
+    const solicitud = await buscarSolicitudPorId(id);
+
+    mostrarSpinner(false);
+
+    if (solicitud) {
+        renderizarSolicitud(solicitud);
+        resultCard.style.display = "block";
+    } else {
+        alertaNoEncontrado.style.display = "block";
+        resultCard.style.display = "none";
+    }
+});
+
+// Función para habilitar edición de campos
+window.enableEdit = (campoId, tipo = "text") => {
+    const field = document.getElementById(campoId);
+
+    if (tipo === "select") {
+        const valorActual = field.innerText;
+        const opciones = Array.from(new Set([valorActual])); // se puede reemplazar con valores desde BD si los traes
+        const select = document.createElement("select");
+        select.className = "form-control";
+
+        opciones.forEach(op => {
+            const option = document.createElement("option");
+            option.value = op;
+            option.textContent = op;
+            if (op === valorActual) option.selected = true;
+            select.appendChild(option);
+        });
+
+        select.id = campoId;
+        field.replaceWith(select);
+    } else {
+        field.contentEditable = "true";
+        field.focus();
+    }
+};
+
+// Obtener campos editables actualizados
+function obtenerDatosEditados() {
+    const getValor = (id) => {
+        const el = document.getElementById(id);
+        return el?.tagName === "SELECT" ? el.value : el?.textContent.trim();
+    };
+
+    return {
+        nombre: getValor("nombreCompleto"),
+        fecha_nacimiento: getValor("fechaNacimiento"),
+        genero: getValor("genero"),
+        telefono: getValor("telefono"),
+        email: getValor("email"),
+        direccion: getValor("direccion"),
+        centro: getValor("centroRegional"),
+        carrera: getValor("carreraInteres"),
+        instituto: getValor("institutoEducacion"),
+        anio_graduacion: getValor("anioGraduacion"),
+    };
+}
+
+// Evento para enviar actualización
+botonActualizar.addEventListener("click", async () => {
+    ocultarMensajes();
+
+    const solicitudId = document.getElementById("solicitudNumber").textContent.trim();
+    const datosActualizados = obtenerDatosEditados();
+
+    const ok = await actualizarSolicitud(solicitudId, datosActualizados);
+
+    if (ok) {
+        mensajeExito.style.display = "block";
+    } else {
+        mensajeError.style.display = "block";
+    }
+
+    setTimeout(ocultarMensajes, 4000);
+});
+
+// Funciones auxiliares
+function mostrarSpinner(mostrar) {
+    spinner.style.display = mostrar ? "block" : "none";
+}
+
+function ocultarMensajes() {
+    alertaNoEncontrado.style.display = "none";
+    mensajeExito.style.display = "none";
+    mensajeError.style.display = "none";
+}

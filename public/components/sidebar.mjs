@@ -24,7 +24,7 @@ class UnahSidebar extends HTMLElement {
                         <li><a class="dropdown-item" href="#">Perfil</a></li>
                         <li><a class="dropdown-item" href="#">Configuración</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#" id="cerrarSesionBtn">Cerrar sesión</a></li>
+                        <li><a class="dropdown-item" href="../../../index.php" id="cerrarSesionBtn">Cerrar sesión</a></li>
                     </ul>
                 </div>
             </div>

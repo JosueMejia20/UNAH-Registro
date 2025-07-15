@@ -13,14 +13,6 @@
 <body>
     <pantalla-de-carga></pantalla-de-carga>
     <unah-navbar></unah-navbar>
-    <!-- Header -->
-    <div class="header text-center">
-        <div class="container">
-            <img src="https://biologia.unah.edu.hn/dmsdocument/1433-unah-logo-texto" alt="Logo UNAH" class="logo">
-            <h1>Consulta y Actualización de Solicitud</h1>
-            <p class="lead">Universidad Nacional Autónoma de Honduras</p>
-        </div>
-    </div>
 
     <!-- Main Content -->
     <div class="container">
@@ -32,10 +24,6 @@
                     <div class="mb-3">
                         <label for="solicitudId" class="form-label info-label">Número de Solicitud</label>
                         <input type="text" class="form-control" id="solicitudId" placeholder="Ingrese su ID de solicitud (ej: SOL-2023-001234)" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="identificacion" class="form-label info-label">Número de Identificación</label>
-                        <input type="text" class="form-control" id="identificacion" placeholder="Ingrese su número de identidad o pasaporte" required>
                     </div>
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-unah btn-lg">
@@ -142,27 +130,6 @@
                         <li><a href="#" class="document-link"><i class="bi bi-file-earmark-pdf"></i> Título de Educación Media (PDF, 2.4MB)</a></li>
                         <li><a href="#" class="document-link"><i class="bi bi-file-earmark-image"></i> Fotografía (JPG, 1.2MB)</a></li>
                     </ul>
-                </div>
-
-                <!-- Status Updates -->
-                <h3 class="section-title mt-4">Actualizaciones de Estado</h3>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-point"></div>
-                        <div class="timeline-content">
-                            <h5>Solicitud Recibida</h5>
-                            <p class="text-muted">15/07/2023 - 10:30 AM</p>
-                            <p>Su solicitud ha sido recibida y está en proceso de revisión.</p>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-point"></div>
-                        <div class="timeline-content">
-                            <h5>Documentos Verificados</h5>
-                            <p class="text-muted">18/07/2023 - 02:15 PM</p>
-                            <p>Los documentos adjuntos han sido verificados satisfactoriamente.</p>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Update Message -->
