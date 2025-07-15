@@ -36,11 +36,24 @@ export const mostrarPerfilEnVista = (datos) => {
 };
 
 export const cargarFormularioEdicion = (datos) => {
-  document.getElementById('correo').value = datos[0].correo_institucional;
-  document.getElementById('telefono').value = datos[0].telefono;
-  document.getElementById('direccion').value = datos[0].direccion;
-  document.getElementById('fecha_nacimiento').value = datos[0].fecha_nacimiento;
+  if (!Array.isArray(datos) || datos.length === 0) {
+    console.warn("No se encontraron datos para editar el perfil");
+    return;
+  }
+
+  const estudiante = datos[0];
+
+  const correoInput = document.getElementById('correo');
+  const telefonoInput = document.getElementById('telefono');
+  const direccionInput = document.getElementById('direccion');
+  const fechaNacimientoInput = document.getElementById('fecha_nacimiento');
+
+  if (correoInput) correoInput.value = estudiante.correo_institucional || '';
+  if (telefonoInput) telefonoInput.value = estudiante.telefono || '';
+  if (direccionInput) direccionInput.value = estudiante.direccion || '';
+  if (fechaNacimientoInput) fechaNacimientoInput.value = estudiante.fecha_nacimiento || '';
 };
+
 
 export const actualizarPerfil = async (formData) => {
   try {

@@ -32,55 +32,47 @@ import {
   cancelarSecciones
 } from '../../components/Estudiantes/matricula_Controller.mjs';
 
-// ==========================
-// VARIABLES GLOBALES
-// ==========================
 let perfilGlobal = null;
 
-// ==========================
-// FUNCIÓN PARA OBTENER MATRÍCULA DESDE SESIÓN
-// ==========================
 function obtenerMatriculaDesdeSesion() {
   return sessionStorage.getItem('matricula') || '20201003849';
 }
 
-// ==========================
-// OBSERVADOR DE VISTAS DINÁMICAS (PERFIL y MATRÍCULA)
-// ==========================
 document.addEventListener('DOMContentLoaded', async () => {
   const observer = new MutationObserver(async (mutations, obs) => {
-    const btnEditar = document.getElementById('btn-editar-perfil');
+    const seccionPerfil = document.querySelector('.profile-header');
     const form = document.getElementById('formEditarPerfil');
     const seccionMatricula = document.getElementById('matricula');
 
-    // ----------------------------
-    // ==== VISTA DE PERFIL =======
-    // ----------------------------
-    if (btnEditar && form) {
+    // =============================
+    // ==== VISTA DE PERFIL ========
+    // =============================
+    if (seccionPerfil && form) {
       obs.disconnect();
       const matriculaEstudiante = obtenerMatriculaDesdeSesion();
       
-
-      // Cargar perfil y materias
       perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
-       if (perfilGlobal) mostrarPerfilEnVista(perfilGlobal);
+      if (perfilGlobal) {
+        mostrarPerfilEnVista(perfilGlobal);
+        const materias = await obtenerMateriasActuales(matriculaEstudiante);
+        mostrarMateriasEnTabla(materias);
+      }
 
-       const materias = await obtenerMateriasActuales(matriculaEstudiante);
-       mostrarMateriasEnTabla(materias);
-
-      // Abrir modal de edición
-      btnEditar.addEventListener('click', () => {
+      // Abrir modal al hacer clic
+      const btnEditar = document.getElementById('btn-editar-perfil');
+      btnEditar?.addEventListener('click', () => {
         cargarFormularioEdicion(perfilGlobal);
         const modal = new bootstrap.Modal(document.getElementById('modalEditarPerfil'));
         modal.show();
       });
 
-      // Envío del formulario
+      // Enviar formulario
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(form);
-        const archivo = document.getElementById('foto_perfil').files[0];
+        const archivo = document.getElementById('foto_perfil')?.files[0];
         if (archivo) formData.append('foto_perfil', archivo);
+        formData.append('matricula', matriculaEstudiante);
 
         try {
           const response = await fetch('/api/estudiantes/post/updatePerfil', {
@@ -92,7 +84,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert('Perfil actualizado correctamente');
             perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
             mostrarPerfilEnVista(perfilGlobal);
-            bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil')).hide();
+            bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil'))?.hide();
           } else {
             alert('Error al actualizar perfil');
           }
@@ -103,9 +95,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    // ----------------------------
-    // ==== VISTA DE MATRÍCULA ====
-    // ----------------------------
+    // =============================
+    // ==== VISTA DE MATRÍCULA =====
+    // =============================
     if (seccionMatricula) {
       inicializarVistaMatricula();
     }
@@ -116,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // ==========================
-// FUNCIONES - VISTA MATRÍCULA Y CANCELACIÓN
+// FUNCIÓN - VISTA MATRÍCULA
 // ==========================
 const inicializarVistaMatricula = () => {
   const selectClasificacion = document.querySelector("#matricula select:nth-child(2)");
@@ -256,9 +248,5 @@ const inicializarVistaMatricula = () => {
     checkboxes.forEach(cb => cb.checked = e.target.checked);
   });
 
-  // Inicializar datos al cargar matrícula
   mostrarSeccionesCancelables();
 };
-
-
-
