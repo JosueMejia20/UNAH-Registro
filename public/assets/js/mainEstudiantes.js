@@ -40,7 +40,11 @@ function obtenerMatriculaDesdeSesion() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  inicializarVistaMatricula();
+  /*inicializarVistaMatricula();
+  
+  Separar logica de la vista del perfil con la de vista de matricula. Los document.getElement y querySelector dan nulos al no encontrarlos ya que se cargan dinamicamente.
+  
+  */
   const observer = new MutationObserver(async (mutations, obs) => {
     const seccionPerfil = document.querySelector('.profile-header');
     const form = document.getElementById('formEditarPerfil');

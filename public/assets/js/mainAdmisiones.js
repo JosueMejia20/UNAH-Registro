@@ -203,6 +203,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('requestModal').style.display = 'none';
   };
 });
+/*
+
+Mover esta logica a otro archivo y atarsela a la vista de Solicitud.
 
 import {
     buscarSolicitudPorId,
@@ -317,4 +320,4 @@ function ocultarMensajes() {
     alertaNoEncontrado.style.display = "none";
     mensajeExito.style.display = "none";
     mensajeError.style.display = "none";
-}
+}*/

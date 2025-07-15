@@ -6,6 +6,8 @@ require 'src/Exception.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+require_once __DIR__ . '/../db/DataBase.php';
+
 class Utilities
 {
     /**
@@ -86,6 +88,78 @@ class Utilities
 
             return $fila['resultado'];
         } catch(PDOException $e){
+            return "Error en la base de datos: ".$e->getMessage();
+        }
+    }
+
+    public function crearCSV(string $encabezado, array $data, string $ruta):bool
+    {
+        $archivo = fopen($ruta, 'w');
+        if (!$archivo) {
+            return false;
+        }
+
+        //escribir el encabezado
+        $columnas = explode(',', $encabezado);
+        fputcsv($archivo, $columnas);
+
+        //escribiendo la data (contenido) linea por lines
+        foreach ($data as $registro) {
+            $valores = explode(',', $registro);
+            fputcsv($archivo, $valores);
+        }
+
+        fclose($archivo);
+        return true;
+    }
+
+    public function pruebaCSV () {
+        try {
+            $db = new DataBase();
+            $pdo = $db->connect();
+
+            //consulta sql retorna dnis sus tipos de examen y su nota minima
+            $sql = "SELECT 
+                        p.dni,
+                        ite.tipo_examen_id,
+                        te.nota_minima
+                    FROM 
+                        Postulante p
+                    JOIN 
+                        Inscripcion i ON p.dni = i.postulante_id
+                    JOIN 
+                        Inscripciones_Tipo_Examen ite ON i.inscripcion_id = ite.inscripcion_id
+                    JOIN 
+                        Tipo_Examen te ON ite.tipo_examen_id = te.tipo_examen_id
+                    ORDER BY 
+                        p.dni, ite.tipo_examen_id;";
+
+            $stmt = $pdo->query($sql);
+            $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            //convirtiendo el array de resultados a array de líneas CSV
+            $contenido = [];
+
+            foreach ($filas as $fila) {
+                $dni = $fila['dni'];
+                $tipoExamen = $fila['tipo_examen_id'];
+                $notaMinima = $fila['nota_minima'];
+                $resultado = rand(0, $notaMinima); // valor aleatorio entre 0 y nota minima (solo es una prueba)
+
+                $contenido[] = "$dni,$tipoExamen,$resultado";
+            }
+
+
+            //definiendo encabezado y ruta
+            $encabezado = "dni,tipoExamen,resultado";
+            $rutaArchivo = "../temp/postulantes_resultados.csv";
+
+            if(self::crearCSV($encabezado, $contenido, $rutaArchivo)) {
+                echo "csv creado exitosamente en: $rutaArchivo";
+            }else {
+                echo "error al crear csv";
+            }
+        }catch (PDOException $e) {
             return "Error en la base de datos: ".$e->getMessage();
         }
     }
