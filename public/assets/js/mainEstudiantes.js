@@ -30,7 +30,7 @@ import {
   matricularSeccion,
   obtenerSeccionesActuales,
   cancelarSecciones
-} from '../../components/Estudiantes/matriculaController.mjs';
+} from '../../components/Estudiantes/matricula_Controller.mjs';
 
 // ==========================
 // VARIABLES GLOBALES
@@ -59,13 +59,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnEditar && form) {
       obs.disconnect();
       const matriculaEstudiante = obtenerMatriculaDesdeSesion();
+      
 
       // Cargar perfil y materias
       perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
-      // if (perfilGlobal) mostrarPerfilEnVista(perfilGlobal);
+       if (perfilGlobal) mostrarPerfilEnVista(perfilGlobal);
 
-      // const materias = await obtenerMateriasActuales(matriculaEstudiante);
-      // mostrarMateriasEnTabla(materias);
+       const materias = await obtenerMateriasActuales(matriculaEstudiante);
+       mostrarMateriasEnTabla(materias);
 
       // Abrir modal de edición
       btnEditar.addEventListener('click', () => {

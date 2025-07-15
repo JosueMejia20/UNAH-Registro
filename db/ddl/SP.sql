@@ -14,6 +14,9 @@ DROP PROCEDURE IF EXISTS AsignarRevisores;
 DROP PROCEDURE IF EXISTS CambiarEstadoRevision;
 DROP PROCEDURE IF EXISTS getInscripcionById;
 DROP PROCEDURE IF EXISTS getEstudianteInfo;
+DROP PROCEDURE IF EXISTS generar_codigo_solicitud;
+DROP PROCEDURE IF EXISTS generar_correo_institucional;
+DROP PROCEDURE IF EXISTS generar_contrasenia_random;
 
 DELIMITER $$
 
@@ -354,6 +357,37 @@ BEGIN
             SHA2(RAND(), 512)
         ), 1, 10
     );
+END$$
+
+
+CREATE PROCEDURE generar_codigo_solicitud(OUT codigo_generado VARCHAR(8))
+BEGIN
+    DECLARE caracteres CHAR(36) DEFAULT 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    DECLARE longitud INT DEFAULT 8;
+    DECLARE i INT DEFAULT 0;
+    DECLARE caracter CHAR(1);
+    DECLARE generado VARCHAR(8) DEFAULT '';
+    DECLARE existe INT;
+
+    REPEAT
+        SET generado = '';
+        SET i = 0;
+
+        WHILE i < longitud DO
+            SET caracter = SUBSTRING(caracteres, FLOOR(1 + RAND() * 36), 1);
+            SET generado = CONCAT(generado, caracter);
+            SET i = i + 1;
+        END WHILE;
+
+        -- Verificar si ya existe
+        SELECT COUNT(*) INTO existe
+        FROM Inscripcion
+        WHERE numero_solicitud = generado;
+
+    UNTIL existe = 0
+    END REPEAT;
+
+    SET codigo_generado = generado;
 END$$
 
 DELIMITER ;

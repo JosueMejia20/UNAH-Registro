@@ -1,6 +1,8 @@
 USE Registro;
 
 DROP TRIGGER IF EXISTS trg_AfterInsertInscripcion;
+DROP TRIGGER IF EXISTS antes_insertar_usuario;
+DROP TRIGGER IF EXISTS before_insert_inscripcion;
 
 -- Triggers
 
@@ -32,6 +34,19 @@ BEGIN
     
     CALL generar_contrasenia_random(contrasenia_generada);
     SET NEW.contrasenia = contrasenia_generada;
+END$$
+
+
+CREATE TRIGGER before_insert_inscripcion
+BEFORE INSERT ON Inscripcion
+FOR EACH ROW
+BEGIN
+    DECLARE codigo VARCHAR(8);
+
+    IF NEW.numero_solicitud IS NULL THEN
+        CALL generar_codigo_solicitud(codigo);
+        SET NEW.numero_solicitud = codigo;
+    END IF;
 END$$
 
 
