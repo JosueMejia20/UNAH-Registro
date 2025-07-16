@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    //ELIMINAR ESTE ARCHIVO
     const mainContent = document.querySelector('.main-content');
 
     // Escuchamos eventos en toda la página

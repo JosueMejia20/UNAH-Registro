@@ -382,7 +382,10 @@ CREATE TABLE Estados_Clase(
     nombre VARCHAR(20) NOT NULL
 );
 
--- tabla intermedia
+
+-- Esta tabla simula el historial academico
+-- El docente al momento de subir notas, se hara el insert en esta tabla.
+-- El campo estado_clase_id es calculado, a excepcion de caso de abandono
 CREATE TABLE Estudiantes_Secciones(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     estudiante_id VARCHAR(11) NOT NULL,
@@ -404,7 +407,33 @@ CREATE TABLE Estudiantes_Secciones(
         ON UPDATE CASCADE
 );
 
--- tabla bitacora. Trigger on delete de tabla estudiantes seccion
+-- Estas son las clases que el estudiante matriculo segun el periodo
+-- La de arriba seria el detalle de esta tabla, y cuando el docente ingrese notas al sistema
+-- se debera hacer un get de esta tabla segun el docente de la seccion y el estudiante
+-- El SP debera obtener la seccion, pero el periodo academico de esta tabla se debera insertar de acuerdo
+-- al periodo de la seccion. Eso se hara en el SP.
+-- Forma 03
+CREATE TABLE Estudiantes_Matricula(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    estudiante_id VARCHAR(11) NOT NULL,
+    seccion_id INT NOT NULL,
+    periodo_acad_id INT NOT NULL,
+    UNIQUE(estudiante_id, seccion_id),
+    
+    FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (seccion_id) REFERENCES Seccion(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (periodo_acad_id) REFERENCES Periodo_Academico(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- tabla bitacora. Trigger on delete de tabla estudiante matricula
 CREATE TABLE Estudiante_Seccion_Cancelada(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     estudiante_id VARCHAR(11) NOT NULL,

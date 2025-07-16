@@ -39,3 +39,16 @@ INSERT INTO Estudiante (numero_cuenta, carrera_id,usuario_id,centro_reg_id,anio_
 -- Docente de Prueba
 INSERT INTO Docente (numero_empleado, persona_id, centro_reg_id, usuario_id, departamento_id, foto) VALUES (1002, '0801198812346', 1, 2, 1, NULL);
 
+-- Secciones de Prueba
+INSERT INTO Seccion (codigo_seccion, hora_inicio, hora_fin, clase_id, docente_id, cupos, periodo_acad_id, dias, aula_id) VALUES
+('0800', '08:00:00', '09:30:00', 1, 1002, 30, 8, 'Lun,Mie,Vie', 3),
+('1000', '10:00:00', '11:30:00', 1, 1002, 30, 8, 'Mar,Jue', 5),
+('1200', '12:00:00', '13:30:00', 1, 1002, 25, 8, 'Lun,Mie', 2),
+('1400', '14:00:00', '15:30:00', 1, 1002, 20, 8, 'Mar,Jue,Vie', 7),
+('1600', '16:00:00', '17:30:00', 1, 1002, 15, 8, 'Lun,Vie', 1),
+
+('0801', '08:00:00', '09:30:00', 1, 1002, 30, 7, 'Lun,Mie,Vie', 4),
+('1001', '10:00:00', '11:30:00', 1, 1002, 30, 7, 'Mar,Jue', 6),
+('1201', '12:00:00', '13:30:00', 1, 1002, 25, 7, 'Lun,Mie', 9);
+
+

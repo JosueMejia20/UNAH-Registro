@@ -1,3 +1,7 @@
+<!--
+ESTA VISTA CAMBIARLA A COMO ESTAN LAS DEMAS, CUAL ERA EL FACTOR COMUN Y SOLAMENTE METER TODOS LOS DIVS ABAJO
+-->
+
 <div class="header">
                     <h2>Evaluación Docente</h2>
                     <p class="mb-0">Completa las evaluaciones para ver tus calificaciones</p>

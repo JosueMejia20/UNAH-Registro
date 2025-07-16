@@ -12,9 +12,9 @@ export const obtenerDepartamentosPorClases = async (estudiante) => {
     }
 };
 
-export const obtenerAsignaturasPorClasificacion = async (estudiante) => {
+export const obtenerAsignaturasPorDepartamento = async (estudiante,departamento) => {
     try {
-        const response = await fetch(`${API_BASE}/get/getDeptPorClaseCarrera?estudiante=${estudiante}`);
+        const response = await fetch(`${API_BASE}/get/getClasePorDeptEstudiante?estudiante=${estudiante}&departamento=${departamento}`);
         if (!response.ok) throw new Error('Error al obtener asignaturas');
         return await response.json();
     } catch (error) {
@@ -26,7 +26,7 @@ export const obtenerAsignaturasPorClasificacion = async (estudiante) => {
 // Obtener horarios por asignatura
 export const obtenerHorariosPorAsignatura = async (asignaturaId) => {
     try {
-        const response = await fetch(`${API_BASE}/horarios?asignatura=${encodeURIComponent(asignaturaId)}`);
+        const response = await fetch(`${API_BASE}/get/getSeccionPeriodoActualPorClase?asignatura=${asignaturaId}`);
         if (!response.ok) throw new Error('Error al obtener horarios');
         return await response.json();
     } catch (error) {
@@ -38,7 +38,7 @@ export const obtenerHorariosPorAsignatura = async (asignaturaId) => {
 // Matricular estudiante
 export const matricularSeccion = async (datosMatricula) => {
     try {
-        const response = await fetch(`${API_BASE}/matricular`, {
+        const response = await fetch(`${API_BASE}/post/matricularSeccion`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datosMatricula)

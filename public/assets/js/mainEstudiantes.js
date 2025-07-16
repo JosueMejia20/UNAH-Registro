@@ -26,7 +26,7 @@ import {
 // -------- Controlador de MATRÍCULA --------
 import {
   obtenerDepartamentosPorClases,
-  obtenerAsignaturasPorClasificacion,
+  obtenerAsignaturasPorDepartamento,
   obtenerHorariosPorAsignatura,
   matricularSeccion,
   obtenerSeccionesActuales,
@@ -40,81 +40,61 @@ function obtenerMatriculaDesdeSesion() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  /*inicializarVistaMatricula();
-  
-  Separar logica de la vista del perfil con la de vista de matricula. Los document.getElement y querySelector dan nulos al no encontrarlos ya que se cargan dinamicamente.
-  
-  */
-  const observer = new MutationObserver(async (mutations, obs) => {
-    const seccionPerfil = document.querySelector('.profile-header');
-    const form = document.getElementById('formEditarPerfil');
-    const seccionMatricula = document.getElementById('matricula');
+  const ruta = window.location.pathname;
 
-    // =============================
-    // ==== VISTA DE PERFIL ========
-    // =============================
-    if (seccionPerfil && form) {
-      obs.disconnect();
-      const matriculaEstudiante = obtenerMatriculaDesdeSesion();
-      
-      perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
-      if (perfilGlobal) {
-        mostrarPerfilEnVista(perfilGlobal);
-        const materias = await obtenerMateriasActuales(matriculaEstudiante);
-        mostrarMateriasEnTabla(materias);
-      }
+  //Se le puede agregar lo mismo que matricula. Un metodo aparte y que lo mande a llamar para iniciarlizar la vista
+  if (ruta.includes('perfil.php')) {
+    const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
+    const perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
 
-      // Abrir modal al hacer clic
-      const btnEditar = document.getElementById('btn-editar-perfil');
-      btnEditar?.addEventListener('click', () => {
-        cargarFormularioEdicion(perfilGlobal);
-        const modal = new bootstrap.Modal(document.getElementById('modalEditarPerfil'));
-        modal.show();
-      });
-
-      // Enviar formulario
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const formData = new FormData(form);
-        const archivo = document.getElementById('foto_perfil')?.files[0];
-        if (archivo) formData.append('foto_perfil', archivo);
-        formData.append('matricula', matriculaEstudiante);
-
-        try {
-          const response = await fetch('/api/estudiantes/post/updatePerfil', {
-            method: 'POST',
-            body: formData
-          });
-          const resultado = await response.json();
-          if (resultado.success) {
-            alert('Perfil actualizado correctamente');
-            perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
-            mostrarPerfilEnVista(perfilGlobal);
-            bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil'))?.hide();
-          } else {
-            alert('Error al actualizar perfil');
-          }
-        } catch (error) {
-          console.error('Error al enviar perfil:', error);
-          alert('Error de conexión al actualizar perfil.');
-        }
-      });
+    if (perfilGlobal) {
+      mostrarPerfilEnVista(perfilGlobal);
+      const materias = await obtenerMateriasActuales(matriculaEstudiante);
+      mostrarMateriasEnTabla(materias);
     }
 
-    // =============================
-    // ==== VISTA DE MATRÍCULA =====
-    // =============================
-    /*if (seccionMatricula) {
-      setTimeout(() => {
-        inicializarVistaMatricula();
-      }, 300);
-    }*/
+    const btnEditar = document.getElementById('btn-editar-perfil');
+    const form = document.getElementById('formEditarPerfil');
+    btnEditar?.addEventListener('click', () => {
+      cargarFormularioEdicion(perfilGlobal);
+      const modal = new bootstrap.Modal(document.getElementById('modalEditarPerfil'));
+      modal.show();
+    });
 
-  });
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const archivo = document.getElementById('foto_perfil')?.files[0];
+      if (archivo) formData.append('foto_perfil', archivo);
+      formData.append('matricula', matriculaEstudiante);
 
-  const contenedor = document.getElementById('main-content');
-  observer.observe(contenedor, { childList: true, subtree: true });
+      try {
+        const response = await fetch('/api/estudiantes/post/updatePerfil', {
+          method: 'POST',
+          body: formData
+        });
+        const resultado = await response.json();
+        if (resultado.success) {
+          alert('Perfil actualizado correctamente');
+          const nuevoPerfil = await obtenerPerfilEstudiante(matriculaEstudiante);
+          mostrarPerfilEnVista(nuevoPerfil);
+          bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil'))?.hide();
+        } else {
+          alert('Error al actualizar perfil');
+        }
+      } catch (error) {
+        alert('Error de conexión al actualizar perfil.');
+      }
+    });
+  }
+
+  if (ruta.includes('matricula.php')) {
+    inicializarVistaMatricula(); // Declarada abajo
+  }
+
+  // De acuerdo se agreguen mas metodos para las demas vistas. Se deben agregar mas if en esta parte de aca
 });
+
 
 // ==========================
 // FUNCIÓN - VISTA MATRÍCULA
@@ -122,8 +102,13 @@ document.addEventListener('DOMContentLoaded', async () => {
  const inicializarVistaMatricula = async () => {
   const selectClasificacion = document.querySelector('#departamentosClases');
   console.log(selectClasificacion);
-  const selectAsignatura = document.querySelector("#matricula select:nth-child(4)");
-  const selectHorario = document.querySelector("#matricula select:nth-child(6)");
+  
+  const selectAsignatura = document.querySelector("#clasesDepartamentos");
+  console.log(selectAsignatura);
+
+  const selectHorario = document.querySelector("#horarios");
+  console.log(selectHorario);
+
   const btnMatricular = document.querySelector("#matricula button.btn-unah");
   const tablaHorario = document.querySelector("#matricula table tbody");
   const tablaCancelacion = document.querySelector("#cancelacion table tbody");
@@ -144,6 +129,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   items.forEach(item => {
     const option = document.createElement("option");
     option.textContent = item[textKey];
+    option.value = item[valueKey];
+    select.appendChild(option);
+  });
+};
+
+const llenarSelectHorarios = (select, items, textKeyCodigo, textKeyDias, textKeyHoraIni, textKeyHoraFin, valueKey) => {
+  if (!select) return;
+  items.forEach(item => {
+    const option = document.createElement("option");
+    option.textContent = `${item[textKeyCodigo]} - ${item[textKeyDias]} ${item[textKeyHoraIni]}-${item[textKeyHoraFin]}`;
     option.value = item[valueKey];
     select.appendChild(option);
   });
@@ -205,8 +200,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const clasificacion = selectClasificacion.value;
 
     if (clasificacion !== "Selecciona una clasificación") {
-      const asignaturas = await obtenerAsignaturasPorClasificacion(clasificacion);
-      llenarSelect(selectAsignatura, asignaturas, "nombre");
+      const asignaturas = await obtenerAsignaturasPorDepartamento('20201003849',clasificacion);
+      llenarSelect(selectAsignatura, asignaturas, "nombre_clase", "clase_id");
     }
   });
 
@@ -216,20 +211,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (asignatura !== "Selecciona una asignatura") {
       const horarios = await obtenerHorariosPorAsignatura(asignatura);
-      llenarSelect(selectHorario, horarios, "descripcion");
+     // llenarSelect(selectHorario, horarios, "descripcion");
+      llenarSelectHorarios(selectHorario, horarios, "codigo_seccion", "dias", "hora_inicio", "hora_fin", "seccion_id")
     }
   });
 
   btnMatricular?.addEventListener("click", async () => {
-    const asignatura = selectAsignatura.value;
+    const estudiante = '20201003849'; //SE DEBE HACER LOGICA PARA OBTENERLO DE SESION
     const horario = selectHorario.value;
 
-    if (!asignatura || !horario || asignatura.includes("Selecciona") || horario.includes("Selecciona")) {
-      alert("Debe seleccionar una asignatura y un horario.");
+    if (!horario || horario.includes("Selecciona")) {
+      alert("Debe seleccionar una seccion");
       return;
     }
 
-    const datos = { asignatura, horario };
+    const datos = { estudiante, horario };
     const respuesta = await matricularSeccion(datos);
 
     if (respuesta.success) {

@@ -72,7 +72,7 @@ export const actualizarPerfil = async (formData) => {
 
 export const obtenerMateriasActuales = async (matricula) => {
   try {
-    const response = await fetch(`${MATERIAS_URL}?matricula=${encodeURIComponent(matricula)}`);
+    const response = await fetch(`${BASE_URL}/materiasActuales?matricula=${matricula}`);
     if (!response.ok) throw new Error('Error al obtener materias');
     return await response.json();
   } catch (error) {
@@ -87,11 +87,11 @@ export const mostrarMateriasEnTabla = (materias) => {
   materias.forEach(materia => {
     const fila = document.createElement('tr');
     fila.innerHTML = `
-      <td>${materia.codigo}</td>
-      <td>${materia.asignatura}</td>
-      <td>${materia.seccion}</td>
+      <td>${materia.codigo_clase}</td>
+      <td>${materia.nombre_clase}</td>
+      <td>${materia.codigo_clase}</td>
       <td>${materia.horario}</td>
-      <td>${materia.docente}</td>
+      <td>${materia.nombre_docente}</td>
     `;
     tbody.appendChild(fila);
   });

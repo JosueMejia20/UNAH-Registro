@@ -18,6 +18,10 @@ DROP PROCEDURE IF EXISTS generar_codigo_solicitud;
 DROP PROCEDURE IF EXISTS generar_correo_institucional;
 DROP PROCEDURE IF EXISTS generar_contrasenia_random;
 DROP PROCEDURE IF EXISTS ObtenerDepartamentosPorClaseCarrera;
+DROP PROCEDURE IF EXISTS ObtenerClasesPorDepartamentoYEstudiante;
+DROP PROCEDURE IF EXISTS ObtenerSeccionesPorClasePeriodoActual;
+DROP PROCEDURE IF EXISTS InsertarEstudianteMatricula;
+DROP PROCEDURE IF EXISTS ObtenerSeccionesActualesEstudiante;
 
 DELIMITER $$
 
@@ -406,8 +410,105 @@ BEGIN
         INNER JOIN Clase c ON cc.clase_id = c.clase_id
         INNER JOIN Departamento_Uni d ON c.departamento_id = d.departamento_id
         WHERE cc.carrera_id = v_carrera_id;
-
 END$$
+
+CREATE PROCEDURE ObtenerClasesPorDepartamentoYEstudiante(
+    IN p_numero_cuenta VARCHAR(11),
+    IN p_departamento_id INT
+)
+BEGIN
+    SELECT c.*
+    FROM Clase c
+    INNER JOIN Clases_Carrera cc ON c.clase_id = cc.clase_id
+    INNER JOIN Estudiante e ON cc.carrera_id = e.carrera_id
+    WHERE e.numero_cuenta = p_numero_cuenta
+      AND c.departamento_id = p_departamento_id;
+END$$
+
+
+CREATE PROCEDURE ObtenerSeccionesPorClasePeriodoActual(
+    IN p_clase_id INT
+)
+BEGIN
+    SELECT 
+        s.id AS seccion_id,
+        s.codigo_seccion,
+        DATE_FORMAT(s.hora_inicio, '%H:%i') AS hora_inicio,
+        DATE_FORMAT(s.hora_fin, '%H:%i') AS hora_fin,
+        s.dias,
+        s.cupos,
+        d.numero_empleado AS docente_id,
+        p.nombre_completo AS nombre_docente,
+        a.nombre AS aula,
+        e.nombre AS edificio,
+        du.nombre_departamento AS departamento_universidad,
+        per.nombre AS periodo_academico
+    FROM Seccion s
+    JOIN Docente d ON s.docente_id = d.numero_empleado
+    JOIN Persona p ON d.persona_id = p.dni
+    JOIN Aula_Edificio a ON s.aula_id = a.id
+    JOIN Edificio e ON a.edificio_id = e.edificio_id
+    JOIN Centro_Regional cr ON e.centro_reg_id = cr.centro_regional_id
+    JOIN Periodo_Academico per ON s.periodo_acad_id = per.id
+    JOIN Clase c ON s.clase_id = c.clase_id
+    JOIN Carrera ca ON c.departamento_id = ca.departamento_id
+    JOIN Departamento_Uni du ON ca.departamento_id = du.departamento_id
+    WHERE s.clase_id = p_clase_id
+      AND CURRENT_DATE BETWEEN per.fecha_inicio AND per.fecha_fin
+    ORDER BY s.codigo_seccion, s.hora_inicio;
+END$$
+
+
+CREATE PROCEDURE InsertarEstudianteMatricula(
+    IN p_estudiante_id VARCHAR(11),
+    IN p_seccion_id INT
+)
+BEGIN
+    DECLARE v_periodo_acad_id INT;
+
+    -- Obtener el periodo académico desde la sección
+    SELECT periodo_acad_id
+    INTO v_periodo_acad_id
+    FROM Seccion
+    WHERE id = p_seccion_id;
+
+    -- Insertar en la tabla Estudiantes_Matricula
+    INSERT INTO Estudiantes_Matricula(estudiante_id, seccion_id, periodo_acad_id)
+    VALUES (p_estudiante_id, p_seccion_id, v_periodo_acad_id);
+END$$
+
+
+CREATE PROCEDURE ObtenerSeccionesActualesEstudiante(
+    IN p_estudiante_id VARCHAR(11)
+)
+BEGIN
+    SELECT 
+        s.id AS seccion_id,
+        s.codigo_seccion AS codigo_seccion,
+		CONCAT(DATE_FORMAT(s.hora_inicio, '%H:%i'),' - ',DATE_FORMAT(s.hora_fin, '%H:%i')) AS horario,
+        s.dias AS dias,
+        c.nombre_clase AS nombre_clase,
+        c.codigo AS codigo_clase,
+        CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_docente,
+        per.nombre AS periodo,
+        a.nombre AS aula,
+        e.nombre AS edificio
+    FROM Estudiantes_Matricula em
+    JOIN Seccion s ON em.seccion_id = s.id
+    JOIN Clase c ON s.clase_id = c.clase_id
+    JOIN Docente d ON s.docente_id = d.numero_empleado
+    JOIN Persona p ON d.persona_id = p.dni
+    JOIN Aula_Edificio a ON s.aula_id = a.id
+    JOIN Edificio e ON a.edificio_id = e.edificio_id
+    JOIN Periodo_Academico per ON em.periodo_acad_id = per.id
+    WHERE em.estudiante_id = p_estudiante_id
+      AND CURRENT_DATE BETWEEN per.fecha_inicio AND per.fecha_fin
+    ORDER BY s.hora_inicio;
+END$$
+
+
+
+
 
 DELIMITER ;
 

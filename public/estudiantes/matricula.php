@@ -1,4 +1,28 @@
-<div class="header">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrícula - UNAH</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/../../assets/css/principal_components.css">
+  <link rel="stylesheet" href="/../../assets/css/estudiante_style.css">
+</head>
+<body>
+  <unah-navbar></unah-navbar>
+
+  <div class="container-completo">
+    <unah-sidebar menu-items='[
+      {"label": "Perfil", "href": "perfil.php"},
+      {"label": "Matrícula", "href": "matricula.php"},
+      {"label": "Chat y Solicitudes", "href": "chat.php"},
+      {"label": "Gestión de Solicitudes", "href": "solicitudes.php"},
+      {"label": "Perfil de Docentes", "href": "perfil_docentes.php"},
+      {"label": "Certificado Académico", "href": "certificado.php"}
+    ]'></unah-sidebar>
+
+    <main class="main-content p-4">
+      <div class="header">
     <h2>Matrícula y Cancelación de Secciones</h2>
     <p class="mb-0">Realiza tu matrícula académica y gestiona tus secciones</p>
 </div>
@@ -23,35 +47,25 @@
                         <div class="row">
                             <!-- Clasificación -->
                             <div class="col-md-4 mb-4">
-                                <label class="form-label fw-bold">Clasificación de Asignatura</label>
+                                <label class="form-label fw-bold">Departamento de Asignatura</label>
                                 <select id="departamentosClases" class="form-select" size="15">
-                                    <option selected disabled>Selecciona una clasificación</option>
+                                    <option selected disabled>Selecciona un Departamento</option>
                                 </select>
                             </div>
 
                             <!-- Asignatura -->
                             <div class="col-md-4 mb-4">
                                 <label class="form-label fw-bold">Asignatura</label>
-                                <select class="form-select" size="15">
-                                    <option selected>Selecciona una asignatura</option>
-                                    <option>Matemática II</option>
-                                    <option>Física I</option>
-                                    <option>Inglés Técnico</option>
-                                    <option>Algoritmos</option>
-                                    <option>Programación I</option>
+                                <select id="clasesDepartamentos" class="form-select" size="15">
+                                    <option selected disabled>Selecciona una asignatura</option>
                                 </select>
                             </div>
 
                             <!-- Horarios -->
                             <div class="col-md-4 mb-4">
                                 <label class="form-label fw-bold">Horarios Disponibles</label>
-                                <select class="form-select" size="15">
-                                    <option selected>Selecciona un horario</option>
-                                    <option>0800 - Lunes/Miércoles 10:00-11:30</option>
-                                    <option>0801 - Martes/Jueves 8:00-9:30</option>
-                                    <option>0900 - Viernes 13:00-16:00</option>
-                                    <option>1000 - Sábado 7:00-10:00</option>
-                                    <option>1001 - Sábado 10:00-13:00</option>
+                                <select id="horarios" class="form-select" size="15">
+                                    <option selected disabled>Selecciona un horario</option>
                                 </select>
                             </div>
                         </div>
@@ -176,5 +190,10 @@
         </div> <!-- /.card -->
     </div> <!-- /.col-md-12 -->
 </div> <!-- /.row -->
-<script src="../../assets/js/Estudiantes/estudiante.js"></script>
-<script type="module" src="../../assets/js/mainEstudiantes.js"></script>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="../../assets/js/mainEstudiantes.js"></script>
+</body>
+</html>

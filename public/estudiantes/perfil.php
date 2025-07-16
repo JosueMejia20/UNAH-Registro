@@ -1,4 +1,30 @@
-<div class="profile-header">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil Estudiante - UNAH</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/../../assets/css/principal_components.css">
+  <link rel="stylesheet" href="/../../assets/css/estudiante_style.css">
+</head>
+<body>
+  <unah-navbar></unah-navbar>
+
+  <div class="container-completo">
+    <!-- Sidebar -->
+    <unah-sidebar menu-items='[
+      {"label": "Perfil", "href": "perfil.php"},
+      {"label": "Matrícula", "href": "matricula.php"},
+      {"label": "Chat y Solicitudes", "href": "chat.php"},
+      {"label": "Gestión de Solicitudes", "href": "solicitudes.php"},
+      {"label": "Perfil de Docentes", "href": "perfil_docentes.php"},
+      {"label": "Certificado Académico", "href": "certificado.php"}
+    ]'></unah-sidebar>
+
+    <!-- Contenido principal -->
+    <main class="main-content p-4">
+       <div class="profile-header">
     <div class="row align-items-center">
         <div class="col-md-2 text-center">
             <img src="" alt="Foto de perfil" class="profile-pic">
@@ -149,3 +175,10 @@
     </div>
   </div>
 </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="../../assets/js/mainEstudiantes.js"></script>
+</body>
+</html>

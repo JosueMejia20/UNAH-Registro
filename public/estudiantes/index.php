@@ -1,4 +1,5 @@
 <?php
+//ELIMINAR ESTE ARCHIVO
 $vista = $_GET['vista'] ?? 'dashboard'; // Por defecto carga dashboard
 
 $ruta = __DIR__ . '/' . $vista . '.php';
