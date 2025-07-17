@@ -23,7 +23,7 @@
           <div class="d-flex justify-content-between align-items-center mb-4">
               <h4 class="mb-0">Revisión de Solicitudes</h4>
               <div class="solicitud-counter">
-                <div class="requests-count">Solicitudes pendientes: <span id="pendingCount">4</span></div>
+                <div class="requests-count">Solicitudes pendientes: <span id="pendingCount">0</span></div>
 
               </div>
           </div>
@@ -31,7 +31,7 @@
           <!-- Tarjeta de solicitud -->
           <div class="card">
               <div class="card-header d-flex justify-content-between align-items-center">
-                  <span><i class="bi bi-file-earmark-text"></i> Solicitud #SOL-2023-001</span>
+                  <span id="numeroSolicitud"><i class="bi bi-file-earmark-text"></i></span>
                   <span class="status-badge status-pendiente">Pendiente de revisión</span>
               </div>
               <div class="card-body" id="card-body">
@@ -45,7 +45,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Nombre completo:</span>
-                              <p>Juan Carlos Pérez García</p>
+                              <p id="nombrePostulante"></p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -62,7 +62,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Identificación:</span>
-                              <p>0801-1995-12345 (Identidad)</p>
+                              <p id="identidadPostulante"></p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -79,7 +79,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Fecha de nacimiento:</span>
-                              <p>15/08/1995</p>
+                              <p id="fechaNacimientoPostulante"></p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -96,7 +96,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Género:</span>
-                              <p>Masculino</p>
+                              <p id="generoPostulante">Masculino</p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -113,7 +113,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Estado civil:</span>
-                              <p>Soltero/a</p>
+                              <p id="estadoCivilPostulante"></p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -133,7 +133,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Dirección:</span>
-                              <p>Colonia Las Lomas, Calle Principal, Casa #123, Tegucigalpa, Francisco Morazán</p>
+                              <p id="direccionPostulante"></p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -150,7 +150,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Teléfono:</span>
-                              <p>2234-5678</p>
+                              <p id="telefonoPostulante"></p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -167,7 +167,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Correo electrónico:</span>
-                              <p>juan.perez@email.com</p>
+                              <p id="correoPostulante"></p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -187,7 +187,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Instituto de Educación Media:</span>
-                              <p>Instituto Central Vicente Cáceres</p>
+                              <p id="institutoPostulante"></p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -204,7 +204,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Año de graduación:</span>
-                              <p>2012</p>
+                              <p id="anioGraduacionPostulante"></p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -221,7 +221,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Centro Regional:</span>
-                              <p>UNAH Tegucigalpa</p>
+                              <p id="centroRegionalPostulante"></p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -238,7 +238,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Carrera (1ra opción):</span>
-                              <p>Medicina y Cirugía</p>
+                              <p id="carreraPrimariaPostulante"></p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -255,7 +255,7 @@
                       <div class="field-container">
                           <div class="field-content">
                               <span class="info-label">Carrera (2da opción):</span>
-                              <p>Bioquímica y Microbiología</p>
+                              <p id="carreraSecundariaPostulante"></p>
                           </div>
                           <div class="field-validation">
                               <div class="checkbox-group">
@@ -293,8 +293,8 @@
                               </button>
                           </div>
                       </div>
-                      <div class="document-viewer">
-                          <iframe src="/path/to/document.pdf" style="width: 100%; height: 100%; border: none;"></iframe>
+                      <div class="document-viewer" style="max-width: 80%; margin: 0 auto; text-align: center; overflow: auto; border:1px solid #ccc;">
+                          <img id="documentImage" src="" style="max-width: 100%; text-align: center; height: auto; display: block;">
                       </div>
                       
                       <!-- Área de comentarios sobre el documento -->

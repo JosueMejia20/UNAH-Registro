@@ -80,6 +80,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="../../assets/js/mainAdmisiones.js"></script>
+    <script type="module" src="../../assets/js/mainRevisores.js"></script>
 </body>
 </html>

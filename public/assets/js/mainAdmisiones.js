@@ -18,12 +18,13 @@ import {
   filtrarCarreraSecundaria
 } from "/../../components/Admisiones/formulario_Controller.mjs";
 
+//MEJORAR ESTA PARTE, QUITAR TODO LO DE REVISORES DE ESTE ARCHIVO
+/*
 import {
   verDetalles,
-  responderSolicitud,
   cargarSolicitudesPaginadas,
   loginRevisor
-} from "../../components/Admisiones/revisores_controller.mjs";
+} from "../../components/Admisiones/revisores_controller.mjs";*/
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Formulario de admisiones

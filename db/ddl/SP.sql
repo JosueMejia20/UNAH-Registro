@@ -256,21 +256,24 @@ CREATE PROCEDURE getInscripcionById(
 BEGIN
 	SELECT
 		p.dni AS identidad_postulante,
+        i.numero_solicitud AS numero_solicitud,
         p.numero_telefono  AS telefono,
-        p.correo_personal,
-        p.genero,
+        p.correo_personal AS correo_personal,
+        p.genero AS genero,
         p.instituto_educ_media AS instituto_educacion_media,
-        p.anio_graduacion,
+        p.anio_graduacion AS anio_graduacion,
         pa.pais_id AS pais_estudio,
-        p.fecha_nacimiento,
-		i.inscripcion_id,
+        p.fecha_nacimiento AS fecha_nacimiento,
+		i.inscripcion_id AS inscripcion_id,
 		CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_postulante,
 		cp.nombre_carrera AS carrera_primaria,
         cs.nombre_carrera AS carrera_secundaria,
-		i.fecha_inscripcion,
+		i.fecha_inscripcion AS fecha_inscripcion,
         cr.nombre_centro AS centro_regional,
         er.nombre_estado AS estado_revision,
-        i.imagen_certificado AS documento_adjunto
+        i.imagen_certificado AS documento_adjunto,
+        ec.nombre_estado_civil AS estado_civil,
+        CONCAT(dir.descripcion, ', ',dp.nombre_departamento) AS direccion
         
 	FROM Inscripcion i
     INNER JOIN Postulante p ON i.postulante_id = p.dni
@@ -279,6 +282,9 @@ BEGIN
     INNER JOIN Carrera cp ON i.carrera_primaria = cp.carrera_id
     INNER JOIN Carrera cs ON i.carrera_secundaria = cs.carrera_id
     INNER JOIN Estado_Revision er ON i.estado_revision_id = er.estado_revision_id
+    INNER JOIN Estado_Civil ec ON p.estado_civil_id = ec.estado_civil_id
+    INNER JOIN Direccion dir ON p.direccion_id = dir.direccion_id
+    INNER JOIN Departamento_Pais dp ON dir.departamento_id = dp.departamento_id
     
     WHERE i.inscripcion_id = f_inscripcion_id;
 END $$

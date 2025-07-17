@@ -20,7 +20,7 @@ header("Content-Type: application/json");
 
 $putData = json_decode(file_get_contents("php://input"),true);
 $idInscripcion = $putData["idInscripcion"];
-$valorInscripcion = $putData["valorInscripcion"];
+$valorInscripcion = $putData["valor"];
 $justificacion = $putData["justificacion"];
 $correo = $putData["correo"];
 

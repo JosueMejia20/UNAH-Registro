@@ -34,17 +34,38 @@ const renderizarSolicitud = async () => {
 
     if (!detalle) return;
 
+    console.log(detalle);
+    console.log(solicitud);
     // Aquí puedes recorrer todos los campos del HTML y llenar con `detalle`
-    document.querySelector('.card-header span').innerHTML = `<i class="bi bi-file-earmark-text"></i> Solicitud #${detalle.codigo}`;
+    document.querySelector('#numeroSolicitud').innerHTML = `<i class="bi bi-file-earmark-text"></i> Solicitud #${detalle[0].numero_solicitud}`;
     document.querySelector('.status-badge').textContent = "Pendiente de revisión";
 
     document.querySelector('#pendingCount').textContent = solicitudes.length - indexActual;
 
     // Ejemplo de llenado dinámico
-    document.querySelector('.solicitud-info p:nth-of-type(1)').textContent = detalle.nombre_completo;
-    document.querySelector('.solicitud-info p:nth-of-type(2)').textContent = detalle.identidad;
-    document.querySelector('.solicitud-info p:nth-of-type(3)').textContent = detalle.fecha_nacimiento;
+    document.querySelector('#nombrePostulante').innerHTML = detalle[0].nombre_postulante;
+    document.querySelector('#identidadPostulante').textContent = detalle[0].identidad_postulante;
+    document.querySelector('#fechaNacimientoPostulante').textContent = detalle[0].fecha_nacimiento;
+    document.querySelector('#generoPostulante').textContent = detalle[0].genero;
+    document.querySelector('#estadoCivilPostulante').textContent = detalle[0].estado_civil;
+    document.querySelector('#direccionPostulante').textContent = detalle[0].direccion;
+    document.querySelector('#telefonoPostulante').textContent = detalle[0].telefono;
+    document.querySelector('#correoPostulante').textContent = detalle[0].correo_personal;
+    document.querySelector('#institutoPostulante').textContent = detalle[0].instituto_educacion_media;
+    document.querySelector('#anioGraduacionPostulante').textContent = detalle[0].anio_graduacion;
+    document.querySelector('#centroRegionalPostulante').textContent = detalle[0].centro_regional;
+    document.querySelector('#carreraPrimariaPostulante').textContent = detalle[0].carrera_primaria;
+    document.querySelector('#carreraSecundariaPostulante').textContent = detalle[0].carrera_secundaria;
+
+    // Documento (si hay)
+    const documentImg = document.getElementById('documentImage');
+    documentImg.src = detalle[0].documento_adjunto
+      ? `data:image/jpeg;base64,${detalle[0].documento_adjunto}`
+      : 'https://via.placeholder.com/300x400?text=Sin+Documento';
     // ... Y así sucesivamente con el resto
+
+   
+
 };
 
 const siguienteSolicitud = () => {
@@ -52,17 +73,16 @@ const siguienteSolicitud = () => {
     renderizarSolicitud();
 };
 
-const manejarAprobacion = async () => {
+const manejarAprobacion = async (inscripcion, valor, justificacion, correo) => {
     const solicitud = solicitudes[indexActual];
-    await aprobarSolicitud(solicitud.inscripcion_id);
+    await aprobarSolicitud(inscripcion, valor, justificacion, correo);
     siguienteSolicitud();
 };
 
-const manejarRechazo = async () => {
+const manejarRechazo = async (inscripcion, valor, justificacion, correo) => {
     const solicitud = solicitudes[indexActual];
-    const razon = prompt("Ingrese la razón del rechazo:");
-    if (!razon) return alert("Debe ingresar una razón.");
-    await rechazarSolicitud(solicitud.inscripcion_id, razon);
+
+    await rechazarSolicitud(inscripcion, valor, justificacion, correo);
     siguienteSolicitud();
 };
 
@@ -70,8 +90,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     solicitudes = await obtenerSolicitudesPorRevisor(idRevisor);
     renderizarSolicitud();
 
-    document.getElementById('acceptBtn').addEventListener('click', manejarAprobacion);
-    document.getElementById('rejectBtn').addEventListener('click', manejarRechazo);
+ //   document.getElementById('acceptBtn').addEventListener('click', manejarAprobacion(solicitud.inscripcion_id,1,"",detalle[0].correo_personal));
+    
+    document.getElementById('acceptBtn').addEventListener('click', async()=>{
+        const solicitud = solicitudes[indexActual];
+        const detalle = await obtenerDetalleSolicitud(solicitud.inscripcion_id);
+
+        await manejarAprobacion(solicitud.inscripcion_id,'Aprobada',"",detalle[0].correo_personal);
+    });
+    
+    document.getElementById('rejectBtn').addEventListener('click', async()=>{
+        const solicitud = solicitudes[indexActual];
+        const detalle = await obtenerDetalleSolicitud(solicitud.inscripcion_id);
+
+        const comentariosGenerales = document.getElementById("comentarios-generales").value.trim();
+        console.log(document.getElementById("comentarios-generales").value.trim());
+        const comentariosDocumento = document.getElementById("comentarios-documento").value.trim();
+
+        
+
+
+        const razon = `${comentariosGenerales}\n\n${comentariosDocumento}\n\n`;
+
+        console.log(razon);
+
+        if (!razon) return alert("Debe ingresar una razón.");
+
+        await manejarRechazo(solicitud.inscripcion_id,'Rechazada',razon,detalle[0].correo_personal);
+    });
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -115,24 +161,28 @@ document.addEventListener('DOMContentLoaded', () => {
         spinner.classList.add('d-none');
         btnText.textContent = 'Ingresar';
 
-        if (!resultado.success) {
+      /*  if (!resultado.success) {
             alert(resultado.message || 'Credenciales inválidas');
             return;
         }
+*/
+        if (resultado.success) {
+            btnLogin.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Bienvenido';
+            btnLogin.classList.add('btn-success');
+
+            setTimeout(() => {
+            alert("Acceso exitoso. Redirigiendo...");
+            window.location.href = "../../../admisiones/revisores.php";
+        }, 1000);
+      } else {
+            btnText.textContent = "Ingresar";
+            spinner.classList.add('d-none');
+            btnLogin.disabled = false;
+            alert("Credenciales incorrectas. Intente de nuevo.");
+      }
 
         // Guardar datos relevantes en localStorage
-        localStorage.setItem('usuario', resultado.usuario);
-        localStorage.setItem('tipoUsuario', resultado.tipo);
-        localStorage.setItem('idUsuario', resultado.id);
+        localStorage.setItem('idRevisor', resultado.idRevisor);
 
-        // Redireccionar según tipo de usuario
-        switch (resultado.tipo) {
-            case 'revisor':
-                localStorage.setItem('idRevisor', resultado.id);
-                window.location.href = '../revisores/index.php';
-                break;
-            default:
-                alert('Tipo de usuario no reconocido.');
-        }
     });
 });
