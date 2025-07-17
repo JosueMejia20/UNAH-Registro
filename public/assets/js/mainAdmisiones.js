@@ -70,37 +70,53 @@ document.addEventListener('DOMContentLoaded', async () => {
   const submitBtn = document.getElementById('submitBtn');
 
   if (form && submitBtn) {
-    submitBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
+  submitBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
 
-      const formData = new FormData(form);
-      const datosJSON = {};
+    const formData = new FormData(form);
+    const datosJSON = {};
 
-      const toBase64 = file => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-      });
+    const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
 
-      for (const [key, value] of formData.entries()) {
-        if (value instanceof File && value.name) {
-          datosJSON[key] = await toBase64(value);
-        } else {
-          datosJSON[key] = value;
-        }
+    for (const [key, value] of formData.entries()) {
+      if (value instanceof File && value.name) {
+        datosJSON[key] = await toBase64(value);
+      } else {
+        datosJSON[key] = value;
       }
+    }
 
-     // preview.style.display = 'block';
-     // preview.textContent = JSON.stringify(datosJSON, null, 2);
-
-      await fetch(`${BASE_URL}/post/insertPostulanteInscripcion/index.php`, {
+    try {
+      const response = await fetch(`${BASE_URL}/post/insertPostulanteInscripcion/index.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(datosJSON)
       });
-    });
-  }
+
+      console.log('Código de estado:', response.status);
+
+      const data = await response.json(); // Intenta parsear la respuesta
+
+      if (response.ok && data.success) {
+        alert('Solicitud enviada correctamente.');
+        window.location.href = '../../index.php';
+      } else {
+        alert('Error del servidor: ' + (data.error || 'Respuesta inesperada.'));
+      }
+
+    } catch (error) {
+      console.error('Error en el envío:', error);
+      alert('Ocurrió un error inesperado.');
+    }
+  });
+}
+
+
 
 
   const loginForm = document.getElementById('loginForm');

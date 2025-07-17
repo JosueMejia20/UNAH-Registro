@@ -86,16 +86,45 @@ const manejarRechazo = async (inscripcion, valor, justificacion, correo) => {
     siguienteSolicitud();
 };
 
+// Vista revisor 
 document.addEventListener('DOMContentLoaded', async () => {
     solicitudes = await obtenerSolicitudesPorRevisor(idRevisor);
     renderizarSolicitud();
+
+// Manejar los checkboxes de validación (solo uno seleccionable por campo)
+        document.querySelectorAll('.field-validation').forEach(container => {
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Desmarcar el otro checkbox del mismo grupo
+                        const groupName = this.name;
+                        checkboxes.forEach(cb => {
+                            if (cb !== this && cb.name === groupName) {
+                                cb.checked = false;
+                            }
+                        });
+                    }
+                });
+            });
+        });
 
  //   document.getElementById('acceptBtn').addEventListener('click', manejarAprobacion(solicitud.inscripcion_id,1,"",detalle[0].correo_personal));
     
     document.getElementById('acceptBtn').addEventListener('click', async()=>{
         const solicitud = solicitudes[indexActual];
         const detalle = await obtenerDetalleSolicitud(solicitud.inscripcion_id);
+// Validar que al menos todos los campos tengan una selección
+        const allValidated = Array.from(document.querySelectorAll('.field-validation')).every(container => {
+            return container.querySelector('input[type="checkbox"]:checked') !== null;
+        });
 
+        if (!allValidated) {
+            alert('Por favor, valide todos los campos antes de aprobar la solicitud.');
+            return;
+        }
+
+        alert('Solicitud aprobada correctamente.');
         await manejarAprobacion(solicitud.inscripcion_id,'Aprobada',"",detalle[0].correo_personal);
     });
     
@@ -107,19 +136,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(document.getElementById("comentarios-generales").value.trim());
         const comentariosDocumento = document.getElementById("comentarios-documento").value.trim();
 
-        
-
-
         const razon = `${comentariosGenerales}\n\n${comentariosDocumento}\n\n`;
 
         console.log(razon);
 
+        // Validar que al menos un campo esté marcado como incorrecto
+        const hasIncorrectFields = Array.from(document.querySelectorAll('.field-validation')).some(container => {
+            return container.querySelector('input[value="incorrecto"]:checked') !== null;
+        });
+        
+        if (!hasIncorrectFields) {
+            alert('Por favor, marque al menos un campo como incorrecto para rechazar la solicitud.');
+            return;
+        }
         if (!razon) return alert("Debe ingresar una razón.");
 
+        
         await manejarRechazo(solicitud.inscripcion_id,'Rechazada',razon,detalle[0].correo_personal);
     });
 });
 
+
+// Login 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     const btnLogin = form.querySelector('.btn-login');

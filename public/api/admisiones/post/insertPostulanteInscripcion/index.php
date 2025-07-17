@@ -54,3 +54,9 @@ $imagen_base64);
 
 //$carrerasByCentro = $admisiones->getCarrerasByCentro($idCentro);
 //echo json_encode($carrerasByCentro);
+
+// Respuesta OK
+echo json_encode([
+    "success" => true,
+    "message" => "Inscripción registrada correctamente."
+]);
