@@ -97,7 +97,20 @@
 
             $stmt->execute();
 
-            Utilities::enviarCorreo("Su solicitud ha sido recibida, por favor estar pendiente de su correo ya que en los próximos días se hará su revisión.\n\nAtentamente, UNAH.", $correo);
+            $stmt = $pdo->prepare("SELECT numero_solicitud FROM Inscripcion WHERE postulante_id = :dni");
+            $stmt->bindParam(':dni', $dni, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $numero_solicitud = $stmt->fetchColumn();
+
+            if ($numero_solicitud) {
+                Utilities::enviarCorreo(
+                "Su solicitud ha sido recibida, por favor estar pendiente de su correo ya que en los próximos días se hará su revisión. Solicitud número: " . $numero_solicitud,
+                $correo
+                );
+            }else {
+                echo "No se pudo obtener el número de solicitud.";
+            }
 
         } catch (PDOException $e) {
             // Manejo de error

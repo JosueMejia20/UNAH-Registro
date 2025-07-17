@@ -58,9 +58,45 @@ class Utilities
             $mail->setFrom('unahcorreos@gmail.com', 'UNAH');
             $mail->addAddress($correoPersonal);
 
-            $mail->isHTML(false);
+            $mail->isHTML(true);
             $mail->Subject = 'Solicitud de Admision UNAH';
-            $mail->Body    = $mensaje;
+
+            $mail->addEmbeddedImage(__DIR__ . '/img/UNAH-logo.png', 'UNAH-logo');
+
+            $html = '
+                    <!DOCTYPE html>
+                    <html lang="es">
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>Solicitud Aceptada</title>
+                    </head>
+                    <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 0; margin: 0;">
+                        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px 0;">
+                            <tr>
+                                <td align="center">
+                                    <table width="550" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+                                        <tr>
+                                            <td style="padding: 30px; text-align: center;">
+                                                <img src="cid:UNAH-logo" alt="UNAH" width="80" style="margin-bottom: 20px;">
+                                                <h2 style="color: #333333;">'.$mensaje.'</h2>
+                                                <p style="font-size: 12px; color: #999999; margin-top: 30px;">
+                                                    Atentamente: UNAH<br>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="background-color: #005f87; text-align: center; padding: 15px; font-size: 11px; color:rgb(255, 255, 255);">
+                                                © 2025 Universidad Nacional Autónoma de Honduras
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </body>
+                    </html>';
+
+            $mail->Body    = $html;
 
             $mail->send();
          //   echo 'Mensaje enviado correctamente';
