@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Solicitudes - UNAH</title>
+  <link rel="icon" href="https://lepidopterahonduras.wordpress.com/wp-content/uploads/2015/04/cropped-escudo-unah-22.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/../../assets/css/principal_components.css">
   <link rel="stylesheet" href="/../../assets/css/estudiante_style.css">
@@ -16,10 +17,11 @@
     <unah-sidebar menu-items='[
       {"label": "Perfil", "href": "perfil.php"},
       {"label": "Matrícula", "href": "matricula.php"},
-      {"label": "Chat y Solicitudes", "href": "chat.php"},
+      {"label": "Chat", "href": "chat.php"},
       {"label": "Gestión de Solicitudes", "href": "solicitudes.php"},
       {"label": "Perfil de Docentes", "href": "perfil_docentes.php"},
-      {"label": "Certificado Académico", "href": "certificado.php"}
+      {"label": "Certificado Académico", "href": "certificado.php"},
+      {"label": "Evaluacion Docente", "href": "evaluaciones.php"}
     ]'></unah-sidebar>
 
     <main class="main-content p-4">

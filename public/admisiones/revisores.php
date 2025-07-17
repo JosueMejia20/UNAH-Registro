@@ -6,106 +6,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revisión de Admisiones - UNAH</title>
+    <title>Panel de Revisión - Admisiones UNAH</title>
     <link rel="icon" href="https://lepidopterahonduras.wordpress.com/wp-content/uploads/2015/04/cropped-escudo-unah-22.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/../../assets/css/principal_components.css">
-    <link rel="stylesheet" href="/../../assets/css/revisores_style.css">
+  <link rel="stylesheet" href="/../../assets/css/revisores_style.css">
 </head>
 <body>
-    <pantalla-de-carga></pantalla-de-carga>
+    <unah-navbar></unah-navbar>
 
-    <header>
-        <div class="container header-content">
-            <img src="https://lepidopterahonduras.wordpress.com/wp-content/uploads/2015/04/cropped-escudo-unah-22.png" alt="Logo UNAH" class="logo">
-            <div class="user-info">
-                <span>Bienvenido, Revisor</span>
-                <div class="user-avatar">R</div>
-            </div>
-        </div>
-    </header>
+    <div class="revisor">
 
-    <div class="container">
-        <h1 class="main-title">Revisión de Solicitudes de Admisión</h1>
-        
-        <div class="requests-info">
-            <div class="requests-count">Solicitudes pendientes: <span id="pendingCount">4</span></div>
-        </div>
+      <div class="container mb-5">
+          <!-- Contador de solicitudes -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="mb-0">Revisión de Solicitudes</h4>
+              <div class="solicitud-counter">
+                <div class="requests-count">Solicitudes pendientes: <span id="pendingCount">4</span></div>
 
-        <!-- Tabla de solicitudes -->
-        <table class="requests-table">
-            <thead>
-                <tr>
-                    <th>N° Solicitud</th>
-                    <th>Nombre del Postulante</th>
-                    <th>Carrera</th>
-                    <th>Fecha</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="requestsTableBody">
-                <!-- Las solicitudes se cargarán dinámicamente con JavaScript -->
-            </tbody>
-        </table>
-
-        <!-- Paginación -->
-        <div class="pagination" id="pagination">
-            <button id="prevPage" disabled>Anterior</button>
-            <!-- Los números de página se generarán dinámicamente -->
-            <button id="nextPage">Siguiente</button>
-        </div>
+              </div>
+          </div>
+  
+          <!-- Tarjeta de solicitud -->
+          <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                  <span><i class="bi bi-file-earmark-text"></i> Solicitud #SOL-2023-001</span>
+                  <span class="status-badge status-pendiente">Pendiente de revisión</span>
+              </div>
+              <div class="card-body" id="card-body">
+                  <!-- Datos del solicitante -->
+                  <div class="solicitud-info">
+                      <h5 class="section-title"><i class="bi bi-person"></i> Datos del Solicitante</h5>
+                      
+                      <!-- Datos Personales -->
+                      <h6 class="mb-3"><i class="bi bi-person-vcard"></i> Datos Personales</h6>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Nombre completo:</span>
+                              <p>Juan Carlos Pérez García</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="nombre-correcto" name="nombre-validation" value="correcto">
+                                  <label for="nombre-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="nombre-incorrecto" name="nombre-validation" value="incorrecto">
+                                  <label for="nombre-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Identificación:</span>
+                              <p>0801-1995-12345 (Identidad)</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="identificacion-correcto" name="identificacion-validation" value="correcto">
+                                  <label for="identificacion-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="identificacion-incorrecto" name="identificacion-validation" value="incorrecto">
+                                  <label for="identificacion-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Fecha de nacimiento:</span>
+                              <p>15/08/1995</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="fecha-correcto" name="fecha-validation" value="correcto">
+                                  <label for="fecha-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="fecha-incorrecto" name="fecha-validation" value="incorrecto">
+                                  <label for="fecha-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Género:</span>
+                              <p>Masculino</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="genero-correcto" name="genero-validation" value="correcto">
+                                  <label for="genero-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="genero-incorrecto" name="genero-validation" value="incorrecto">
+                                  <label for="genero-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Estado civil:</span>
+                              <p>Soltero/a</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="estado-civil-correcto" name="estado-civil-validation" value="correcto">
+                                  <label for="estado-civil-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="estado-civil-incorrecto" name="estado-civil-validation" value="incorrecto">
+                                  <label for="estado-civil-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <!-- Información de Contacto -->
+                      <h6 class="mb-3 mt-4"><i class="bi bi-geo-alt"></i> Información de Contacto</h6>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Dirección:</span>
+                              <p>Colonia Las Lomas, Calle Principal, Casa #123, Tegucigalpa, Francisco Morazán</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="direccion-correcto" name="direccion-validation" value="correcto">
+                                  <label for="direccion-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="direccion-incorrecto" name="direccion-validation" value="incorrecto">
+                                  <label for="direccion-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Teléfono:</span>
+                              <p>2234-5678</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="telefono-correcto" name="telefono-validation" value="correcto">
+                                  <label for="telefono-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="telefono-incorrecto" name="telefono-validation" value="incorrecto">
+                                  <label for="telefono-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Correo electrónico:</span>
+                              <p>juan.perez@email.com</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="email-correcto" name="email-validation" value="correcto">
+                                  <label for="email-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="email-incorrecto" name="email-validation" value="incorrecto">
+                                  <label for="email-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <!-- Información Académica -->
+                      <h6 class="mb-3 mt-4"><i class="bi bi-book"></i> Información Académica</h6>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Instituto de Educación Media:</span>
+                              <p>Instituto Central Vicente Cáceres</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="instituto-correcto" name="instituto-validation" value="correcto">
+                                  <label for="instituto-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="instituto-incorrecto" name="instituto-validation" value="incorrecto">
+                                  <label for="instituto-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Año de graduación:</span>
+                              <p>2012</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="graduacion-correcto" name="graduacion-validation" value="correcto">
+                                  <label for="graduacion-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="graduacion-incorrecto" name="graduacion-validation" value="incorrecto">
+                                  <label for="graduacion-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Centro Regional:</span>
+                              <p>UNAH Tegucigalpa</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="centro-correcto" name="centro-validation" value="correcto">
+                                  <label for="centro-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="centro-incorrecto" name="centro-validation" value="incorrecto">
+                                  <label for="centro-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Carrera (1ra opción):</span>
+                              <p>Medicina y Cirugía</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="carrera1-correcto" name="carrera1-validation" value="correcto">
+                                  <label for="carrera1-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="carrera1-incorrecto" name="carrera1-validation" value="incorrecto">
+                                  <label for="carrera1-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <div class="field-container">
+                          <div class="field-content">
+                              <span class="info-label">Carrera (2da opción):</span>
+                              <p>Bioquímica y Microbiología</p>
+                          </div>
+                          <div class="field-validation">
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="carrera2-correcto" name="carrera2-validation" value="correcto">
+                                  <label for="carrera2-correcto">Correcto</label>
+                              </div>
+                              <div class="checkbox-group">
+                                  <input type="checkbox" id="carrera2-incorrecto" name="carrera2-validation" value="incorrecto">
+                                  <label for="carrera2-incorrecto">Incorrecto</label>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <!-- Comentarios generales -->
+                      <div class="comentarios-box">
+                          <label for="comentarios-generales" class="form-label info-label">Comentarios generales:</label>
+                          <textarea class="comentario-input" id="comentarios-generales" placeholder="Escriba aquí sus observaciones generales sobre la solicitud..."></textarea>
+                      </div>
+                  </div>
+  
+                  <!-- Documento principal -->
+                  <div class="document-section">
+                      <h5 class="section-title"><i class="bi bi-file-earmark-pdf"></i> Documento Adjunto</h5>
+                      <div class="document-info">
+                          <div class="document-title">
+                              <i class="bi bi-filetype-pdf"></i> Título de Educación Media.pdf
+                              <span class="badge bg-secondary ms-2">5.2 MB</span>
+                          </div>
+                          <div class="document-actions">
+                              <button class="btn btn-sm btn-outline-primary">
+                                  <i class="bi bi-download"></i> Descargar
+                              </button>
+                              <button class="btn btn-sm btn-outline-secondary">
+                                  <i class="bi bi-printer"></i> Imprimir
+                              </button>
+                          </div>
+                      </div>
+                      <div class="document-viewer">
+                          <iframe src="/path/to/document.pdf" style="width: 100%; height: 100%; border: none;"></iframe>
+                      </div>
+                      
+                      <!-- Área de comentarios sobre el documento -->
+                      <div class="comentarios-box">
+                          <label for="comentarios-documento" class="form-label info-label">Comentarios sobre el documento:</label>
+                          <textarea class="comentario-input" id="comentarios-documento" placeholder="Escriba aquí sus observaciones específicas sobre el documento..."></textarea>
+                      </div>
+                  </div>
+  
+                  <!-- Botones de acción -->
+                  <div class="actions-footer">
+                      <div class="d-flex gap-3">
+                          <button type="button" class="btn btn-reject" id="rejectBtn">
+                              <i class="bi bi-x-circle"></i> Rechazar Solicitud
+                          </button>
+                          <button type="button" class="btn btn-accept" id="acceptBtn">
+                              <i class="bi bi-check-circle"></i> Aprobar Solicitud
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
     </div>
 
-    <!-- Modal de detalles de solicitud -->
-    <div class="modal" id="requestModal">
-        <div class="modal-content">
-            <h3 class="modal-title">Solicitud de Admisión <span id="modalRequestId"></span></h3>
-            <div class="modal-body">
-                <div class="request-details">
-                    <div class="request-info">
-                        <div class="info-group">
-                            <label>Nombre del Postulante:</label>
-                            <p id="studentName"></p>
-                        </div>
-                        <div class="info-group">
-                            <label>Carrera:</label>
-                            <p id="studentCareer"></p>
-                        </div>
-                        <div class="info-group">
-                            <label>Fecha de Solicitud:</label>
-                            <p id="requestDate"></p>
-                        </div>
-                        <div class="info-group">
-                            <label>Estado:</label>
-                            <p id="requestStatus"></p>
-                        </div>
-                    </div>
-                    <div class="request-document">
-                        <h4>Documento Adjunto</h4>
-                        <img src="" alt="Documento de solicitud" id="documentImage">
-                    </div>
-                </div>
-                
-                <div class="rejection-reason" id="rejectionReason">
-                    <label>Razón de rechazo:</label>
-                    <textarea id="reasonText" placeholder="Describa la razón por la cual rechaza esta solicitud..."></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="closeModal()">Cerrar</button>
-                <button class="btn btn-reject" id="rejectBtn" onclick="showRejectionReason()">Rechazar</button>
-                <button class="btn btn-approve" id="approveBtn" onclick="approveRequest()">Aprobar</button>
-                <button class="btn btn-reject" id="confirmRejectBtn" onclick="rejectRequest()">Confirmar Rechazo</button>
-            </div>
-        </div>
-    </div>
     <unah-footer></unah-footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../../assets/js/mainRevisores.js"></script>
+    <script type="module" src="../../assets/js/main.js"></script>
 
-    <script type="module" src="../../assets/js/mainAdmisiones.js"></script>
-    
     <script>
         const id = localStorage.getItem('idRevisor');
         if (!id) {
@@ -113,6 +333,5 @@
             window.location.href = "../login.php";
         }
     </script>
-
 </body>
 </html>
