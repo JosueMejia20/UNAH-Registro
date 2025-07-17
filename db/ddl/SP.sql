@@ -22,6 +22,7 @@ DROP PROCEDURE IF EXISTS ObtenerClasesPorDepartamentoYEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerSeccionesPorClasePeriodoActual;
 DROP PROCEDURE IF EXISTS InsertarEstudianteMatricula;
 DROP PROCEDURE IF EXISTS ObtenerSeccionesActualesEstudiante;
+DROP PROCEDURE IF EXISTS UpdateEstudiante;
 
 DELIMITER $$
 
@@ -512,6 +513,55 @@ BEGIN
     ORDER BY s.hora_inicio;
 END$$
 
+
+CREATE PROCEDURE UpdateEstudiante(
+    IN p_estudiante_id VARCHAR(11),
+    IN p_correo_institucional VARCHAR(50),
+    IN p_telefono VARCHAR(20),
+    IN p_desc_direccion VARCHAR(250),
+    IN p_foto_perfil BLOB
+)
+BEGIN
+    DECLARE v_usuario_id INT;
+    DECLARE v_persona_id VARCHAR(25);
+    DECLARE v_direccion_id INT;
+
+    -- Obtener usuario_id de Estudiante
+    SELECT usuario_id INTO v_usuario_id
+    FROM Estudiante
+    WHERE numero_cuenta = p_estudiante_id;
+
+    -- Obtener persona_id (dni) de Usuario
+    SELECT persona_id INTO v_persona_id
+    FROM Usuario
+    WHERE usuario_id = v_usuario_id;
+
+    -- Obtener direccion_id de Persona
+    SELECT direccion_id INTO v_direccion_id
+    FROM Persona
+    WHERE dni = v_persona_id;
+
+    -- Actualizar correo_institucional en Usuario
+    UPDATE Usuario
+    SET correo_institucional = p_correo_institucional
+    WHERE usuario_id = v_usuario_id;
+
+    -- Actualizar telefono en Persona
+    UPDATE Persona
+    SET numero_telefono = p_telefono
+    WHERE dni = v_persona_id;
+
+    -- Actualizar descripcion en Direccion
+    UPDATE Direccion
+    SET descripcion = p_desc_direccion
+    WHERE direccion_id = v_direccion_id;
+
+    -- Actualizar foto_perfil en Estudiante
+    UPDATE Estudiante
+    SET foto_perfil = p_foto_perfil
+    WHERE numero_cuenta = p_estudiante_id;
+
+END $$
 
 
 
