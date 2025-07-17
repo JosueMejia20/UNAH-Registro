@@ -95,7 +95,7 @@
                                                 <th>Viernes</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="tableBodyHorarioGenerado">
                                             <tr>
                                                 <td>7:00 - 8:30</td>
                                                 <td></td>

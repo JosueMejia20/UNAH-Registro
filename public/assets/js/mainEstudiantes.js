@@ -20,7 +20,9 @@ import {
   mostrarPerfilEnVista,
   cargarFormularioEdicion,
   obtenerMateriasActuales,
-  mostrarMateriasEnTabla
+  mostrarMateriasEnTabla,
+  actualizarPerfil,
+  obtenerFotoPerfilEstudiante
 } from '../../components/Estudiantes/perfil_Controller.mjs';
 
 // -------- Controlador de MATRÍCULA --------
@@ -39,6 +41,12 @@ function obtenerMatriculaDesdeSesion() {
   return sessionStorage.getItem('matricula') || '20201003849';
 }
 
+const asignarImagenBase64 = (imgTag, base64String, mime = 'image/jpeg') => {
+      imgTag.src = base64String
+        ? `data:${mime};base64,${base64String}`
+        : 'https://via.placeholder.com/300x400?text=Sin+Documento';
+    };
+
 document.addEventListener('DOMContentLoaded', async () => {
   const ruta = window.location.pathname;
 
@@ -46,10 +54,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (ruta.includes('perfil.php')) {
     const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
     const perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
+    const fotoPerfil = await obtenerFotoPerfilEstudiante(matriculaEstudiante) || null;
+    console.log(fotoPerfil);
+    const imgTagFotoPerfil = document.getElementById("fotoDePerfil");
 
     if (perfilGlobal) {
       mostrarPerfilEnVista(perfilGlobal);
+      if(fotoPerfil != null){
+          asignarImagenBase64(imgTagFotoPerfil, fotoPerfil[0]["foto_perfil"]);
+      } else{
+        imgTagFotoPerfil.src = '';
+      }
       const materias = await obtenerMateriasActuales(matriculaEstudiante);
+     // console.log(fotoPerfil[0]["foto_perfil"]);
       mostrarMateriasEnTabla(materias);
     }
 
@@ -61,24 +78,50 @@ document.addEventListener('DOMContentLoaded', async () => {
       modal.show();
     });
 
+    const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
+
+    
+
+
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
-      const archivo = document.getElementById('foto_perfil')?.files[0];
-      if (archivo) formData.append('foto_perfil', archivo);
+      const datosJSON = {};
+
+      //Comentado porque ya se inserta la foto cuando se hace newFormData. Descongelar cuando sea necesario
+      //const archivo = document.getElementById('foto_perfil')?.files[0];
+      //if (archivo) formData.append('foto_perfil', archivo);
+
       formData.append('matricula', matriculaEstudiante);
 
+      console.log(formData);
+
+
+    for (const [key, value] of formData.entries()) {
+      if (value instanceof File && value.name) {
+        datosJSON[key] = await toBase64(value);
+      } else {
+        datosJSON[key] = value;
+      }
+    }
+
+    console.log(datosJSON);
+
       try {
-        const response = await fetch('/api/estudiantes/post/updatePerfil', {
-          method: 'POST',
-          body: formData
-        });
-        const resultado = await response.json();
-        if (resultado.success) {
+        const response = await actualizarPerfil(datosJSON);
+        //const resultado = await response.json();
+
+        if (response.success) {
           alert('Perfil actualizado correctamente');
           const nuevoPerfil = await obtenerPerfilEstudiante(matriculaEstudiante);
           mostrarPerfilEnVista(nuevoPerfil);
           bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil'))?.hide();
+          location.reload();
         } else {
           alert('Error al actualizar perfil');
         }

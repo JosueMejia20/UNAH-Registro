@@ -29,7 +29,7 @@
        <div class="profile-header">
     <div class="row align-items-center">
         <div class="col-md-2 text-center">
-            <img src="" alt="Foto de perfil" class="profile-pic">
+            <img id="fotoDePerfil" src="" alt="Foto perfil" class="profile-pic">
         </div>
         <div class="col-md-6">
             <h2 data-field="nombre_completo">Juan Carlos Pérez López</h2>
@@ -51,8 +51,12 @@
             </div>
             <div class="card-body">
                 <div class="info-item">
-                    <div class="info-label">Correo Electrónico</div>
-                    <div class="info-value" data-field="correo">juan.perez@unah.edu.hn</div>
+                    <div class="info-label">Correo Electrónico Institucional</div>
+                    <div class="info-value" data-field="correo_institucional">juan.perez@unah.edu.hn</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Correo Electrónico Personal</div>
+                    <div class="info-value" data-field="correo_personal">juan.perez@unah.edu.hn</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">Teléfono</div>
@@ -149,7 +153,7 @@
         <form id="formEditarPerfil" enctype="multipart/form-data">
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="correo" class="form-label">Correo Electrónico</label>
+              <label for="correo" class="form-label">Correo Electrónico Personal</label>
               <input type="email" class="form-control" id="correo" name="correo" required>
             </div>
             <div class="col-md-6 mb-3">

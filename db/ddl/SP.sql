@@ -23,6 +23,7 @@ DROP PROCEDURE IF EXISTS ObtenerSeccionesPorClasePeriodoActual;
 DROP PROCEDURE IF EXISTS InsertarEstudianteMatricula;
 DROP PROCEDURE IF EXISTS ObtenerSeccionesActualesEstudiante;
 DROP PROCEDURE IF EXISTS UpdateEstudiante;
+DROP PROCEDURE IF EXISTS obtenerFotoPerfilEstudiante;
 
 DELIMITER $$
 
@@ -296,6 +297,7 @@ CREATE PROCEDURE getEstudianteInfo(
 BEGIN
 	SELECT
 		CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_estudiante,
+        p.correo_personal AS correo_personal,
         c.nombre_carrera AS carrera_estudiante,
         e.numero_cuenta AS numero_cuenta,
         u.correo_institucional AS correo_institucional,
@@ -442,7 +444,7 @@ BEGIN
         s.codigo_seccion,
         DATE_FORMAT(s.hora_inicio, '%H:%i') AS hora_inicio,
         DATE_FORMAT(s.hora_fin, '%H:%i') AS hora_fin,
-        s.dias,
+        di.nombre AS dias,
         s.cupos,
         d.numero_empleado AS docente_id,
         p.nombre_completo AS nombre_docente,
@@ -460,6 +462,7 @@ BEGIN
     JOIN Clase c ON s.clase_id = c.clase_id
     JOIN Carrera ca ON c.departamento_id = ca.departamento_id
     JOIN Departamento_Uni du ON ca.departamento_id = du.departamento_id
+    JOIN Dias di ON s.dias_id = di.id
     WHERE s.clase_id = p_clase_id
       AND CURRENT_DATE BETWEEN per.fecha_inicio AND per.fecha_fin
     ORDER BY s.codigo_seccion, s.hora_inicio;
@@ -493,7 +496,7 @@ BEGIN
         s.id AS seccion_id,
         s.codigo_seccion AS codigo_seccion,
 		CONCAT(DATE_FORMAT(s.hora_inicio, '%H:%i'),' - ',DATE_FORMAT(s.hora_fin, '%H:%i')) AS horario,
-        s.dias AS dias,
+        di.nombre AS dias,
         c.nombre_clase AS nombre_clase,
         c.codigo AS codigo_clase,
         CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_docente,
@@ -508,6 +511,7 @@ BEGIN
     JOIN Aula_Edificio a ON s.aula_id = a.id
     JOIN Edificio e ON a.edificio_id = e.edificio_id
     JOIN Periodo_Academico per ON em.periodo_acad_id = per.id
+    JOIN Dias di ON s.dias_id = di.id
     WHERE em.estudiante_id = p_estudiante_id
       AND CURRENT_DATE BETWEEN per.fecha_inicio AND per.fecha_fin
     ORDER BY s.hora_inicio;
@@ -516,10 +520,10 @@ END$$
 
 CREATE PROCEDURE UpdateEstudiante(
     IN p_estudiante_id VARCHAR(11),
-    IN p_correo_institucional VARCHAR(50),
+    IN p_correo_personal VARCHAR(50),
     IN p_telefono VARCHAR(20),
     IN p_desc_direccion VARCHAR(250),
-    IN p_foto_perfil BLOB
+    IN p_foto_perfil MEDIUMBLOB
 )
 BEGIN
     DECLARE v_usuario_id INT;
@@ -542,9 +546,9 @@ BEGIN
     WHERE dni = v_persona_id;
 
     -- Actualizar correo_institucional en Usuario
-    UPDATE Usuario
-    SET correo_institucional = p_correo_institucional
-    WHERE usuario_id = v_usuario_id;
+    UPDATE Persona
+    SET correo_personal = p_correo_personal
+    WHERE dni = v_persona_id;
 
     -- Actualizar telefono en Persona
     UPDATE Persona
@@ -561,6 +565,13 @@ BEGIN
     SET foto_perfil = p_foto_perfil
     WHERE numero_cuenta = p_estudiante_id;
 
+END $$
+
+CREATE PROCEDURE obtenerFotoPerfilEstudiante(
+	IN p_estudiante_id VARCHAR(11)
+)
+BEGIN
+	SELECT foto_perfil FROM Estudiante WHERE numero_cuenta = p_estudiante_id;
 END $$
 
 

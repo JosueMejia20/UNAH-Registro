@@ -381,6 +381,17 @@ INSERT INTO Clases_Carrera (clase_id, carrera_id) VALUES
 
 -- AGREGAR A Indice_Matricula y verificar que el dia este dentro de los del PeriodoMatricula
 
+-- INSERTS De Dias
+INSERT INTO Dias (nombre) VALUES
+('Lu'), ('Ma'), ('Mi'), ('Ju'), ('Vi'),
+('LuMa'), ('LuMi'), ('LuJu'), ('LuVi'),
+('MaMi'), ('MaJu'), ('MaVi'), ('MiJu'), ('MiVi'), ('JuVi'),
+('LuMaMi'), ('LuMaJu'), ('LuMaVi'), ('LuMiJu'), ('LuMiVi'), ('LuJuVi'),
+('MaMiJu'), ('MaMiVi'), ('MaJuVi'), ('MiJuVi'),
+('LuMaMiJu'), ('LuMaMiVi'), ('LuMaJuVi'), ('LuMiJuVi'), ('MaMiJuVi'),
+('LuMaMiJuVi');
+
+
 
 
 

@@ -244,7 +244,7 @@ CREATE TABLE Estudiante(
     centro_reg_id INT NOT NULL,
     anio_ingreso YEAR NOT NULL,
     estado TINYINT NOT NULL,
-    foto_perfil BLOB,
+    foto_perfil MEDIUMBLOB,
     
    /* FOREIGN KEY (personaId) REFERENCES Persona(id)
 		ON DELETE CASCADE
@@ -348,6 +348,11 @@ CREATE TABLE Aula_Edificio(
         ON UPDATE CASCADE
 );
 
+CREATE TABLE Dias(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(20) UNIQUE
+);
+
 CREATE TABLE Seccion(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     codigo_seccion VARCHAR(10) NOT NULL,
@@ -357,7 +362,7 @@ CREATE TABLE Seccion(
     docente_id INT NOT NULL,
     cupos INT NOT NULL,
     periodo_acad_id INT NOT NULL,
-    dias VARCHAR(20),
+    dias_id INT NOT NULL,
     aula_id INT NOT NULL,
     
     FOREIGN KEY (clase_id) REFERENCES Clase(clase_id)
@@ -373,6 +378,10 @@ CREATE TABLE Seccion(
         ON UPDATE CASCADE,
         
 	FOREIGN KEY (aula_id) REFERENCES Aula_Edificio(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (dias_id) REFERENCES Dias(id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE
 );

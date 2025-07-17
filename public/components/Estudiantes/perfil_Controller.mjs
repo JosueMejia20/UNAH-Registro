@@ -1,11 +1,11 @@
-const BASE_URL = '/api/estudiantes/get';
+const BASE_URL = '/api/estudiantes';
 const PERFIL_URL = `${BASE_URL}/getinfoEstudiante`;
 const ACTUALIZAR_URL = '/api/estudiantes/post/updatePerfil'; // Ajusta esto si tienes un nombre diferente
 const MATERIAS_URL = '/api/estudiantes/get/materiasActuales'; // Suponiendo este nombre, confírmame si es otro
 
 export const obtenerPerfilEstudiante = async (matricula) => {
   try {
-    const response = await fetch(`${BASE_URL}/getInfoEstudiante?matricula=${matricula}`);
+    const response = await fetch(`${BASE_URL}/get/getInfoEstudiante?matricula=${matricula}`);
     if (!response.ok) throw new Error('Error al obtener perfil del estudiante');
     return await response.json();
   } catch (error) {
@@ -20,7 +20,8 @@ export const mostrarPerfilEnVista = (datos) => {
   document.querySelector('[data-field="nombre_completo"]').textContent = datos[0].nombre_estudiante;
   document.querySelector('[data-field="carrera_resumen"]').textContent = datos[0].carrera_estudiante;
   document.querySelector('[data-field="matricula"]').textContent = datos[0].numero_cuenta;
-  document.querySelector('[data-field="correo"]').textContent = datos[0].correo_institucional;
+  document.querySelector('[data-field="correo_institucional"]').textContent = datos[0].correo_institucional;
+  document.querySelector('[data-field="correo_personal"]').textContent = datos[0].correo_personal;
   document.querySelector('[data-field="telefono"]').textContent = datos[0].telefono;
   document.querySelector('[data-field="direccion"]').textContent = datos[0].direccion;
   document.querySelector('[data-field="fecha_nacimiento"]').textContent = datos[0].fecha_nacimiento;
@@ -48,19 +49,19 @@ export const cargarFormularioEdicion = (datos) => {
   const direccionInput = document.getElementById('direccion');
   const fechaNacimientoInput = document.getElementById('fecha_nacimiento');
 
-  if (correoInput) correoInput.value = estudiante.correo_institucional || '';
+  if (correoInput) correoInput.value = estudiante.correo_personal || '';
   if (telefonoInput) telefonoInput.value = estudiante.telefono || '';
   if (direccionInput) direccionInput.value = estudiante.direccion || '';
   if (fechaNacimientoInput) fechaNacimientoInput.value = estudiante.fecha_nacimiento || '';
 };
 
 
-export const actualizarPerfil = async (formData) => {
+export const actualizarPerfil = async (datosJson) => {
   try {
-    const response = await fetch(ACTUALIZAR_URL, {
-      method: 'POST',
+    const response = await fetch(`${BASE_URL}/put/updateEstudiante`, {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(datosJson),
     });
     if (!response.ok) throw new Error('No se pudo actualizar el perfil');
     return await response.json();
@@ -72,7 +73,7 @@ export const actualizarPerfil = async (formData) => {
 
 export const obtenerMateriasActuales = async (matricula) => {
   try {
-    const response = await fetch(`${BASE_URL}/materiasActuales?matricula=${matricula}`);
+    const response = await fetch(`${BASE_URL}/get/materiasActuales?matricula=${matricula}`);
     if (!response.ok) throw new Error('Error al obtener materias');
     return await response.json();
   } catch (error) {
@@ -95,4 +96,15 @@ export const mostrarMateriasEnTabla = (materias) => {
     `;
     tbody.appendChild(fila);
   });
+};
+
+export const obtenerFotoPerfilEstudiante = async (matricula) =>{
+  try {
+    const response = await fetch(`${BASE_URL}/get/fotoPerfilEstudiante?matricula=${matricula}`);
+    if (!response.ok) throw new Error('Error al obtener foto de perfil');
+    return await response.json();
+  } catch (error) {
+    console.error('Error al cargar foto de perfil:', error);
+    return [];
+  }
 };
