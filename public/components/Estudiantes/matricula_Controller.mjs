@@ -51,24 +51,26 @@ export const matricularSeccion = async (datosMatricula) => {
 };
 
 // Obtener secciones actuales del estudiante
-export const obtenerSeccionesActuales = async () => {
+export const obtenerSeccionesActuales = async (matricula) => {
     try {
-        const response = await fetch(`${API_BASE}/secciones`);
-        if (!response.ok) throw new Error('Error al obtener secciones actuales');
+        const response = await fetch(`${API_BASE}/get/materiasActuales?matricula=${matricula}`);
+        if (!response.ok) throw new Error('Error al obtener materias');
         return await response.json();
-    } catch (error) {
-        console.error('Error:', error);
+  } catch (error) {
+        console.error('Error al cargar materias:', error);
         return [];
-    }
+  }
 };
 
 // Cancelar secciones seleccionadas
-export const cancelarSecciones = async (idsSecciones) => {
+export const cancelarSecciones = async (idsSecciones, estudiante) => {
     try {
-        const response = await fetch(`${API_BASE}/cancelar`, {
-            method: 'POST',
+        const response = await fetch(`${API_BASE}/delete/cancelarSeccion`, {
+            method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ secciones: idsSecciones })
+            body: JSON.stringify({ secciones: idsSecciones,
+                estudiante: estudiante
+             })
         });
         return await response.json();
     } catch (error) {
@@ -76,3 +78,4 @@ export const cancelarSecciones = async (idsSecciones) => {
         return { success: false, mensaje: 'Error en la cancelación' };
     }
 };
+

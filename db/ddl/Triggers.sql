@@ -3,6 +3,7 @@ USE Registro;
 DROP TRIGGER IF EXISTS trg_AfterInsertInscripcion;
 DROP TRIGGER IF EXISTS antes_insertar_usuario;
 DROP TRIGGER IF EXISTS before_insert_inscripcion;
+DROP TRIGGER IF EXISTS trg_cancelar_seccion_matriculada;
 
 -- Triggers
 
@@ -48,6 +49,15 @@ BEGIN
         SET NEW.numero_solicitud = codigo;
     END IF;
 END$$
+
+
+CREATE TRIGGER trg_cancelar_seccion_matriculada
+BEFORE DELETE ON Estudiantes_Matricula
+FOR EACH ROW
+BEGIN
+  INSERT INTO Estudiante_Seccion_Cancelada(estudiante_id, seccion_id)
+  VALUES (OLD.estudiante_id, OLD.seccion_id);
+END $$
 
 
 DELIMITER ;

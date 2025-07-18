@@ -143,6 +143,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 // FUNCIÓN - VISTA MATRÍCULA
 // ==========================
  const inicializarVistaMatricula = async () => {
+
+  const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
+
   const selectClasificacion = document.querySelector('#departamentosClases');
   console.log(selectClasificacion);
   
@@ -153,8 +156,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   console.log(selectHorario);
 
   const btnMatricular = document.querySelector("#matricula button.btn-unah");
-  const tablaHorario = document.querySelector("#matricula table tbody");
-  const tablaCancelacion = document.querySelector("#cancelacion table tbody");
+  const tablaHorario = document.querySelector("#tableBodyHorarioGenerado");
+  const tablaCancelacion = document.querySelector("#tablaCancelacion");
   const btnCancelar = document.querySelector("#cancelacion button.btn-danger");
   const checkboxSelectAll = document.querySelector("#selectAllCancel");
 
@@ -187,43 +190,97 @@ const llenarSelectHorarios = (select, items, textKeyCodigo, textKeyDias, textKey
   });
 };
 
+function separarDias(cadena) {
+  const dias = [];
+  for (let i = 0; i < cadena.length; i += 2) {
+    dias.push(cadena.substring(i, i + 2));
+  }
+  return dias;
+}
 
-  const generarHorarioEjemplo = () => {
+  const materiasActuales = await obtenerMateriasActuales(matriculaEstudiante);
+  //console.log(materiasActuales);
+  const datosHorario = [];
+
+  materiasActuales.forEach((materia)=>{
+    const diasSeparados = separarDias(materia.dias);
+
+
+    diasSeparados.forEach((dia)=>{
+      datosHorario.push({
+        dia: dia,
+        hora: materia.horario,
+        materia: materia.nombre_clase,
+        aula: `${materia.edificio}-${materia.aula}`
+      })
+    });
+  });
+
+  console.log(datosHorario);
+
+  const diasOrden = ["Lu", "Ma", "Mi", "Ju", "Vi"];
+  const generarHorarioEjemplo = (datosHorario, tablaHorario) => {
+
     if (!tablaHorario) return;
-    tablaHorario.innerHTML = `
-      <tr>
-        <td>10:00 - 11:30</td>
-        <td class="bg-light-blue">Matemática II<br>C1-205</td>
-        <td></td>
-        <td class="bg-light-blue">Matemática II<br>C1-205</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>13:00 - 14:30</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="bg-light-blue">Inglés Técnico<br>I2-302</td>
-      </tr>
-    `;
+
+    //Hacer un array del Set de datosHorario para obtener las horas unicas (propiedad del set)
+    //uso de map para simplificar la iteracion sobre datosHorario (que es un arreglo de json)
+    //datosHorario puede extenderse mucho, ya que guarda por dia y no por materia. Si dos materias
+    //son de lunes a viernes, entonces serian 10 registros (2*5)
+    const horasUnicas = [...new Set(datosHorario.map(d=>d.hora))].sort();
+
+    //Para almacenar hora > {dia>materia}
+    const horarioMap = {};
+
+    horasUnicas.forEach(hora => {
+      horarioMap[hora] = {}; //Las filas de la tabla
+
+      diasOrden.forEach(dia => {
+
+        horarioMap[hora][dia] = null; //Se inicializa con null cada celda.
+
+      });
+    });
+
+
+    datosHorario.forEach(({ dia, hora, materia, aula }) => {
+      if (horarioMap[hora]) {
+        //horarioMap["08:00 - 09:30"]["Lu"] = "Matemáticas<br>A1-103";
+        horarioMap[hora][dia] = `${materia}<br>${aula}`; //Cada celda tiene la forma materia, salto linea, aula
+      }
+    });
+
+    let stringBuilderHtml = ""
+
+    horasUnicas.forEach(hora => {
+      stringBuilderHtml += `<tr>`;
+      stringBuilderHtml += `<td>${hora}</td>`; //Primera columna, la hora
+      
+      diasOrden.forEach(dia => {
+        const contenido = horarioMap[hora][dia];
+
+        stringBuilderHtml += `<td class="${contenido ? 'bg-light-blue' : ''}">${contenido || ''}</td>`;
+      });
+      stringBuilderHtml += `</tr>`;
+    });
+
+    tablaHorario.innerHTML = stringBuilderHtml;
   };
 
   const mostrarSeccionesCancelables = async () => {
-    const secciones = await obtenerSeccionesActuales();
+    const secciones = await obtenerSeccionesActuales(idEstudiante);
     if (!tablaCancelacion) return;
 
     tablaCancelacion.innerHTML = "";
     secciones.forEach(seccion => {
       const fila = document.createElement("tr");
       fila.innerHTML = `
-        <td><input class="form-check-input" type="checkbox" value="${seccion.id}"></td>
-        <td>${seccion.codigo}</td>
-        <td>${seccion.asignatura}</td>
-        <td>${seccion.seccion}</td>
+        <td><input class="form-check-input" type="checkbox" value="${seccion.seccion_id}"></td>
+        <td>${seccion.codigo_clase}</td>
+        <td>${seccion.nombre_clase}</td>
+        <td>${seccion.codigo_seccion}</td>
         <td>${seccion.horario}</td>
-        <td>${seccion.docente}</td>
+        <td>${seccion.nombre_docente}</td>
       `;
       tablaCancelacion.appendChild(fila);
     });
@@ -273,16 +330,20 @@ const llenarSelectHorarios = (select, items, textKeyCodigo, textKeyDias, textKey
 
     if (respuesta.success) {
       alert("¡Matrícula realizada con éxito!");
-      generarHorarioEjemplo();
-      mostrarSeccionesCancelables();
+      //generarHorarioEjemplo(datosHorario, tablaHorario);
+     // mostrarSeccionesCancelables();
+     location.reload();
     } else {
       alert(respuesta.mensaje || "No se pudo realizar la matrícula.");
     }
   });
 
   btnCancelar?.addEventListener("click", async () => {
+    const estudiante = '20201003849'; //SE DEBE HACER LOGICA PARA OBTENERLO DE SESION
     const checkboxes = tablaCancelacion.querySelectorAll("input[type='checkbox']:checked");
+    console.log(checkboxes);
     const ids = Array.from(checkboxes).map(c => c.value);
+    console.log(ids);
 
     if (ids.length === 0) {
       alert("Selecciona al menos una asignatura para cancelar.");
@@ -292,7 +353,7 @@ const llenarSelectHorarios = (select, items, textKeyCodigo, textKeyDias, textKey
     const confirmacion = confirm("¿Estás seguro de cancelar las secciones seleccionadas?");
     if (!confirmacion) return;
 
-    const respuesta = await cancelarSecciones(ids);
+    const respuesta = await cancelarSecciones(ids, estudiante); //ids es un array
 
     if (respuesta.success) {
       alert("Secciones canceladas correctamente.");
@@ -308,6 +369,7 @@ const llenarSelectHorarios = (select, items, textKeyCodigo, textKeyDias, textKey
   });
 
   mostrarSeccionesCancelables();
+  generarHorarioEjemplo(datosHorario, tablaHorario);
 };
 /*
 document.addEventListener('DOMContentLoaded', () => {

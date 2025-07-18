@@ -129,4 +129,23 @@
                 return "Error en la base de datos: ".$e->getMessage();
             }
         }
+
+        public function deleteEstudianteMatricula(string $idEstudiante, int $idSeccion){
+            try {
+                $db = new DataBase();
+                $pdo = $db->connect();
+
+                $stmt = $pdo->prepare("CALL CancelarMatriculaEstudiante(:idEstudiante, :idSeccion)");
+
+                $stmt->bindParam(':idEstudiante', $idEstudiante, PDO::PARAM_STR);
+                $stmt->bindParam(':idSeccion', $idSeccion, PDO::PARAM_INT);
+
+                $resultado = $stmt->execute();
+
+                return $resultado;
+            } catch (PDOException $e) {
+                // Manejo de error
+                echo "Error al actualizar: " . $e->getMessage();
+            }
+        }
     }

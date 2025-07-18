@@ -96,38 +96,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="tableBodyHorarioGenerado">
-                                            <tr>
-                                                <td>7:00 - 8:30</td>
-                                                <td></td>
-                                                <td class="bg-light-blue">Física I<br>F1-105</td>
-                                                <td></td>
-                                                <td class="bg-light-blue">Física I<br>F1-105</td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td>8:30 - 10:00</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td>10:00 - 11:30</td>
-                                                <td class="bg-light-blue">Matemática II<br>C1-205</td>
-                                                <td></td>
-                                                <td class="bg-light-blue">Matemática II<br>C1-205</td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td>13:00 - 14:30</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="bg-light-blue">Inglés Técnico<br>I2-302</td>
-                                            </tr>
+                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -155,23 +124,8 @@
                                         <th>Docente</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><input class="form-check-input" type="checkbox"></td>
-                                        <td>MAT-201</td>
-                                        <td>Matemática II</td>
-                                        <td>0800</td>
-                                        <td>Lunes y Miércoles, 10:00-11:30</td>
-                                        <td>Juan Carlos Martínez</td>
-                                    </tr>
-                                    <tr>
-                                        <td><input class="form-check-input" type="checkbox"></td>
-                                        <td>FIS-101</td>
-                                        <td>Física I</td>
-                                        <td>1000</td>
-                                        <td>Martes y Jueves, 8:00-9:30</td>
-                                        <td>Ana Lucia Fernández</td>
-                                    </tr>
+                                <tbody id="tablaCancelacion">
+                                    
                                 </tbody>
                             </table>
                         </div>

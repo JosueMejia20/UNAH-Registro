@@ -24,6 +24,7 @@ DROP PROCEDURE IF EXISTS InsertarEstudianteMatricula;
 DROP PROCEDURE IF EXISTS ObtenerSeccionesActualesEstudiante;
 DROP PROCEDURE IF EXISTS UpdateEstudiante;
 DROP PROCEDURE IF EXISTS obtenerFotoPerfilEstudiante;
+DROP PROCEDURE IF EXISTS CancelarMatriculaEstudiante;
 
 DELIMITER $$
 
@@ -574,6 +575,15 @@ BEGIN
 	SELECT foto_perfil FROM Estudiante WHERE numero_cuenta = p_estudiante_id;
 END $$
 
+CREATE PROCEDURE CancelarMatriculaEstudiante (
+    IN p_estudiante_id VARCHAR(11),
+    IN p_seccion_id INT
+)
+BEGIN
+    DELETE FROM Estudiantes_Matricula
+    WHERE estudiante_id = p_estudiante_id
+      AND seccion_id = p_seccion_id;
+END $$
 
 
 
