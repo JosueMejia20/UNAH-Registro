@@ -586,6 +586,28 @@ CREATE TABLE Estado_Pago_Reposicion(
     nombre VARCHAR(20) NOT NULL
 );
 
+-- catalogo
+CREATE TABLE Estado_Solicitudes(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE Coordinadores_Carrera(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    docente_id INT NOT NULL,
+    carrera_id INT NOT NULL,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE,
+    activo TINYINT(1) NOT NULL,
+    
+    FOREIGN KEY (docente_id) REFERENCES Docente(docente_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (carrera_id) REFERENCES Carrera(carrera_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
 CREATE TABLE Solicitud_Pago_Reposicion(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     estudiante_id VARCHAR(11) NOT NULL,
@@ -613,7 +635,8 @@ CREATE TABLE Solicitud_Cancelacion_Excepc(
     justificacion VARCHAR(255) NOT NULL,
     archivoPDF VARCHAR(255) NOT NULL, -- ver si se guarda la ruta
     seccion_id INT NOT NULL,
-   -- coordinadorId INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
+    coordinador_id INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
+    estado_solicitud_id INT NOT NULL,
     
     FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
 		ON DELETE CASCADE
@@ -621,21 +644,25 @@ CREATE TABLE Solicitud_Cancelacion_Excepc(
     FOREIGN KEY (periodo_acad_id) REFERENCES Periodo_Academico(id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE,
-	/*
-	FOREIGN KEY (coordinadorId) REFERENCES CoordinadoresCarrera(id)
+	
+	FOREIGN KEY (coordinador_id) REFERENCES Coordinadores_Carrera(id)
 		ON DELETE CASCADE
-        ON UPDATE CASCADE,*/
+        ON UPDATE CASCADE,
 	FOREIGN KEY (seccion_id) REFERENCES Seccion(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (estado_solicitud_id) REFERENCES Estado_Solicitudes(id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
-CREATE TABLE SolicitudCambiosCarrera(
+CREATE TABLE Solicitud_Cambios_Carrera(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     estudiante_id VARCHAR(11) NOT NULL,
     carrera_nueva_id INT NOT NULL,
     observacion VARCHAR(255),
-    -- coordinador_id INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
+    coordinador_id INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
+    estado_solicitud_id INT NOT NULL,
     
     FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
 		ON DELETE CASCADE
@@ -643,11 +670,38 @@ CREATE TABLE SolicitudCambiosCarrera(
         
 	FOREIGN KEY (carrera_nueva_id) REFERENCES Carrera(carrera_id)
 		ON DELETE CASCADE
-        ON UPDATE CASCADE
-        /*
-	FOREIGN KEY (coordinadorId) REFERENCES CoordinadoresCarrera(id)
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (coordinador_id) REFERENCES Coordinadores_Carrera(id)
 		ON DELETE CASCADE
-        ON UPDATE CASCADE*/
+        ON UPDATE CASCADE,
+	FOREIGN KEY (estado_solicitud_id) REFERENCES Estado_Solicitudes(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Solicitud_Cambio_Centro(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    estudiante_id INT NOT NULL,
+    centro_nuevo_id INT NOT NULL,
+    observacion VARCHAR(255),
+    coordinador_id INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
+	estado_solicitud_id INT NOT NULL,
+
+	FOREIGN KEY (estudiante_id) REFERENCES Estudiante(estudiante_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (centro_nuevo_id) REFERENCES Centro_Regional(centro_regional_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (coordinador_id) REFERENCES Coordinadores_Carrera(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (estado_solicitud_id) REFERENCES Estado_Solicitudes(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 

@@ -47,7 +47,7 @@
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="tablaBodySolicitudes">
                                             <tr>
                                                 <td>#12345</td>
                                                 <td>Cambio de carrera</td>
@@ -106,19 +106,19 @@
                             </div>
                             <div class="card-body">
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-unah mb-2" type="button">
+                                    <button id="cambioCarreraBtn" class="btn btn-unah mb-2" type="button">
                                         <i class="fas fa-exchange-alt me-2"></i>Cambio de Carrera
                                     </button>
-                                    <button class="btn btn-unah mb-2" type="button">
+                                    <button id="cancelacionMatriculaBtn" class="btn btn-unah mb-2" type="button">
                                         <i class="fas fa-ban me-2"></i>Cancelación de Matrícula
                                     </button>
-                                    <button class="btn btn-unah mb-2" type="button">
-                                        <i class="fas fa-redo me-2"></i>Reposición de Matrícula
+                                    <button id="pagoReposicionBtn" class="btn btn-unah mb-2" type="button">
+                                        <i class="fas fa-redo me-2"></i>Pago de Reposicion
                                     </button>
-                                    <button class="btn btn-unah mb-2" type="button">
+                                    <button id="cancelacionExcepcionalBtn" class="btn btn-unah mb-2" type="button">
                                         <i class="fas fa-calendar-times me-2"></i>Cancelación de Asignatura
                                     </button>
-                                    <button class="btn btn-unah mb-2" type="button">
+                                    <button id="subirDocumentosBtn" class="btn btn-unah mb-2" type="button">
                                         <i class="fas fa-file-upload me-2"></i>Subir Documentos
                                     </button>
                                 </div>
