@@ -600,7 +600,7 @@ CREATE TABLE Coordinadores_Carrera(
     fecha_fin DATE,
     activo TINYINT(1) NOT NULL,
     
-    FOREIGN KEY (docente_id) REFERENCES Docente(docente_id)
+    FOREIGN KEY (docente_id) REFERENCES Docente(numero_empleado)
 		ON DELETE CASCADE
         ON UPDATE CASCADE,
     FOREIGN KEY (carrera_id) REFERENCES Carrera(carrera_id)
@@ -628,13 +628,15 @@ CREATE TABLE Solicitud_Pago_Reposicion(
     
 );
 
+-- Solo se hace 1 solicitud por seccion
 CREATE TABLE Solicitud_Cancelacion_Excepc(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     estudiante_id VARCHAR(11) NOT NULL,
     periodo_acad_id INT NOT NULL,
     justificacion VARCHAR(255) NOT NULL,
-    archivoPDF VARCHAR(255) NOT NULL, -- ver si se guarda la ruta
+    archivoPDF MEDIUMBLOB NOT NULL, -- ver si se guarda la ruta
     seccion_id INT NOT NULL,
+    fecha_solicitud DATETIME NOT NULL DEFAULT current_timestamp,
     coordinador_id INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
     estado_solicitud_id INT NOT NULL,
     
@@ -661,6 +663,7 @@ CREATE TABLE Solicitud_Cambios_Carrera(
     estudiante_id VARCHAR(11) NOT NULL,
     carrera_nueva_id INT NOT NULL,
     observacion VARCHAR(255),
+    fecha_solicitud DATETIME NOT NULL DEFAULT current_timestamp,
     coordinador_id INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
     estado_solicitud_id INT NOT NULL,
     
@@ -682,13 +685,14 @@ CREATE TABLE Solicitud_Cambios_Carrera(
 
 CREATE TABLE Solicitud_Cambio_Centro(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-    estudiante_id INT NOT NULL,
+    estudiante_id VARCHAR(11) NOT NULL,
     centro_nuevo_id INT NOT NULL,
     observacion VARCHAR(255),
+    fecha_solicitud DATETIME NOT NULL DEFAULT current_timestamp,
     coordinador_id INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
 	estado_solicitud_id INT NOT NULL,
 
-	FOREIGN KEY (estudiante_id) REFERENCES Estudiante(estudiante_id)
+	FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
 		ON DELETE CASCADE
         ON UPDATE CASCADE,
         

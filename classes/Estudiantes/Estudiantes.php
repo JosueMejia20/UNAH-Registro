@@ -89,25 +89,25 @@
         string $telefono, string $direccion, string $imagen_base64){
 
             try {
-            $imagen_binaria = Utilities::obtenerBinario($imagen_base64);
-            $db = new DataBase();
-            $pdo = $db->connect();
+                $imagen_binaria = Utilities::obtenerBinario($imagen_base64);
+                $db = new DataBase();
+                $pdo = $db->connect();
 
-            $stmt = $pdo->prepare("CALL UpdateEstudiante(:idEstudiante, :correo, :telefono, :direccion, :imagen)");
+                $stmt = $pdo->prepare("CALL UpdateEstudiante(:idEstudiante, :correo, :telefono, :direccion, :imagen)");
 
-            $stmt->bindParam(':idEstudiante', $idEstudiante, PDO::PARAM_STR);
-            $stmt->bindParam(':correo', $correo, PDO::PARAM_STR);
-            $stmt->bindParam(':telefono', $telefono, PDO::PARAM_STR);
-            $stmt->bindParam(':direccion', $direccion, PDO::PARAM_STR);
-            $stmt->bindParam(':imagen', $imagen_binaria, PDO::PARAM_LOB);
+                $stmt->bindParam(':idEstudiante', $idEstudiante, PDO::PARAM_STR);
+                $stmt->bindParam(':correo', $correo, PDO::PARAM_STR);
+                $stmt->bindParam(':telefono', $telefono, PDO::PARAM_STR);
+                $stmt->bindParam(':direccion', $direccion, PDO::PARAM_STR);
+                $stmt->bindParam(':imagen', $imagen_binaria, PDO::PARAM_LOB);
 
-            $resultado = $stmt->execute();
+                $resultado = $stmt->execute();
 
-            return $resultado;
-        } catch (PDOException $e) {
-            // Manejo de error
-            echo "Error al actualizar: " . $e->getMessage();
-        }
+                return $resultado;
+            } catch (PDOException $e) {
+                // Manejo de error
+                echo "Error al actualizar: " . $e->getMessage();
+            }
         }
 
         public function obtenerFotoPerfilB64(string $idEstudiante){
@@ -139,6 +139,123 @@
 
                 $stmt->bindParam(':idEstudiante', $idEstudiante, PDO::PARAM_STR);
                 $stmt->bindParam(':idSeccion', $idSeccion, PDO::PARAM_INT);
+
+                $resultado = $stmt->execute();
+
+                return $resultado;
+            } catch (PDOException $e) {
+                // Manejo de error
+                echo "Error al actualizar: " . $e->getMessage();
+            }
+        }
+
+        public function obtenerCarrerasSinActual(string $idEstudiante){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL ObtenerCarrerasCentroExcepActualEstudiante($idEstudiante)");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
+
+        public function obtenerCentrosSinActual($idEstudiante){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL ObtenerCentrosExcepActualEstudiante($idEstudiante)");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
+
+        public function insertCambioCarrera($idEstudiante, $carreraNueva, $justificacion){
+            try {
+                $db = new DataBase();
+                $pdo = $db->connect();
+
+                $stmt = $pdo->prepare("CALL InsertarSolicitudCambioCarrera(:idEstudiante, :carreraNuevaId, :justificacion)");
+
+                $stmt->bindParam(':idEstudiante', $idEstudiante, PDO::PARAM_STR);
+                $stmt->bindParam(':carreraNuevaId', $carreraNueva, PDO::PARAM_INT);
+                $stmt->bindParam(':justificacion', $justificacion, PDO::PARAM_STR);
+
+                $resultado = $stmt->execute();
+
+                return $resultado;
+            } catch (PDOException $e) {
+                // Manejo de error
+                echo "Error al actualizar: " . $e->getMessage();
+            }
+        }
+
+        public function insertCambioCentro($idEstudiante, $centroNuevo, $justificacion){
+            try {
+                $db = new DataBase();
+                $pdo = $db->connect();
+
+                $stmt = $pdo->prepare("CALL InsertarSolicitudCambioCentro(:idEstudiante, :centroNuevoId, :justificacion)");
+
+                $stmt->bindParam(':idEstudiante', $idEstudiante, PDO::PARAM_STR);
+                $stmt->bindParam(':centroNuevoId', $centroNuevo, PDO::PARAM_INT);
+                $stmt->bindParam(':justificacion', $justificacion, PDO::PARAM_STR);
+
+                $resultado = $stmt->execute();
+
+                return $resultado;
+            } catch (PDOException $e) {
+                // Manejo de error
+                echo "Error al actualizar: " . $e->getMessage();
+            }
+        }
+
+        public function insertPagoReposicion($idEstudiante, $justificacion){
+            try {
+                $db = new DataBase();
+                $pdo = $db->connect();
+
+                $stmt = $pdo->prepare("CALL InsertarSolicitudPagoReposicion(:idEstudiante, :justificacion)");
+
+                $stmt->bindParam(':idEstudiante', $idEstudiante, PDO::PARAM_STR);
+                $stmt->bindParam(':justificacion', $justificacion, PDO::PARAM_STR);
+
+                $resultado = $stmt->execute();
+
+                return $resultado;
+            } catch (PDOException $e) {
+                // Manejo de error
+                echo "Error al actualizar: " . $e->getMessage();
+            }
+        }
+
+        public function obtenerSolicitudesRecientes($idEstudiante){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL ObtenerSolicitudesEstudiante($idEstudiante)");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
+
+        public function insertCancelacionExcep($idEstudiante, $justificacion, $archivoPdf64, $idSeccion){
+            try {
+                $archivoPdfBinario = Utilities::obtenerBinario($archivoPdf64);
+                $db = new DataBase();
+                $pdo = $db->connect();
+
+                $stmt = $pdo->prepare("CALL InsertarSolicitudCancelacionExcepc(:idEstudiante, :justificacion, :archivo, :seccion)");
+
+                $stmt->bindParam(':idEstudiante', $idEstudiante, PDO::PARAM_STR);
+                $stmt->bindParam(':justificacion', $justificacion, PDO::PARAM_STR);
+                $stmt->bindParam(':archivo', $archivoPdfBinario, PDO::PARAM_LOB);
+                $stmt->bindParam(':seccion', $idSeccion, PDO::PARAM_INT);
 
                 $resultado = $stmt->execute();
 

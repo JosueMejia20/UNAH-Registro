@@ -391,6 +391,17 @@ INSERT INTO Dias (nombre) VALUES
 ('LuMaMiJu'), ('LuMaMiVi'), ('LuMaJuVi'), ('LuMiJuVi'), ('MaMiJuVi'),
 ('LuMaMiJuVi');
 
+-- INSERTS PARA ESTADOS PAGO REPOSICION
+INSERT INTO Estado_Pago_Reposicion (nombre) VALUES
+('No pagado'),
+('Pagado');
+
+-- INSERTS PARA ESTADOS DE LAS DEMAS SOLICITUDES
+INSERT INTO Estado_Solicitudes (nombre) VALUES
+('Pendiente'),
+('Aprobado'),
+('Rechazado');
+
 
 
 

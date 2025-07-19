@@ -1,7 +1,7 @@
 const BASE_URL = '/api/estudiantes';
-const PERFIL_URL = `${BASE_URL}/getinfoEstudiante`;
-const ACTUALIZAR_URL = '/api/estudiantes/post/updatePerfil'; // Ajusta esto si tienes un nombre diferente
-const MATERIAS_URL = '/api/estudiantes/get/materiasActuales'; // Suponiendo este nombre, confírmame si es otro
+const PERFIL_URL = `${BASE_URL}/getinfoEstudiante`; //Eliminar
+const ACTUALIZAR_URL = '/api/estudiantes/post/updatePerfil'; // Eliminar
+const MATERIAS_URL = '/api/estudiantes/get/materiasActuales'; // Eliminar
 
 export const obtenerPerfilEstudiante = async (matricula) => {
   try {

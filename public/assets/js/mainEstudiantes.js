@@ -358,6 +358,7 @@ function separarDias(cadena) {
     if (respuesta.success) {
       alert("Secciones canceladas correctamente.");
       mostrarSeccionesCancelables();
+      location.reload();
     } else {
       alert(respuesta.mensaje || "No se pudo cancelar.");
     }

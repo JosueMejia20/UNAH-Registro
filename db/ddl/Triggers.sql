@@ -59,5 +59,32 @@ BEGIN
   VALUES (OLD.estudiante_id, OLD.seccion_id);
 END $$
 
+/* DESCONGELAR CUANDO SEA NECESARIO
+CREATE TRIGGER before_insert_solicitud_carrera
+BEFORE INSERT ON Solicitud_Cambios_Carrera
+FOR EACH ROW
+BEGIN
+    DECLARE v_carrera_actual INT;
+    DECLARE v_coordinador_id INT;
+
+    -- Obtener la carrera actual del estudiante
+    SELECT carrera_id
+    INTO v_carrera_actual
+    FROM Estudiante
+    WHERE numero_cuenta = NEW.estudiante_id;
+
+    -- Obtener el coordinador de esa carrera
+    SELECT id
+    INTO v_coordinador_id
+    FROM Coordinadores_Carrera
+    WHERE carrera_id = v_carrera_actual
+    LIMIT 1;
+
+    -- Asignar el coordinador a la nueva fila
+    SET NEW.coordinador_id = v_coordinador_id;
+END $$
+*/
+
+
 
 DELIMITER ;

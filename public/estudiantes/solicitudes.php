@@ -48,36 +48,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="tablaBodySolicitudes">
-                                            <tr>
-                                                <td>#12345</td>
-                                                <td>Cambio de carrera</td>
-                                                <td>15/03/2023</td>
-                                                <td><span class="badge bg-warning">En revisión</span></td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
-                                                    <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-print"></i></button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>#12346</td>
-                                                <td>Reposición de matrícula</td>
-                                                <td>10/03/2023</td>
-                                                <td><span class="badge bg-info">Documentación pendiente</span></td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
-                                                    <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-print"></i></button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>#12347</td>
-                                                <td>Cancelación de asignatura</td>
-                                                <td>05/03/2023</td>
-                                                <td><span class="badge bg-success">Aprobada</span></td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
-                                                    <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-print"></i></button>
-                                                </td>
-                                            </tr>
+                                            <!-- Se cargan dinamicamente en mainSolicitudesEstudiantes.js -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -109,18 +80,17 @@
                                     <button id="cambioCarreraBtn" class="btn btn-unah mb-2" type="button">
                                         <i class="fas fa-exchange-alt me-2"></i>Cambio de Carrera
                                     </button>
-                                    <button id="cancelacionMatriculaBtn" class="btn btn-unah mb-2" type="button">
-                                        <i class="fas fa-ban me-2"></i>Cancelación de Matrícula
+                                    <button id="cambioCentroBtn" class="btn btn-unah mb-2" type="button">
+                                        <i class="fas fa-ban me-2"></i>Cambio de Centro Regional
                                     </button>
                                     <button id="pagoReposicionBtn" class="btn btn-unah mb-2" type="button">
                                         <i class="fas fa-redo me-2"></i>Pago de Reposicion
                                     </button>
                                     <button id="cancelacionExcepcionalBtn" class="btn btn-unah mb-2" type="button">
-                                        <i class="fas fa-calendar-times me-2"></i>Cancelación de Asignatura
+                                        <i class="fas fa-calendar-times me-2"></i>Cancelación Excepcional de Asignatura
                                     </button>
-                                    <button id="subirDocumentosBtn" class="btn btn-unah mb-2" type="button">
-                                        <i class="fas fa-file-upload me-2"></i>Subir Documentos
-                                    </button>
+
+
                                 </div>
                             </div>
                         </div>
@@ -147,10 +117,142 @@
                         </div>
                     </div>
                 </div>
+
+    
+    <!-- Modales para las solicitudes -->
+     <!-- Modales para cambio de carrera -->
+<div class="modal fade" id="modalCambioDeCarrera" tabindex="-1" aria-labelledby="editarPerfilLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="cambioCarreraLabel">Cambio de Carrera</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formCambioCarrera" enctype="multipart/form-data">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="carreraNueva" class="form-label">Carrera Nueva a Inscribir</label>
+              <select class="form-select" id="carreraNueva" name="carreraNueva" required>
+                <!-- Las opciones serán agregadas dinámicamente -->
+              </select>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="justificacionCambioCarrera" class="form-label">Justificación</label>
+              <textarea class="form-control" id="justificacionCambioCarrera" name="justificacionCambioCarrera" rows="4" placeholder="Escribe una justificación..." required></textarea>
+            </div>
+          </div>
+          <div class="text-end">
+            <button type="submit" class="btn btn-success">Enviar Solicitud</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modales para Cambio de Centro Regional -->
+ <div class="modal fade" id="modalCambioCentro" tabindex="-1" aria-labelledby="editarPerfilLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="cambioCentroLabel">Cambio de Centro Regional</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formCambioCentro" enctype="multipart/form-data">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="centroNuevo" class="form-label">Centro Nuevo a Inscribir</label>
+              <select class="form-select" id="centroNuevo" name="centroNuevo" required>
+                <!-- Las opciones serán agregadas dinámicamente -->
+              </select>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="justificacionCambioCentro" class="form-label">Justificación</label>
+              <textarea class="form-control" id="justificacionCambioCentro" name="justificacionCambioCentro" rows="4" placeholder="Escribe una justificación..." required></textarea>
+            </div>
+          </div>
+          <div class="text-end">
+            <button type="submit" class="btn btn-success">Enviar Solicitud</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Pago de Reposicion -->
+
+<div class="modal fade" id="modalPagoRepo" tabindex="-1" aria-labelledby="editarPerfilLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="pagoRepoLabel">Pago de Reposicion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formPagoRepo" enctype="multipart/form-data">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="observacionPagoRepo" class="form-label">Observación</label>
+              <textarea class="form-control" id="observacionPagoRepo" name="observacionPagoRepo" rows="4" placeholder="Escribe tu observación aquí..." required></textarea>
+            </div>
+          </div>
+          <div class="text-end">
+            <button type="submit" class="btn btn-success">Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modales para Cancelacion Excepcional -->
+
+<div class="modal fade" id="modalCancelacionExcep" tabindex="-1" aria-labelledby="editarPerfilLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="cambioCarreraLabel">Cancelacion Excepcional de Asignaturas</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formCancelacionExcep" enctype="multipart/form-data">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="justificacionCancelacion" class="form-label">Justificación del porque quiere cancelar la seccion</label>
+              <textarea class="form-control" id="justificacionCancelacion" name="justificacionCancelacion" rows="4" required></textarea>
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <label for="selectSeccionesCancelar" class="form-label">Seleccione la seccion para cancelar</label>
+              <select class="form-select" id="selectSeccionesCancelar" name="seccionId" required>
+                <!-- Opciones dinamicas -->
+              </select>
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <label for="archivoPDF" class="form-label">Adjuntar archivo PDF</label>
+              <input type="file" class="form-control" id="archivoPDF" name="archivoPDF" accept="application/pdf" required>
+            </div>
+          </div>
+
+          <div class="text-end">
+            <button type="submit" class="btn btn-success">Enviar Solicitud</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
     </main>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script type="module" src="../../assets/js/mainEstudiantes.js"></script>
+    <!--<script type="module" src="../../assets/js/mainEstudiantes.js"></script>-->
+    <script type="module" src="../../assets/js/mainSolicitudesEstudiantes.js"></script>
 </body>
 </html>
