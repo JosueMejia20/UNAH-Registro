@@ -32,6 +32,12 @@ DROP PROCEDURE IF EXISTS InsertarSolicitudCambioCarrera;
 DROP PROCEDURE IF EXISTS InsertarSolicitudCambioCentro;
 DROP PROCEDURE IF EXISTS InsertarSolicitudPagoReposicion;
 DROP PROCEDURE IF EXISTS InsertarSolicitudCancelacionExcepc;
+DROP PROCEDURE IF EXISTS ObtenerContactosEstudiante;
+DROP PROCEDURE IF EXISTS ObtenerMensajesEntreEstudiantes;
+DROP PROCEDURE IF EXISTS ObtenerSolicitudesContactoPorReceptor;
+DROP PROCEDURE IF EXISTS AceptarSolicitudContacto;
+DROP PROCEDURE IF EXISTS RechazarSolicitudContacto;
+DROP PROCEDURE IF EXISTS InsertarMensaje;
 
 DELIMITER $$
 
@@ -805,6 +811,117 @@ BEGIN
         SET MESSAGE_TEXT = 'No se encontró un periodo académico activo para la fecha actual.';
     END IF;
 END $$
+
+
+
+CREATE PROCEDURE ObtenerContactosEstudiante(
+    IN p_estudiante_id VARCHAR(11)
+)
+BEGIN
+    SELECT 
+        E.numero_cuenta AS contacto_id,
+        concat(P.nombre_completo, ' ', P.apellido_completo) AS nombre_completo,
+        C.fecha_contacto
+    FROM Contactos C
+    JOIN Estudiante E ON (
+        (C.estudiante_1_id = p_estudiante_id AND C.estudiante_2_id = E.numero_cuenta) OR
+        (C.estudiante_2_id = p_estudiante_id AND C.estudiante_1_id = E.numero_cuenta)
+    )
+    JOIN Usuario U ON U.usuario_id = E.usuario_id
+    JOIN Persona P ON P.dni = U.persona_id
+    ORDER BY C.fecha_contacto DESC;
+END $$
+
+
+CREATE PROCEDURE ObtenerMensajesEntreEstudiantes(
+    IN p_estudiante1_id VARCHAR(11),
+    IN p_estudiante2_id VARCHAR(11)
+)
+BEGIN
+    SELECT 
+        m.id,
+        m.emisor_id,
+        concat(emisor_p.nombre_completo, ' ', emisor_p.apellido_completo) AS nombre_emisor,
+        m.receptor_id,
+        concat(receptor_p.nombre_completo, ' ', receptor_p.apellido_completo) AS nombre_receptor,
+        m.contenido,
+        m.fecha_envio
+    FROM Mensaje m
+    INNER JOIN Estudiante emisor_e ON emisor_e.numero_cuenta = m.emisor_id
+    INNER JOIN Usuario emisor_u ON emisor_u.usuario_id = emisor_e.usuario_id
+    INNER JOIN Persona emisor_p ON emisor_p.dni = emisor_u.persona_id
+    
+    INNER JOIN Estudiante receptor_e ON receptor_e.numero_cuenta = m.receptor_id
+    INNER JOIN Usuario receptor_u ON receptor_u.usuario_id = receptor_e.usuario_id
+    INNER JOIN Persona receptor_p ON receptor_p.dni = receptor_u.persona_id
+
+    WHERE 
+        (m.emisor_id = p_estudiante1_id AND m.receptor_id = p_estudiante2_id)
+        OR
+        (m.emisor_id = p_estudiante2_id AND m.receptor_id = p_estudiante1_id)
+    ORDER BY m.fecha_envio ASC;
+END$$
+
+
+
+CREATE PROCEDURE ObtenerSolicitudesContactoPorReceptor(
+    IN p_receptor_id VARCHAR(11)
+)
+BEGIN
+    SELECT 
+        s.id AS solicitud_id,
+        s.emisor_id AS emisor_id,
+        CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_completo_emisor,
+        u.correo_institucional AS correo_institucional_emisor,
+        s.fecha_solicitud AS fecha_solicitud
+    FROM Solicitudes_Contacto s
+    INNER JOIN Estudiante e ON s.emisor_id = e.numero_cuenta
+    INNER JOIN Usuario u ON e.usuario_id = u.usuario_id
+    INNER JOIN Persona p ON u.persona_id = p.dni
+    WHERE s.receptor_id = p_receptor_id
+      AND s.estado_solicitud_id = 1;
+END$$
+
+
+
+CREATE PROCEDURE AceptarSolicitudContacto(
+    IN p_solicitud_id INT
+)
+BEGIN
+    UPDATE Solicitudes_Contacto
+    SET estado_solicitud_id = 3
+    WHERE id = p_solicitud_id;
+END$$
+
+CREATE PROCEDURE RechazarSolicitudContacto(
+    IN p_solicitud_id INT
+)
+BEGIN
+    UPDATE Solicitudes_Contacto
+    SET estado_solicitud_id = 2
+    WHERE id = p_solicitud_id;
+END$$
+
+
+
+
+CREATE PROCEDURE InsertarMensaje (
+    IN p_emisor_id VARCHAR(11),
+    IN p_receptor_id VARCHAR(11),
+    IN p_contenido VARCHAR(255)
+)
+BEGIN
+    INSERT INTO Mensaje (emisor_id, receptor_id, contenido, fecha_envio)
+    VALUES (p_emisor_id, p_receptor_id, p_contenido, NOW());
+END $$
+
+
+
+
+
+
+
+
 
 
 

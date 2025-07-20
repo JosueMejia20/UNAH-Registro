@@ -4,6 +4,7 @@ DROP TRIGGER IF EXISTS trg_AfterInsertInscripcion;
 DROP TRIGGER IF EXISTS antes_insertar_usuario;
 DROP TRIGGER IF EXISTS before_insert_inscripcion;
 DROP TRIGGER IF EXISTS trg_cancelar_seccion_matriculada;
+DROP TRIGGER IF EXISTS after_update_solicitud_contacto;
 
 -- Triggers
 
@@ -58,6 +59,19 @@ BEGIN
   INSERT INTO Estudiante_Seccion_Cancelada(estudiante_id, seccion_id)
   VALUES (OLD.estudiante_id, OLD.seccion_id);
 END $$
+
+
+
+CREATE TRIGGER after_update_solicitud_contacto
+AFTER UPDATE ON Solicitudes_Contacto
+FOR EACH ROW
+BEGIN
+  -- Solo si el nuevo estado es 3 y el anterior no lo era (para evitar reinserciones)
+  IF NEW.estado_solicitud_id = 3 AND OLD.estado_solicitud_id <> 3 THEN
+    INSERT INTO Contactos (estudiante_1_id, estudiante_2_id, fecha_contacto)
+    VALUES (NEW.emisor_id, NEW.receptor_id, NOW());
+  END IF;
+END$$
 
 /* DESCONGELAR CUANDO SEA NECESARIO
 CREATE TRIGGER before_insert_solicitud_carrera

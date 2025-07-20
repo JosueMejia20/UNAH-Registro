@@ -402,6 +402,13 @@ INSERT INTO Estado_Solicitudes (nombre) VALUES
 ('Aprobado'),
 ('Rechazado');
 
+-- INSERTS PARA ESTADOS DE LA SOLICITUD DE CONTACTO
+INSERT INTO Estado_Solicitud_Contacto (nombre) VALUES
+('Pendiente'),
+('Rechazada'),
+('Aceptada');
+
+
 
 
 

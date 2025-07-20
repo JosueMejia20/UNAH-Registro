@@ -36,6 +36,13 @@ INSERT INTO Usuario_Rol (usuario_id, rol_id) VALUES
 -- Estudiante de prueba
 INSERT INTO Estudiante (numero_cuenta, carrera_id,usuario_id,centro_reg_id,anio_ingreso,estado) VALUES (20201003849, 1,1,1,'2019',1);
 
+INSERT INTO Estudiante (numero_cuenta, carrera_id, usuario_id, centro_reg_id, anio_ingreso, estado, foto_perfil) VALUES
+(20201004567, 2, 2, 1, 2020, 1, NULL),
+(20211001234, 1, 3, 2, 2021, 1, NULL),
+(20221007890, 3, 4, 2, 2022, 1, NULL),
+(20231001122, 4, 5, 3, 2023, 1, NULL);
+
+
 -- Docente de Prueba
 INSERT INTO Docente (numero_empleado, persona_id, centro_reg_id, usuario_id, departamento_id, foto) VALUES (1002, '0801198812346', 1, 2, 1, NULL);
 
@@ -50,5 +57,52 @@ INSERT INTO Seccion (codigo_seccion, hora_inicio, hora_fin, clase_id, docente_id
 ('0801', '08:00:00', '09:30:00', 1, 1002, 30, 7, 6, 4),
 ('1001', '10:00:00', '11:30:00', 1, 1002, 30, 7, 7, 6),
 ('1201', '12:00:00', '13:30:00', 1, 1002, 25, 7, 8, 9);
+
+-- Contactos de Prueba.
+INSERT INTO Contactos (estudiante_1_id, estudiante_2_id, fecha_contacto) VALUES
+(20201003849, 20201004567, NOW()),
+(20201003849, 20211001234, NOW()),
+(20201003849, 20221007890, NOW()),
+(20201003849, 20231001122, NOW());
+
+-- Mensajes de Prueba
+-- Mensajes entre 20201003849 y 20201004567
+INSERT INTO Mensaje (emisor_id, receptor_id, contenido, fecha_envio) VALUES
+('20201003849', '20201004567', 'Hola, ¿cómo va todo?', NOW() - INTERVAL 15 MINUTE),
+('20201004567', '20201003849', 'Bien, gracias. ¿Y tú?', NOW() - INTERVAL 14 MINUTE);
+
+-- Mensajes entre 20201003849 y 20211001234
+INSERT INTO Mensaje (emisor_id, receptor_id, contenido, fecha_envio) VALUES
+('20211001234', '20201003849', '¿Has revisado la tarea?', NOW() - INTERVAL 13 MINUTE),
+('20201003849', '20211001234', 'Sí, la terminé anoche.', NOW() - INTERVAL 12 MINUTE);
+
+-- Mensajes entre 20201003849 y 20221007890
+INSERT INTO Mensaje (emisor_id, receptor_id, contenido, fecha_envio) VALUES
+('20201003849', '20221007890', '¿Nos vemos en la biblioteca?', NOW() - INTERVAL 11 MINUTE),
+('20221007890', '20201003849', 'Claro, a las 4 pm está bien.', NOW() - INTERVAL 10 MINUTE);
+
+-- Mensajes entre 20201003849 y 20231001122
+INSERT INTO Mensaje (emisor_id, receptor_id, contenido, fecha_envio) VALUES
+('20231001122', '20201003849', '¿Terminaste el proyecto?', NOW() - INTERVAL 9 MINUTE),
+('20201003849', '20231001122', 'Sí, ya lo envié.', NOW() - INTERVAL 8 MINUTE);
+
+-- SOLICITUDES DE CONTACTO
+-- Estudiante 20201004567 envía solicitud pendiente al estudiante 20201003849
+INSERT INTO Solicitudes_Contacto (emisor_id, receptor_id, estado_solicitud_id, fecha_solicitud)
+VALUES ('20201004567', '20201003849', 1, NOW());
+
+-- Estudiante 20211001234 envía solicitud aceptada al estudiante 20201003849
+INSERT INTO Solicitudes_Contacto (emisor_id, receptor_id, estado_solicitud_id, fecha_solicitud)
+VALUES ('20211001234', '20201003849', 3, NOW());
+
+-- Estudiante 20221007890 envía solicitud rechazada al estudiante 20201003849
+INSERT INTO Solicitudes_Contacto (emisor_id, receptor_id, estado_solicitud_id, fecha_solicitud)
+VALUES ('20221007890', '20201003849', 2, NOW());
+
+-- Estudiante 20231001122 envía solicitud pendiente al estudiante 20201003849
+INSERT INTO Solicitudes_Contacto (emisor_id, receptor_id, estado_solicitud_id, fecha_solicitud)
+VALUES ('20231001122', '20201003849', 1, NOW());
+
+
 
 

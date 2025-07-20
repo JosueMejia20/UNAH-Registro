@@ -265,4 +265,96 @@
                 echo "Error al actualizar: " . $e->getMessage();
             }
         }
+
+        public function obtenerContactos($idEstudiante){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL ObtenerContactosEstudiante($idEstudiante)");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
+
+        public function obtenerMensajes($idEstudiante, $contactoId){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL ObtenerMensajesEntreEstudiantes($idEstudiante, $contactoId)");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
+
+        public function obtenerSolicitudesContacto($idEstudiante){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL ObtenerSolicitudesContactoPorReceptor($idEstudiante)");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
+
+        public function aceptarSolicitudContacto($idSolicitud){
+            try {
+                $db = new DataBase();
+                $pdo = $db->connect();
+
+                $stmt = $pdo->prepare("CALL AceptarSolicitudContacto(:idSolicitud)");
+
+                $stmt->bindParam(':idSolicitud', $idSolicitud, PDO::PARAM_INT);
+
+                $resultado = $stmt->execute();
+
+                return $resultado;
+            } catch (PDOException $e) {
+                // Manejo de error
+                echo "Error al actualizar: " . $e->getMessage();
+            }
+        }
+
+        public function rechazarSolicitudContacto($idSolicitud){
+            try {
+                $db = new DataBase();
+                $pdo = $db->connect();
+
+                $stmt = $pdo->prepare("CALL RechazarSolicitudContacto(:idSolicitud)");
+
+                $stmt->bindParam(':idSolicitud', $idSolicitud, PDO::PARAM_INT);
+
+                $resultado = $stmt->execute();
+
+                return $resultado;
+            } catch (PDOException $e) {
+                // Manejo de error
+                echo "Error al actualizar: " . $e->getMessage();
+            }
+        }
+
+        public function enviarMensaje($emisor_id, $receptor_id,$mensaje){
+            try {
+                $db = new DataBase();
+                $pdo = $db->connect();
+
+                $stmt = $pdo->prepare("CALL InsertarMensaje(:emisor_id, :receptor_id, :mensaje)");
+
+                $stmt->bindParam(':emisor_id', $emisor_id, PDO::PARAM_STR);
+                $stmt->bindParam(':receptor_id', $receptor_id, PDO::PARAM_STR);
+                $stmt->bindParam(':mensaje', $mensaje, PDO::PARAM_STR);
+
+                $resultado = $stmt->execute();
+
+                return $resultado;
+            } catch (PDOException $e) {
+                // Manejo de error
+                echo "Error al actualizar: " . $e->getMessage();
+            }
+        }
     }
