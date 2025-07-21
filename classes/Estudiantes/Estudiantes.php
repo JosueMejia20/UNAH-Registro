@@ -357,4 +357,59 @@
                 echo "Error al actualizar: " . $e->getMessage();
             }
         }
+
+        public function insertSolicitudContacto($correoReceptor, $emisorId){
+            try {
+                $db = new DataBase();
+                $pdo = $db->connect();
+
+                $stmt = $pdo->prepare("CALL InsertarSolicitudContacto(:emisor_id, :correo_receptor)");
+
+                $stmt->bindParam(':emisor_id', $emisorId, PDO::PARAM_STR);
+                $stmt->bindParam(':correo_receptor', $correoReceptor, PDO::PARAM_STR);
+
+                $resultado = $stmt->execute();
+
+                return $resultado;
+            } catch (PDOException $e) {
+                // Manejo de error
+                echo "Error al actualizar: " . $e->getMessage();
+            }
+        }
+
+        public function obtenerDocentesActualesPorEstudiante($idEstudiante){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL ObtenerDocentesActualesPorEstudiante($idEstudiante)");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
+
+        public function obtenerInfoDocente($idDocente){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL ObtenerDatosDocente($idDocente)");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
+
+        public function obtenerAsignaturasActualesDocente($idDocente){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL ObtenerAsignaturasActualesDocente($idDocente)");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
     }

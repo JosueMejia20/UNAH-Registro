@@ -98,4 +98,21 @@ export const insertMensaje = async (mensaje, idEstudiante, idContacto) =>{
   }
 }
 
+export const enviarSolicitudContacto = async (datosJson) => {
+  try {
+    const response = await fetch(`${BASE_URL}/post/insertSolicitudContacto`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datosJson),
+    });
+    if (!response.ok) throw new Error('No se pudo enviar la solicitud de contacto');
+    return await response.json();
+  } catch (error) {
+    console.error('Error al enviar solicitud de contacto:', error);
+    return null;
+  }
+};
+
+
+
 

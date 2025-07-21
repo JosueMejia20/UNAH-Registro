@@ -27,8 +27,17 @@
 
     <main class="main-content p-4">
       <div class="header animate__animated animate__fadeIn">
-        <h2><i class="fas fa-comments me-2" style="color: var(--unah-blue);"></i> Chat</h2>
-        <p class="mb-0">Comunícate con tus amigos</p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h2><i class="fas fa-comments me-2" style="color: var(--unah-blue);"></i> Chat</h2>
+            <p class="mb-0">Comunícate con tus amigos</p>
+          </div>
+          <div>
+            <button id="agregarAmigoBtn" class="btn btn-primary">
+              <i class="fas fa-user-plus me-1"></i> Agregar amigo
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="row">
@@ -102,6 +111,33 @@
           </div>
         </div>
       </div>
+
+      <!-- Modal para mandar una solicitud -->
+
+      <div class="modal fade" id="modalAgregarAmigo" tabindex="-1" aria-labelledby="editarPerfilLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+              <h5 class="modal-title" id="agregarAmigoLabel">Agregar a un amigo estudiante como contacto</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <form id="formAgregarAmigo" enctype="multipart/form-data">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="estudiante" class="form-label">Correo institucional de tu nuevo contacto</label>
+                    <input type="text" class="form-control" id="estudianteAmigoId" name="correo_receptor" required>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <button type="submit" class="btn btn-success">Enviar Solicitud de Contacto</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 

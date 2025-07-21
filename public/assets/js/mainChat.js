@@ -21,7 +21,8 @@ import {
     cargarSolicitudesContacto,
     aceptarSolicitudContacto,
     rechazarSolicitudContacto,
-    insertMensaje
+    insertMensaje,
+    enviarSolicitudContacto
 } from '../../components/Estudiantes/chat_Controller.mjs';
 
 // INICIALIZACION DE VARIABLES Y FUNCIONES
@@ -32,6 +33,44 @@ function obtenerMatriculaDesdeSesion() {
 }
 const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
 let contactoSeleccionadoId = null;
+
+
+    const btnAgregarAmigo = document.getElementById('agregarAmigoBtn');
+    const formAgregarAmigo = document.getElementById('formAgregarAmigo');
+    btnAgregarAmigo?.addEventListener('click', () => {
+      const modal = new bootstrap.Modal(document.getElementById('modalAgregarAmigo'));
+      modal.show();
+    });
+
+    formAgregarAmigo?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(formAgregarAmigo);
+      const datosJSON = {};
+
+      formData.append('emisor_id', matriculaEstudiante);
+    
+      for (const [key, value] of formData.entries()) {
+          datosJSON[key] = value;
+      }
+    
+        console.log(datosJSON);
+    
+      try {
+        const response = await enviarSolicitudContacto(datosJSON);
+        //const resultado = await response.json();
+    
+        if (response.success) {
+          alert('Solicitud enviada correctamente');
+          bootstrap.Modal.getInstance(document.getElementById('modalAgregarAmigo'))?.hide();
+          location.reload();
+        } else {
+          alert('Error al enviar solicitud');
+        }
+      } catch (error) {
+        alert('Error de conexión al enviar solicitud.');
+      }
+    });
+
 
 
 const mostrarContactos = async (idEstudiante,listaContactos) => {

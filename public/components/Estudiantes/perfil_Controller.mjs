@@ -90,7 +90,7 @@ export const mostrarMateriasEnTabla = (materias) => {
     fila.innerHTML = `
       <td>${materia.codigo_clase}</td>
       <td>${materia.nombre_clase}</td>
-      <td>${materia.codigo_clase}</td>
+      <td>${materia.codigo_seccion}</td>
       <td>${materia.horario}</td>
       <td>${materia.nombre_docente}</td>
     `;

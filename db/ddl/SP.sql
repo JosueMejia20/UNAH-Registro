@@ -38,6 +38,10 @@ DROP PROCEDURE IF EXISTS ObtenerSolicitudesContactoPorReceptor;
 DROP PROCEDURE IF EXISTS AceptarSolicitudContacto;
 DROP PROCEDURE IF EXISTS RechazarSolicitudContacto;
 DROP PROCEDURE IF EXISTS InsertarMensaje;
+DROP PROCEDURE IF EXISTS InsertarSolicitudContacto;
+DROP PROCEDURE IF EXISTS ObtenerDocentesActualesPorEstudiante;
+DROP PROCEDURE IF EXISTS ObtenerDatosDocente;
+DROP PROCEDURE IF EXISTS ObtenerAsignaturasActualesDocente;
 
 DELIMITER $$
 
@@ -914,6 +918,115 @@ BEGIN
     INSERT INTO Mensaje (emisor_id, receptor_id, contenido, fecha_envio)
     VALUES (p_emisor_id, p_receptor_id, p_contenido, NOW());
 END $$
+
+
+
+CREATE PROCEDURE InsertarSolicitudContacto(
+    IN p_emisor_id VARCHAR(11),
+    IN p_correo_institucional VARCHAR(50)
+)
+BEGIN
+    DECLARE v_usuario_id INT;
+    DECLARE v_receptor_id VARCHAR(11);
+
+    -- 1. Obtener usuario_id a partir del correo institucional
+    SELECT usuario_id INTO v_usuario_id
+    FROM Usuario
+    WHERE correo_institucional = p_correo_institucional
+    LIMIT 1;
+
+    -- 2. Obtener numero_cuenta del estudiante receptor
+    SELECT numero_cuenta INTO v_receptor_id
+    FROM Estudiante
+    WHERE usuario_id = v_usuario_id
+    LIMIT 1;
+
+    -- 3. Insertar solicitud de contacto
+    INSERT INTO Solicitudes_Contacto (
+        emisor_id,
+        receptor_id,
+        estado_solicitud_id,
+        fecha_solicitud
+    )
+    VALUES (
+        p_emisor_id,
+        v_receptor_id,
+        1,
+        NOW()
+    );
+END $$
+
+
+
+CREATE PROCEDURE ObtenerDocentesActualesPorEstudiante (
+    IN p_numero_cuenta VARCHAR(11)
+)
+BEGIN
+    -- Declaramos una variable para la fecha actual
+    DECLARE v_fecha_actual DATE;
+    SET v_fecha_actual = CURDATE();
+
+    SELECT 
+        c.nombre_clase AS nombre_clase,
+        s.id AS seccion_id,
+        s.codigo_seccion AS codigo_seccion,
+        d.numero_empleado AS numero_empleado_docente,
+        concat(p.nombre_completo, ' ' ,p.apellido_completo) AS docente_nombre_completo,
+        u.correo_institucional AS correo_institucional_docente
+    FROM Estudiantes_Matricula em
+    INNER JOIN Periodo_Academico pa ON em.periodo_acad_id = pa.id
+    INNER JOIN Seccion s ON em.seccion_id = s.id
+    INNER JOIN Clase c ON s.clase_id = c.clase_id
+    INNER JOIN Docente d ON s.docente_id = d.numero_empleado
+    INNER JOIN Persona p ON d.persona_id = p.dni
+    INNER JOIN Usuario u ON d.usuario_id = u.usuario_id
+    WHERE em.estudiante_id = p_numero_cuenta
+      AND v_fecha_actual BETWEEN pa.fecha_inicio AND pa.fecha_fin;
+END $$
+
+
+CREATE PROCEDURE ObtenerDatosDocente (
+    IN p_numero_empleado INT
+)
+BEGIN
+    SELECT 
+        CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_completo,
+        du.nombre_departamento,
+        u.correo_institucional,
+        p.numero_telefono
+    FROM Docente d
+    INNER JOIN Persona p ON d.persona_id = p.dni
+    INNER JOIN Usuario u ON d.usuario_id = u.usuario_id
+    INNER JOIN Departamento_Uni du ON d.departamento_id = du.departamento_id
+    WHERE d.numero_empleado = p_numero_empleado;
+END $$
+
+
+
+
+CREATE PROCEDURE ObtenerAsignaturasActualesDocente (
+    IN p_docente_id INT
+)
+BEGIN
+    DECLARE fecha_actual DATE;
+    SET fecha_actual = CURDATE();
+
+    SELECT 
+        c.codigo AS codigo_clase,
+        c.nombre_clase AS nombre_clase,
+        CONCAT(d.nombre, ', ', TIME_FORMAT(s.hora_inicio, '%H:%i'), '-', TIME_FORMAT(s.hora_fin, '%H:%i')) AS horario,
+        CONCAT(e.nombre, '-', a.nombre) AS aula
+    FROM Seccion s
+    INNER JOIN Clase c ON s.clase_id = c.clase_id
+    INNER JOIN Aula_Edificio a ON s.aula_id = a.id
+    INNER JOIN Edificio e ON a.edificio_id = e.edificio_id
+    INNER JOIN Periodo_Academico pa ON s.periodo_acad_id = pa.id
+    INNER JOIN Dias d ON s.dias_id = d.id
+    WHERE s.docente_id = p_docente_id
+      AND fecha_actual BETWEEN pa.fecha_inicio AND pa.fecha_fin;
+END $$
+
+
 
 
 
