@@ -149,7 +149,7 @@ class Utilities
         return true;
     }
 
-    public function pruebaCSV () {
+    public function csvGenerarInscripcionesAceptadas() {
         try {
             $db = new DataBase();
             $pdo = $db->connect();
@@ -157,18 +157,14 @@ class Utilities
             //consulta sql retorna dnis sus tipos de examen y su nota minima
             $sql = "SELECT 
                         p.dni,
-                        ite.tipo_examen_id,
-                        te.nota_minima
-                    FROM 
-                        Postulante p
-                    JOIN 
-                        Inscripcion i ON p.dni = i.postulante_id
-                    JOIN 
-                        Inscripciones_Tipo_Examen ite ON i.inscripcion_id = ite.inscripcion_id
-                    JOIN 
-                        Tipo_Examen te ON ite.tipo_examen_id = te.tipo_examen_id
-                    ORDER BY 
-                        p.dni, ite.tipo_examen_id;";
+                        te.tipo_examen_id,
+                        te.nota_maxima
+                    FROM Postulante p
+                    JOIN Inscripcion i ON p.dni = i.postulante_id
+                    JOIN Inscripciones_Tipo_Examen ite ON i.inscripcion_id = ite.inscripcion_id
+                    JOIN Tipo_Examen te ON ite.tipo_examen_id = te.tipo_examen_id
+                    WHERE i.estado_revision_id = 2";
+
 
             $stmt = $pdo->query($sql);
             $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -179,8 +175,8 @@ class Utilities
             foreach ($filas as $fila) {
                 $dni = $fila['dni'];
                 $tipoExamen = $fila['tipo_examen_id'];
-                $notaMinima = $fila['nota_minima'];
-                $resultado = rand(0, $notaMinima); // valor aleatorio entre 0 y nota minima (solo es una prueba)
+                $notaMaxima = $fila['nota_maxima'];
+                $resultado = rand(400, $notaMaxima); // valor aleatorio entre 0 y nota maxima (solo es una prueba)
 
                 $contenido[] = "$dni,$tipoExamen,$resultado";
             }
@@ -197,6 +193,45 @@ class Utilities
             }
         }catch (PDOException $e) {
             return "Error en la base de datos: ".$e->getMessage();
+        }
+    }
+
+    public static function insertarResultados() {
+        $db = new DataBase();
+        $pdo = $db->connect();
+        $archivoCSV = fopen("../temp/postulantes_resultados.csv", "r");
+
+        if ($archivoCSV !== false) {
+            // Omitir encabezado
+            fgetcsv($archivoCSV);
+
+            while (($datos = fgetcsv($archivoCSV)) !== false) {
+                $dni = trim($datos[0]);
+                $tipoExamen = trim($datos[1]);
+                $resultado = trim($datos[2]);
+
+                // Validación básica
+                if ($dni && $tipoExamen && is_numeric($resultado)) {
+                    // Verificar si ya existe
+                    $stmtCheck = $pdo->prepare("SELECT id FROM Resultados WHERE dni = ? AND tipo_examen_id = ?");
+                    $stmtCheck->execute([$dni, $tipoExamen]);
+
+                    if ($stmtCheck->rowCount() > 0) {
+                        // Ya existe, hacer UPDATE
+                        $stmtUpdate = $pdo->prepare("UPDATE Resultados SET resultado = ? WHERE dni = ? AND tipo_examen_id = ?");
+                        $stmtUpdate->execute([$resultado, $dni, $tipoExamen]);
+                    } else {
+                        // No existe, hacer INSERT
+                        $stmtInsert = $pdo->prepare("INSERT INTO Resultados (dni, tipo_examen_id, resultado) VALUES (?, ?, ?)");
+                        $stmtInsert->execute([$dni, $tipoExamen, $resultado]);
+                    }
+                }
+            }
+
+            fclose($archivoCSV);
+            echo "Registros insertados o actualizados correctamente.";
+        } else {
+            echo "No se pudo abrir el archivo CSV.";
         }
     }
 }
