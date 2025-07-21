@@ -720,28 +720,8 @@ CREATE TABLE Recursos(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(130) NOT NULL,
     archivo_pdf MEDIUMBLOB,
+    autor VARCHAR(180) NOT NULL,
     anio YEAR
-);
-
-CREATE TABLE Autores(
-	id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL,
-    apellido VARCHAR(50) NOT NULL
-);
-
--- tabla intermedia
-CREATE TABLE Recursos_Autores(
-	id INT AUTO_INCREMENT PRIMARY KEY,
-    recurso_id INT NOT NULL,
-    autor_id INT NOT NULL,
-    
-    FOREIGN KEY (recurso_id) REFERENCES Recursos(id)
-		ON DELETE CASCADE
-        ON UPDATE CASCADE,
-        
-	FOREIGN KEY (autor_id) REFERENCES Autores(id)
-		ON DELETE CASCADE
-        ON UPDATE CASCADE
 );
 
 -- tabla intermedia
