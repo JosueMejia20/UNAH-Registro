@@ -5,6 +5,9 @@ DROP TRIGGER IF EXISTS antes_insertar_usuario;
 DROP TRIGGER IF EXISTS before_insert_inscripcion;
 DROP TRIGGER IF EXISTS trg_cancelar_seccion_matriculada;
 DROP TRIGGER IF EXISTS after_update_solicitud_contacto;
+DROP TRIGGER IF EXISTS UsuarioRoles_InsertEstudiante;
+DROP TRIGGER IF EXISTS UsuarioRoles_InsertDocente;
+
 
 -- Triggers
 
@@ -72,6 +75,27 @@ BEGIN
     VALUES (NEW.emisor_id, NEW.receptor_id, NOW());
   END IF;
 END$$
+
+
+CREATE TRIGGER UsuarioRoles_InsertEstudiante
+AFTER INSERT ON Estudiante
+FOR EACH ROW
+BEGIN
+    INSERT INTO Usuario_Rol (usuario_id, rol_id)
+    VALUES (NEW.usuario_id, 2);
+END $$
+
+
+CREATE TRIGGER UsuarioRoles_InsertDocente
+AFTER INSERT ON Docente
+FOR EACH ROW
+BEGIN
+    INSERT INTO Usuario_Rol (usuario_id, rol_id)
+    VALUES (NEW.usuario_id, 3);
+END $$
+
+
+
 
 /* DESCONGELAR CUANDO SEA NECESARIO
 CREATE TRIGGER before_insert_solicitud_carrera

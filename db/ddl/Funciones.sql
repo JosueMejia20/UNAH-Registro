@@ -4,6 +4,8 @@ DROP FUNCTION IF EXISTS autenticarUsuario;
 DROP FUNCTION IF EXISTS isRevisor;
 DROP FUNCTION IF EXISTS obtener_examenes_postulante;
 DROP FUNCTION IF EXISTS obtener_dni_de_inscripcion;
+DROP FUNCTION IF EXISTS isEstudiante;
+DROP FUNCTION IF EXISTS isDocente;
 
 DELIMITER $$
 
@@ -45,6 +47,36 @@ BEGIN
     RETURN IF(v_existe > 0, 1, 0);
 END$$
 
+CREATE FUNCTION isEstudiante(p_usuario_id INT)
+RETURNS TINYINT
+NOT DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE v_existe INT;
+
+    SELECT COUNT(*)
+    INTO v_existe
+    FROM Usuario_Rol
+    WHERE usuario_id = p_usuario_id AND rol_id = 2;
+
+    RETURN IF(v_existe > 0, 1, 0);
+END$$
+
+CREATE FUNCTION isDocente(p_usuario_id INT)
+RETURNS TINYINT
+NOT DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE v_existe INT;
+
+    SELECT COUNT(*)
+    INTO v_existe
+    FROM Usuario_Rol
+    WHERE usuario_id = p_usuario_id AND rol_id = 3;
+
+    RETURN IF(v_existe > 0, 1, 0);
+END$$
+
 
 CREATE FUNCTION obtener_examenes_postulante(p_dni VARCHAR(25))
 RETURNS VARCHAR(1000)
@@ -80,5 +112,7 @@ BEGIN
 
     RETURN dni;
 END$$
+
+
 
 DELIMITER ;

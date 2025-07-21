@@ -708,6 +708,71 @@ CREATE TABLE Solicitud_Cambio_Centro(
         ON UPDATE CASCADE
 );
 
+/*
+*	 MODULO DE BIBLIOTECA
+*/
+CREATE TABLE Tags(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(60)
+);
+
+CREATE TABLE Recursos(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(130) NOT NULL,
+    archivo_pdf MEDIUMBLOB,
+    anio YEAR
+);
+
+CREATE TABLE Autores(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    apellido VARCHAR(50) NOT NULL
+);
+
+-- tabla intermedia
+CREATE TABLE Recursos_Autores(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    recurso_id INT NOT NULL,
+    autor_id INT NOT NULL,
+    
+    FOREIGN KEY (recurso_id) REFERENCES Recursos(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (autor_id) REFERENCES Autores(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- tabla intermedia
+CREATE TABLE Recursos_Tags(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    recurso_id INT NOT NULL,
+    tags_id INT NOT NULL,
+    
+    FOREIGN KEY (recurso_id) REFERENCES Recursos(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+        
+	FOREIGN KEY (tags_id) REFERENCES Tags(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- tabla intermedia
+CREATE TABLE Recursos_Clase(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    recurso_id INT NOT NULL,
+    clase_id INT NOT NULL,
+    
+    FOREIGN KEY (recurso_id) REFERENCES Recursos(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	
+    FOREIGN KEY (clase_id) REFERENCES Clase(clase_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
 
 
 
