@@ -1,9 +1,5 @@
 <?php
 
-use PDO;
-use PDOException;
-use Exception;
-
 class DataBase {
     private $host;
     private $user;
