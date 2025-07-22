@@ -3,7 +3,7 @@ const API_BASE = '/api/estudiantes';
 // Obtener asignaturas según clasificación
 export const obtenerDepartamentosPorClases = async (estudiante) => {
     try {
-        const response = await fetch(`${API_BASE}/get/getDeptPorClaseCarrera?estudiante=${estudiante}`);
+        const response = await fetch(`${API_BASE}/get/getDeptPorClaseCarrera/index.php?estudiante=${estudiante}`);
         if (!response.ok) throw new Error('Error al obtener asignaturas');
         return await response.json();
     } catch (error) {
@@ -14,7 +14,7 @@ export const obtenerDepartamentosPorClases = async (estudiante) => {
 
 export const obtenerAsignaturasPorDepartamento = async (estudiante,departamento) => {
     try {
-        const response = await fetch(`${API_BASE}/get/getClasePorDeptEstudiante?estudiante=${estudiante}&departamento=${departamento}`);
+        const response = await fetch(`${API_BASE}/get/getClasePorDeptEstudiante/index.php?estudiante=${estudiante}&departamento=${departamento}`);
         if (!response.ok) throw new Error('Error al obtener asignaturas');
         return await response.json();
     } catch (error) {
@@ -26,7 +26,7 @@ export const obtenerAsignaturasPorDepartamento = async (estudiante,departamento)
 // Obtener horarios por asignatura
 export const obtenerHorariosPorAsignatura = async (asignaturaId) => {
     try {
-        const response = await fetch(`${API_BASE}/get/getSeccionPeriodoActualPorClase?asignatura=${asignaturaId}`);
+        const response = await fetch(`${API_BASE}/get/getSeccionPeriodoActualPorClase/index.php?asignatura=${asignaturaId}`);
         if (!response.ok) throw new Error('Error al obtener horarios');
         return await response.json();
     } catch (error) {
@@ -38,7 +38,7 @@ export const obtenerHorariosPorAsignatura = async (asignaturaId) => {
 // Matricular estudiante
 export const matricularSeccion = async (datosMatricula) => {
     try {
-        const response = await fetch(`${API_BASE}/post/matricularSeccion`, {
+        const response = await fetch(`${API_BASE}/post/matricularSeccion/index.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datosMatricula)
@@ -53,7 +53,7 @@ export const matricularSeccion = async (datosMatricula) => {
 // Obtener secciones actuales del estudiante
 export const obtenerSeccionesActuales = async (matricula) => {
     try {
-        const response = await fetch(`${API_BASE}/get/materiasActuales?matricula=${matricula}`);
+        const response = await fetch(`${API_BASE}/get/materiasActuales/index.php?matricula=${matricula}`);
         if (!response.ok) throw new Error('Error al obtener materias');
         return await response.json();
   } catch (error) {
@@ -65,7 +65,7 @@ export const obtenerSeccionesActuales = async (matricula) => {
 // Cancelar secciones seleccionadas
 export const cancelarSecciones = async (idsSecciones, estudiante) => {
     try {
-        const response = await fetch(`${API_BASE}/delete/cancelarSeccion`, {
+        const response = await fetch(`${API_BASE}/delete/cancelarSeccion/index.php`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ secciones: idsSecciones,

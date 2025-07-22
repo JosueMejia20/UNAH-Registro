@@ -29,7 +29,7 @@ export const cargarSolicitudes = async (matricula) => {
  */
 export const cargarCarreraSinActual = async (matricula, selectCarrera) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/carrerasSinActual?matricula=${matricula}`);
+    const response = await fetch(`${BASE_URL}/get/carrerasSinActual/index.php?matricula=${matricula}`);
     const data = await response.json();
 
     limpiarOpciones(selectCarrera);
@@ -47,7 +47,7 @@ export const cargarCarreraSinActual = async (matricula, selectCarrera) => {
 
 export const guardarSolicitudCambioCarrera = async (datosJson) => {
   try {
-    const response = await fetch(`${BASE_URL}/post/insertCambioCarrera`, {
+    const response = await fetch(`${BASE_URL}/post/insertCambioCarrera/index.php`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datosJson),
@@ -65,7 +65,7 @@ export const guardarSolicitudCambioCarrera = async (datosJson) => {
  */
 export const cargarCentroRegionalSinActual = async (matricula, selectCentros) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/centrosSinActual?matricula=${matricula}`);
+    const response = await fetch(`${BASE_URL}/get/centrosSinActual/index.php?matricula=${matricula}`);
     const data = await response.json();
 
     limpiarOpciones(selectCentros);
@@ -83,7 +83,7 @@ export const cargarCentroRegionalSinActual = async (matricula, selectCentros) =>
 
 export const guardarSolicitudCambioCentro = async (datosJson) => {
   try {
-    const response = await fetch(`${BASE_URL}/post/insertCambioCentro`, {
+    const response = await fetch(`${BASE_URL}/post/insertCambioCentro/index.php`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datosJson),
@@ -101,7 +101,7 @@ export const guardarSolicitudCambioCentro = async (datosJson) => {
  */
 export const guardarSolicitudPagoRepo = async (datosJson) => {
   try {
-    const response = await fetch(`${BASE_URL}/post/insertPagoReposicion`, {
+    const response = await fetch(`${BASE_URL}/post/insertPagoReposicion/index.php`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datosJson),
@@ -134,7 +134,7 @@ export const cargarSeccionesCancelacion = async (datosSecciones, selectSecciones
 
 export const guardarSolicitudCancelacion = async (datosJson) => {
   try {
-    const response = await fetch(`${BASE_URL}/post/insertCancelacionExcepcional`, {
+    const response = await fetch(`${BASE_URL}/post/insertCancelacionExcepcional/index.php`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datosJson),

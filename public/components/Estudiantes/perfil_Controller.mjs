@@ -5,7 +5,7 @@ const MATERIAS_URL = '/api/estudiantes/get/materiasActuales'; // Eliminar
 
 export const obtenerPerfilEstudiante = async (matricula) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/getInfoEstudiante?matricula=${matricula}`);
+    const response = await fetch(`${BASE_URL}/get/getInfoEstudiante/index.php?matricula=${matricula}`);
     if (!response.ok) throw new Error('Error al obtener perfil del estudiante');
     return await response.json();
   } catch (error) {
@@ -58,7 +58,7 @@ export const cargarFormularioEdicion = (datos) => {
 
 export const actualizarPerfil = async (datosJson) => {
   try {
-    const response = await fetch(`${BASE_URL}/put/updateEstudiante`, {
+    const response = await fetch(`${BASE_URL}/put/updateEstudiante/index.php`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datosJson),
@@ -73,7 +73,7 @@ export const actualizarPerfil = async (datosJson) => {
 
 export const obtenerMateriasActuales = async (matricula) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/materiasActuales?matricula=${matricula}`);
+    const response = await fetch(`${BASE_URL}/get/materiasActuales/index.php?matricula=${matricula}`);
     if (!response.ok) throw new Error('Error al obtener materias');
     return await response.json();
   } catch (error) {
@@ -100,7 +100,7 @@ export const mostrarMateriasEnTabla = (materias) => {
 
 export const obtenerFotoPerfilEstudiante = async (matricula) =>{
   try {
-    const response = await fetch(`${BASE_URL}/get/fotoPerfilEstudiante?matricula=${matricula}`);
+    const response = await fetch(`${BASE_URL}/get/fotoPerfilEstudiante/index.php?matricula=${matricula}`);
     if (!response.ok) throw new Error('Error al obtener foto de perfil');
     return await response.json();
   } catch (error) {

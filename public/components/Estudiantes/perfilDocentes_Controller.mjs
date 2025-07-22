@@ -5,7 +5,7 @@ const BASE_URL = '/api/estudiantes';
  */
 export const cargarDocentesSeccionesMatriculadas = async (matricula) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/docentesSeccionMatriculada?matricula=${matricula}`);
+    const response = await fetch(`${BASE_URL}/get/docentesSeccionMatriculada/index.php?matricula=${matricula}`);
     //const data = await response.json();
 
     if (!response.ok) throw new Error('Error al obtener contactos');
@@ -18,7 +18,7 @@ export const cargarDocentesSeccionesMatriculadas = async (matricula) => {
 
 export const cargarInfoDocente = async (idDocente) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/infoDocente?idDocente=${idDocente}`);
+    const response = await fetch(`${BASE_URL}/get/infoDocente/index.php?idDocente=${idDocente}`);
     //const data = await response.json();
 
     if (!response.ok) throw new Error('Error al obtener contactos');
@@ -31,7 +31,7 @@ export const cargarInfoDocente = async (idDocente) => {
 
 export const cargarAsignaturasDocente = async (idDocente) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/asignaturasDocente?idDocente=${idDocente}`);
+    const response = await fetch(`${BASE_URL}/get/asignaturasDocente/index.php?idDocente=${idDocente}`);
     //const data = await response.json();
 
     if (!response.ok) throw new Error('Error al obtener contactos');

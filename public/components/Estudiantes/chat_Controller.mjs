@@ -5,7 +5,7 @@ const BASE_URL = '/api/estudiantes';
  */
 export const cargarContactos = async (matricula) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/contactos?matricula=${matricula}`);
+    const response = await fetch(`${BASE_URL}/get/contactos/index.php?matricula=${matricula}`);
     //const data = await response.json();
 
     if (!response.ok) throw new Error('Error al obtener contactos');
@@ -20,7 +20,7 @@ export const cargarContactos = async (matricula) => {
 export const cargarMensajes = async (idEstudiante, contactoId) => {
   try {
     //const response = await fetch(`${BASE_URL}/get/contactos?matricula=${matricula}`);
-    const response = await fetch(`${BASE_URL}/get/mensajes?estudiante_id=${idEstudiante}&contacto_id=${contactoId}`);
+    const response = await fetch(`${BASE_URL}/get/mensajes/index.php?estudiante_id=${idEstudiante}&contacto_id=${contactoId}`);
     //const data = await response.json();
 
     if (!response.ok) throw new Error('Error al obtener contactos');
@@ -34,7 +34,7 @@ export const cargarMensajes = async (idEstudiante, contactoId) => {
 export const cargarSolicitudesContacto = async(idEstudiante)=>{
     try {
     //const response = await fetch(`${BASE_URL}/get/contactos?matricula=${matricula}`);
-    const response = await fetch(`${BASE_URL}/get/solicitudesContacto?idEstudiante=${idEstudiante}`);
+    const response = await fetch(`${BASE_URL}/get/solicitudesContacto/index.php?idEstudiante=${idEstudiante}`);
     //const data = await response.json();
 
     if (!response.ok) throw new Error('Error al obtener contactos');
@@ -47,7 +47,7 @@ export const cargarSolicitudesContacto = async(idEstudiante)=>{
 
 export const aceptarSolicitudContacto = async(idSolicitud)=>{
     try {
-    const response = await fetch(`${BASE_URL}/put/aceptarSolicitudContacto`, {
+    const response = await fetch(`${BASE_URL}/put/aceptarSolicitudContacto/index.php`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -64,7 +64,7 @@ export const aceptarSolicitudContacto = async(idSolicitud)=>{
 
 export const rechazarSolicitudContacto = async(idSolicitud)=>{
     try {
-    const response = await fetch(`${BASE_URL}/put/rechazarSolicitudContacto`, {
+    const response = await fetch(`${BASE_URL}/put/rechazarSolicitudContacto/index.php`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -81,7 +81,7 @@ export const rechazarSolicitudContacto = async(idSolicitud)=>{
 
 export const insertMensaje = async (mensaje, idEstudiante, idContacto) =>{
     try {
-    const response = await fetch(`${BASE_URL}/post/enviarMensaje`, {
+    const response = await fetch(`${BASE_URL}/post/enviarMensaje/index.php`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -100,7 +100,7 @@ export const insertMensaje = async (mensaje, idEstudiante, idContacto) =>{
 
 export const enviarSolicitudContacto = async (datosJson) => {
   try {
-    const response = await fetch(`${BASE_URL}/post/insertSolicitudContacto`, {
+    const response = await fetch(`${BASE_URL}/post/insertSolicitudContacto/index.php`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datosJson),
