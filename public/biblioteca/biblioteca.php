@@ -401,7 +401,109 @@
                                         <option value="4">Historia Universal</option>
                                     </select>
                                 </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="cursos" class="form-label">Cursos relacionados</label>
+                                    <select class="form-select" id="cursos" name="cursos" multiple>
+                                        <option value="1">Matemáticas Avanzadas</option>
+                                        <option value="2">Literatura Contemporánea</option>
+                                        <option value="3">Programación Web</option>
+                                        <option value="4">Historia Universal</option>
+                                    </select>
+                                </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="portada" class="form-label">Portada (opcional)</label>
+                                    <input type="file" class="form-control" id="portada" name="portada" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="archivo_pdf" class="form-label">Archivo del recurso*</label>
+                            <input type="file" class="form-control" id="archivo_pdf" name="archivo_pdf" accept=".pdf,.doc,.docx,.ppt,.pptx" required>
+                            <small class="text-muted">Formatos aceptados: PDF, Word, PowerPoint</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-blue-gray">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-unah-blue">Subir Recurso</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar recurso -->
+    <div class="modal fade" id="editarRecursoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-unah-blue text-white">
+                    <h5 class="modal-title">Editar recurso</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formEditarRecurso">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="edit_titulo" class="form-label">Título*</label>
+                                    <input type="text" class="form-control" id="edit_titulo" name="edit_titulo" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit_autores" class="form-label">Autor(es)*</label>
+                                    <input type="text" class="form-control" id="edit_autores" name="edit_autores" required>
+                                    <small class="text-muted">Separar múltiples autores con comas</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit_anio" class="form-label">Año de publicación*</label>
+                                    <input type="number" class="form-control" id="edit_anio" name="edit_anio" min="1900" max="2099" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit_categoria" class="form-label">Tipo de recurso*</label>
+                                    <select class="form-select" id="edit_categoria" name="edit_categoria" required>
+                                        <option value="libro">Libro</option>
+                                        <option value="articulo">Artículo</option>
+                                        <option value="guia">Guía de estudio</option>
+                                        <option value="tesis">Tesis</option>
+                                        <option value="otros">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="edit_descripcion" class="form-label">Descripción*</label>
+                                    <textarea class="form-control" id="edit_descripcion" name="edit_descripcion" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit_tags" class="form-label">Palabras clave</label>
+                                    <input type="text" class="form-control" id="edit_tags" name="edit_tags">
+                                    <small class="text-muted">Separar con comas</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="edit_cursos" class="form-label">Cursos relacionados</label>
+                                    <select class="form-select" id="edit_cursos" name="edit_cursos" multiple>
+                                        <option value="1">Matemáticas Avanzadas</option>
+                                        <option value="2">Literatura Contemporánea</option>
+                                        <option value="3">Programación Web</option>
+                                        <option value="4">Historia Universal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="edit_portada" class="form-label">Cambiar portada (opcional)</label>
+                                    <input type="file" class="form-control" id="edit_portada" name="edit_portada" accept="image/*">
+                                </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="edit_portada" class="form-label">Cambiar portada (opcional)</label>
@@ -409,6 +511,38 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="mb-3">
+                            <label for="edit_archivo" class="form-label">Cambiar archivo (opcional)</label>
+                            <input type="file" class="form-control" id="edit_archivo" name="edit_archivo" accept=".pdf,.doc,.docx,.ppt,.pptx">
+                            <small class="text-muted">Dejar en blanco para mantener el archivo actual</small>
+                        </div>
+                        
+                        <input type="hidden" id="recurso_id" name="recurso_id">
+                    </div>
+                    <div class="modal-footer bg-blue-gray">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-unah-blue">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar -->
+    <div class="modal fade" id="confirmarEliminarModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro que deseas eliminar este recurso? Esta acción no se puede deshacer.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmarEliminarBtn">Eliminar</button>
                         
                         <div class="mb-3">
                             <label for="edit_archivo" class="form-label">Cambiar archivo (opcional)</label>

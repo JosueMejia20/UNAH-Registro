@@ -19,7 +19,7 @@ class UnahNavbar extends HTMLElement {
                             <a class="nav-link active" href="../index.php">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Musica</a>
+                            <a class="nav-link" href="../musica/index.php?vista=musica">Musica</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="../biblioteca/index.php?vista=login_biblioteca">Biblioteca Virtual</a>
@@ -30,9 +30,9 @@ class UnahNavbar extends HTMLElement {
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="admisionesDropdown">
                                 <li><a class="dropdown-item" href="../estudiantes/index.php?vista=login_estudiantes">Estudiantes</a></li>
-                                <li><a class="dropdown-item" href="?page=login&rol=docente">Docentes</a></li>
-                                <li><a class="dropdown-item" href="?page=login&rol=coordinador">Coordinador</a></li>
-                                <li><a class="dropdown-item" href="?page=login&rol=JefeDeDepartamento">Jefe de Departamento</a></li>
+                                <li><a class="dropdown-item" href="../docentes/index.php?vista=perfil_docente">Docentes</a></li>
+                                <li><a class="dropdown-item" href="../coordinador/index.php?vista=perfil_coordinador">Coordinador</a></li>
+                                <li><a class="dropdown-item" href="../jefe/index.php?vista=perfil_jefe">Jefe de Departamento</a></li>
                                 <li><a class="dropdown-item" href="../admisiones/index.php?vista=login_revisores">Revisores</a></li>
                             </ul>
                         </li>
