@@ -58,7 +58,7 @@ export const cargarFormularioEdicion = (datos) => {
 
 export const actualizarPerfil = async (datosJson) => {
   try {
-    const response = await fetch(`${BASE_URL}/put/updateEstudiante/index.php`, {
+    const response = await fetch(`${BASE_URL}/put/updateEstudiante`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datosJson),
