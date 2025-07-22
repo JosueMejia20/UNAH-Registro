@@ -109,7 +109,6 @@
                                 
                             </div>
                             <div class="card-body">
-                                <span class="badge text-bg-info mb-2">Libro</span>
                                 <h5 class="card-title">Introducción a la Programación</h5>
                                 <p class="card-text small text-muted">John Doe, María Pérez, Carlos López</p>
                                 <p class="small text-muted"><i class="bi bi-calendar me-1"></i>2022</p>
@@ -140,7 +139,6 @@
                                 
                             </div>
                             <div class="card-body">
-                                <span class="badge text-bg-success mb-2">Artículo</span>
                                 <h5 class="card-title">Historia del Arte Moderno: Del Renacimiento al Siglo XXI</h5>
                                 <p class="card-text small text-muted">Prof. Carlos Méndez, Robert Johnson</p>
                                 <p class="small text-muted"><i class="bi bi-calendar me-1"></i>2023</p>
@@ -169,7 +167,6 @@
                                 
                             </div>
                             <div class="card-body">
-                                <span class="badge text-bg-info mb-2">Libro</span>
                                 <h5 class="card-title">Álgebra Lineal: Teoría y Práctica</h5>
                                 <p class="card-text small text-muted">Equipo Matemáticas, Dr. Luis González</p>
                                 <p class="small text-muted"><i class="bi bi-calendar me-1"></i>2021</p>
@@ -198,7 +195,6 @@
                                 
                             </div>
                             <div class="card-body">
-                                <span class="badge text-bg-primary mb-2">Guía de estudio</span>
                                 <h5 class="card-title">Diseño Web Moderno: Principios y Técnicas</h5>
                                 <p class="card-text small text-muted">Prof. Carlos Méndez, Sofía Ramírez</p>
                                 <p class="small text-muted"><i class="bi bi-calendar me-1"></i>2023</p>
@@ -295,17 +291,6 @@
                                 <div class="mb-3">
                                     <label for="anio" class="form-label">Año de publicación*</label>
                                     <input type="number" class="form-control" id="anio" name="anio" min="1900" max="2099" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="categoria" class="form-label">Tipo de recurso*</label>
-                                    <select class="form-select" id="categoria" name="categoria" required>
-                                        <option value="">Seleccionar...</option>
-                                        <option value="libro">Libro</option>
-                                        <option value="articulo">Artículo</option>
-                                        <option value="guia">Guía de estudio</option>
-                                        <option value="tesis">Tesis</option>
-                                        <option value="otros">Otro</option>
-                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -465,7 +450,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../assets/js/Biblioteca/biblioteca_script.js"></script>
+    <script type="module" src="../../assets/js/Biblioteca/biblioteca_script.js"></script>
     <script type="module" src="../../assets/js/main.js"></script>
 
 

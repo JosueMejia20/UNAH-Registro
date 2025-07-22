@@ -1036,7 +1036,9 @@ BEGIN
         r.id AS recurso_id,
         r.titulo,
         r.autor,
-        GROUP_CONCAT(t.nombre ORDER BY t.nombre SEPARATOR ', ') AS tags
+        GROUP_CONCAT(t.nombre ORDER BY t.nombre SEPARATOR ', ') AS tags,
+        r.portada,
+        r.anio
     FROM Recursos r
     LEFT JOIN Recursos_Tags rt ON r.id = rt.recurso_id
     LEFT JOIN Tags t ON rt.tags_id = t.id

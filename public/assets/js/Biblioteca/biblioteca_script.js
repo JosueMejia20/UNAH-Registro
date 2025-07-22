@@ -1,3 +1,42 @@
+ 
+ // -------- Controlador del Chat --------
+import {
+    cargarRecursosDocente
+} from '../../../components/Biblioteca/biblioteca_Controller.mjs';
+
+
+const idDocente = sessionStorage.getItem('idDocente') || '1002';
+ 
+ function separarTags(cadena) {
+  if (!cadena) return [];
+
+  return cadena
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(tag => tag.length > 0);
+}
+
+// Función para confirmar eliminación de recurso
+window.confirmarEliminacion = function(id){
+    document.getElementById('confirmarEliminarBtn').onclick = function() {
+        // Aquí iría la lógica para eliminar el recurso
+        console.log(`Recurso ${id} eliminado`);
+                
+        // Cerrar el modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('confirmarEliminarModal'));
+        modal.hide();
+                
+        // Recargar la lista de recursos
+        cargarMisRecursos(idDocente);
+    };
+            
+    // Mostrar el modal de confirmación
+    const modal = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
+    modal.show();
+}
+
+ 
+ 
  // Función para filtrar recursos
         function filtrarRecursos() {
             const filtroCurso = document.getElementById('filtroCurso').value.toLowerCase();
@@ -40,30 +79,42 @@
             const gridMisRecursos = document.getElementById('gridMisRecursos');
             const noMisRecursos = document.getElementById('noMisRecursos');
             
+            console.log(misRecursos);
+
             if (!misRecursos) return;
             if (misRecursos.length > 0) {
                 gridMisRecursos.innerHTML = '';
                 misRecursos.forEach(recurso => {
-                    `
+                    //tagsString = recurso.tags;
+                    const tagsArray = separarTags(recurso.tags);
+                    console.log(tagsArray);
+
+                    const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
+
+                   const html =  `
                     <div id="colRecurso" class="col">
-                        <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="introducción a la programación john doe programación, algoritmos, python" data-categoria="libro">
-                            <div class="portada-container" onclick="verRecurso(1)">
-                                <img src="https://m.media-amazon.com/images/I/61K5jyMB5VL._AC_UF1000,1000_QL80_.jpg" alt="Portada de Introducción a la Programación" class="img-fluid portada-img">
-                                
+                        <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="libro">
+                            <div class="portada-container">
+                                <img src="https://m.media-amazon.com/images/I/61K5jyMB5VL._AC_UF1000,1000_QL80_.jpg">
+                                <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
+                                    <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;" data-bs-toggle="modal" data-bs-target="#editarRecursoModal" onclick="cargarDatosEdicion(${recurso.recurso_id})">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;" onclick="confirmarEliminacion(${recurso.recurso_id})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="card-body">
-                                <span class="badge text-bg-info mb-2">Libro</span>
-                                <h5 class="card-title">Introducción a la Programación</h5>
-                                <p class="card-text small text-muted">John Doe, María Pérez, Carlos López</p>
-                                <p class="small text-muted"><i class="bi bi-calendar me-1"></i>2022</p>
+                                <h5 class="card-title">${recurso.titulo}</h5>
+                                <p class="card-text small text-muted">${recurso.autor}</p>
+                                <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
                                 
                                 <p class="card-text small text-truncate">Este libro ofrece una introducción completa a los fundamentos de la programación, desde conceptos básicos hasta estructuras de datos simples. Ideal para estudiantes de primer año.</p>
                                 
                                 <div class="border-top pt-2 mt-2">
                                     <div class="mb-2">
-                                        <span class="badge badge-tag me-1">programación</span>
-                                        <span class="badge badge-tag me-1">algoritmos</span>
-                                        <span class="badge badge-tag me-1">Python</span>
+                                        ${tagsHTML}
                                     </div>
                                     <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="1">
                                         <i class="bi bi-eye me-1"></i> Ver documento
@@ -75,7 +126,14 @@
                     `;
                     //const clone = recurso.cloneNode(true);
                     //gridMisRecursos.appendChild(clone);
+                    gridMisRecursos.innerHTML += html;
                 });
+                document.querySelectorAll('.ver-recurso').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    verRecurso(id);
+                });
+            });
                 noMisRecursos.style.display = 'none';
             } else {
                 gridMisRecursos.innerHTML = '';
@@ -179,29 +237,12 @@
             }
         }
         
-        // Función para confirmar eliminación de recurso
-        function confirmarEliminacion(id) {
-            document.getElementById('confirmarEliminarBtn').onclick = function() {
-                // Aquí iría la lógica para eliminar el recurso
-                console.log(`Recurso ${id} eliminado`);
-                
-                // Cerrar el modal
-                const modal = bootstrap.Modal.getInstance(document.getElementById('confirmarEliminarModal'));
-                modal.hide();
-                
-                // Recargar la lista de recursos
-                cargarMisRecursos();
-            };
-            
-            // Mostrar el modal de confirmación
-            const modal = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
-            modal.show();
-        }
+        
         
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
             // Cargar los recursos del docente al inicio
-            cargarMisRecursos();
+            cargarMisRecursos(idDocente);
             
             // Configurar eventos de filtrado
             document.getElementById('filtroCurso').addEventListener('change', filtrarRecursos);
@@ -230,7 +271,7 @@
                 modal.hide();
                 
                 // Recargar la lista de recursos
-                cargarMisRecursos();
+                cargarMisRecursos(idDocente);
             });
             
             // Configurar formulario para editar recurso
@@ -244,6 +285,6 @@
                 modal.hide();
                 
                 // Recargar la lista de recursos
-                cargarMisRecursos();
+                cargarMisRecursos(idDocente);
             });
         });

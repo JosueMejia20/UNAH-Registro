@@ -722,6 +722,7 @@ CREATE TABLE Recursos(
     archivo_pdf MEDIUMBLOB,
     autor VARCHAR(180) NOT NULL,
     anio YEAR,
+    portada MEDIUMBLOB,
     docente_id INT NOT NULL,
     
 	FOREIGN KEY (docente_id) REFERENCES Docente(numero_empleado)

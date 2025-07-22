@@ -46,11 +46,25 @@
             }
         }
 
+        public function obtenerRecursosDocente($idDocente){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL ObtenerRecursosPorDocente($idDocente)");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
+
     }
 
 
-//prueba
+
+
+/* prueba
 $ob = new Biblioteca();
-echo 'esto es lo que retorna: '.$ob->verificarUsuarioBiblioteca(1);
+echo 'esto es lo que retorna: '.$ob->verificarUsuarioBiblioteca(1);*/
 
     

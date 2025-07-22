@@ -107,5 +107,43 @@ INSERT INTO Solicitudes_Contacto (emisor_id, receptor_id, estado_solicitud_id, f
 VALUES ('20231001122', '20201003849', 1, NOW());
 
 
+-- INSERTS PARA RECURSOS
+INSERT INTO Recursos (titulo, archivo_pdf, autor, anio, docente_id, portada)
+VALUES 
+('Fundamentos de Álgebra Lineal', NULL, 'Dr. Manuel López', 2020, 1002, NULL),
+('Programación Orientada a Objetos en Java', NULL, 'Ing. Carla Rivas', 2022, 1002, NULL),
+('Teoría de Autómatas y Lenguajes Formales', NULL, 'MSc. Jorge Salgado', 2021, 1002, NULL),
+('Bases de Datos Relacionales', NULL, 'Lic. Silvia Medina', 2023, 1002, NULL),
+('Inteligencia Artificial: Fundamentos y Aplicaciones', NULL, 'PhD. Luisa Castro', 2024, 1002, NULL);
+
+-- INserts para TAGS
+INSERT INTO Tags (nombre) VALUES 
+('Matemáticas'),
+('Programación'),
+('Bases de Datos'),
+('Inteligencia Artificial'),
+('Teoría de la Computación');
+
+
+-- INSERTS PARA RECURSOS_TAGS
+-- Recurso 1: Fundamentos de Álgebra Lineal → Matemáticas
+INSERT INTO Recursos_Tags (recurso_id, tags_id) VALUES (1, 1);
+
+-- Recurso 2: POO en Java → Programación
+INSERT INTO Recursos_Tags (recurso_id, tags_id) VALUES (2, 2);
+
+-- Recurso 3: Autómatas → Teoría de la Computación
+INSERT INTO Recursos_Tags (recurso_id, tags_id) VALUES (3, 5);
+
+-- Recurso 4: Bases de Datos Relacionales → Bases de Datos
+INSERT INTO Recursos_Tags (recurso_id, tags_id) VALUES (4, 3);
+
+-- Recurso 5: IA → Inteligencia Artificial, Programación
+INSERT INTO Recursos_Tags (recurso_id, tags_id) VALUES 
+(5, 4),
+(5, 2);
+
+
+
 
 
