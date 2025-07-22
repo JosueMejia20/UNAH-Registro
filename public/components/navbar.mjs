@@ -22,7 +22,7 @@ class UnahNavbar extends HTMLElement {
                             <a class="nav-link" href="#">Musica</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Biblioteca Virtual</a>
+                            <a class="nav-link" href="../biblioteca/index.php?vista=login_biblioteca">Biblioteca Virtual</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="admisionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

@@ -42,6 +42,7 @@ DROP PROCEDURE IF EXISTS InsertarSolicitudContacto;
 DROP PROCEDURE IF EXISTS ObtenerDocentesActualesPorEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerDatosDocente;
 DROP PROCEDURE IF EXISTS ObtenerAsignaturasActualesDocente;
+DROP PROCEDURE IF EXISTS ObtenerRecursosPorDocente;
 
 DELIMITER $$
 
@@ -1024,6 +1025,23 @@ BEGIN
     INNER JOIN Dias d ON s.dias_id = d.id
     WHERE s.docente_id = p_docente_id
       AND fecha_actual BETWEEN pa.fecha_inicio AND pa.fecha_fin;
+END $$
+
+
+CREATE PROCEDURE ObtenerRecursosPorDocente(
+    IN p_docente_id INT
+)
+BEGIN
+    SELECT 
+        r.id AS recurso_id,
+        r.titulo,
+        r.autor,
+        GROUP_CONCAT(t.nombre ORDER BY t.nombre SEPARATOR ', ') AS tags
+    FROM Recursos r
+    LEFT JOIN Recursos_Tags rt ON r.id = rt.recurso_id
+    LEFT JOIN Tags t ON rt.tags_id = t.id
+    WHERE r.docente_id = p_docente_id
+    GROUP BY r.id, r.titulo, r.autor;
 END $$
 
 

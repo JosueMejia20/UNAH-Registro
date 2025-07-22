@@ -721,7 +721,12 @@ CREATE TABLE Recursos(
     titulo VARCHAR(130) NOT NULL,
     archivo_pdf MEDIUMBLOB,
     autor VARCHAR(180) NOT NULL,
-    anio YEAR
+    anio YEAR,
+    docente_id INT NOT NULL,
+    
+	FOREIGN KEY (docente_id) REFERENCES Docente(numero_empleado)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 -- tabla intermedia
