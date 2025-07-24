@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 $pathToRoot = '/../../../../../';
 
 require_once __DIR__ . $pathToRoot.'classes/Admisiones/Admisiones.php';
@@ -31,6 +33,10 @@ try{
     if($resultadoLogin){
         
         if($admisiones->verificarUsuarioRevisor($resultadoLogin)){
+            //iniciando session )(variables de session)
+            $_SESSION['usuario_id'] = $resultadoLogin;
+            $_SESSION['rol'] = 'revisor';
+            $_SESSION['estado'] = true;
             echo json_encode([
             'success'=> true,
             'message'=> 'Se ha iniciado sesion correctamente',
