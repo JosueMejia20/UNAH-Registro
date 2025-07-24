@@ -408,6 +408,20 @@ INSERT INTO Estado_Solicitud_Contacto (nombre) VALUES
 ('Rechazada'),
 ('Aceptada');
 
+-- INSERTS PARA TIPOS DE SOLICITUD
+INSERT INTO Tipo_Solicitud (nombre) VALUES
+('Pago de Reposición'),
+('Cambio de Centro Regional'),
+('Cambio de Carrera'),
+('Cancelación Excepcional');
+
+
+-- INSERTS TIPO RECURSO
+INSERT INTO Tipo_Recurso (nombre) VALUES 
+('Pdf'),
+('Audio'),
+('Partitura');
+
 
 
 

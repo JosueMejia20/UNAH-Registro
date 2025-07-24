@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS obtener_examenes_postulante;
 DROP FUNCTION IF EXISTS obtener_dni_de_inscripcion;
 DROP FUNCTION IF EXISTS isEstudiante;
 DROP FUNCTION IF EXISTS isDocente;
+DROP FUNCTION IF EXISTS fn_existe_solicitud_en_periodo_actual;
 
 DELIMITER $$
 
@@ -112,6 +113,49 @@ BEGIN
 
     RETURN dni;
 END$$
+
+
+
+
+CREATE FUNCTION fn_existe_solicitud_en_periodo_actual(
+    p_estudiante_id VARCHAR(11),
+    p_tipo_solicitud_id INT
+)
+RETURNS BOOLEAN
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE v_periodo_actual_id INT;
+
+    -- Obtener el ID del periodo academico actual segun la fecha del sistema
+    SELECT id INTO v_periodo_actual_id
+    FROM Periodo_Academico
+    WHERE CURRENT_DATE BETWEEN fecha_inicio AND fecha_fin
+    LIMIT 1;
+
+    -- Si no hay periodo actual, devolvemos FALSE (no hay conflicto)
+    IF v_periodo_actual_id IS NULL THEN
+        RETURN FALSE;
+    END IF;
+
+    -- Verificar si ya existe una solicitud del mismo tipo en el periodo actual
+    IF EXISTS (
+        SELECT 1
+        FROM Solicitudes
+        WHERE estudiante_id = p_estudiante_id
+          AND periodo_acad_id = v_periodo_actual_id
+          AND tipo_solicitud_id = p_tipo_solicitud_id
+    ) THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+
+END $$
+
+
+
+
 
 
 

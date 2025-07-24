@@ -24,10 +24,11 @@ $postData = json_decode(file_get_contents("php://input"),true);
 $centroNuevo = $postData["centroNuevo"];
 $justificacion = $postData["justificacionCambioCentro"];
 $idEstudiante = $postData["matricula"];
+$archivoPdf = $postData["archivoPDF"];
 
 
 try{
-    $resultado = $estudiantes->insertCambioCentro($idEstudiante, $centroNuevo, $justificacion);
+    $resultado = $estudiantes->insertCambioCentro($idEstudiante, $centroNuevo, $justificacion, $archivoPdf);
     if($resultado){
         echo json_encode([
             'success'=> true,

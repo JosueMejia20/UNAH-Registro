@@ -47,7 +47,7 @@ const mostrarSolicitudesRecientes = async (idEstudiante,tablaSolicitudes) => {
     solicitudes.forEach(solicitud => {
       const fila = document.createElement("tr");
       fila.innerHTML = `
-        <td>#${solicitud.id}</td>
+        <td>#${solicitud.solicitud_id}</td>
         <td>${solicitud.tipo_solicitud}</td>
         <td>${solicitud.fecha_solicitud}</td>
         <td><span class="badge bg-warning">${solicitud.estado}</span></td>
@@ -103,7 +103,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     
         for (const [key, value] of formData.entries()) {
-            datosJSON[key] = value;
+            if (value instanceof File && value.name) {
+                datosJSON[key] = await toBase64(value);
+            } else {
+                datosJSON[key] = value;
+            }
         }
     
         console.log(datosJSON);
@@ -144,7 +148,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     
         for (const [key, value] of formData.entries()) {
-            datosJSON[key] = value;
+            if (value instanceof File && value.name) {
+                datosJSON[key] = await toBase64(value);
+            } else {
+                datosJSON[key] = value;
+            }
         }
     
         console.log(datosJSON);

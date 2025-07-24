@@ -569,6 +569,7 @@ CREATE TABLE Evaluacion_Docente(
     seccion_id INT NOT NULL,
     observacion VARCHAR(255),
     fecha_evaluacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    evaluacion JSON,
     UNIQUE(estudiante_id, seccion_id),
     
     FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
@@ -608,13 +609,19 @@ CREATE TABLE Coordinadores_Carrera(
         ON UPDATE CASCADE
 );
 
-CREATE TABLE Solicitud_Pago_Reposicion(
+CREATE TABLE Tipo_Solicitud(
 	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE Solicitudes(
+	numero_solicitud INT AUTO_INCREMENT PRIMARY KEY,
     estudiante_id VARCHAR(11) NOT NULL,
     periodo_acad_id INT NOT NULL,
     fecha_solicitud DATETIME NOT NULL DEFAULT current_timestamp,
     observacion VARCHAR(255) NOT NULL,
-    estado_pago_reposicion_id INT NOT NULL,
+    estado_solicitud_id INT,
+    tipo_solicitud_id INT NOT NULL,
     
     FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
 		ON DELETE CASCADE
@@ -622,88 +629,74 @@ CREATE TABLE Solicitud_Pago_Reposicion(
     FOREIGN KEY (periodo_acad_id) REFERENCES Periodo_Academico(id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE,
-	FOREIGN KEY (estado_pago_reposicion_id) REFERENCES Estado_Pago_Reposicion(id)
+	FOREIGN KEY (tipo_solicitud_id) REFERENCES Tipo_Solicitud(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (estado_solicitud_id) REFERENCES Estado_Solicitudes(id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE
-    
+);
+
+CREATE TABLE Solicitud_Pago_Reposicion(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    estado_pago_reposicion_id INT NOT NULL,
+	solicitud_id INT NOT NULL,
+	FOREIGN KEY (estado_pago_reposicion_id) REFERENCES Estado_Pago_Reposicion(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (solicitud_id) REFERENCES Solicitudes(numero_solicitud)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 -- Solo se hace 1 solicitud por seccion
 CREATE TABLE Solicitud_Cancelacion_Excepc(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-    estudiante_id VARCHAR(11) NOT NULL,
-    periodo_acad_id INT NOT NULL,
-    justificacion VARCHAR(255) NOT NULL,
     archivoPDF MEDIUMBLOB NOT NULL, -- ver si se guarda la ruta
     seccion_id INT NOT NULL,
-    fecha_solicitud DATETIME NOT NULL DEFAULT current_timestamp,
     coordinador_id INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
-    estado_solicitud_id INT NOT NULL,
-    
-    FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
-		ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    FOREIGN KEY (periodo_acad_id) REFERENCES Periodo_Academico(id)
-		ON DELETE CASCADE
-        ON UPDATE CASCADE,
-	
-	FOREIGN KEY (coordinador_id) REFERENCES Coordinadores_Carrera(id)
+	solicitud_id INT NOT NULL,
+    FOREIGN KEY (coordinador_id) REFERENCES Coordinadores_Carrera(id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE,
 	FOREIGN KEY (seccion_id) REFERENCES Seccion(id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE,
-	FOREIGN KEY (estado_solicitud_id) REFERENCES Estado_Solicitudes(id)
+	FOREIGN KEY (solicitud_id) REFERENCES Solicitudes(numero_solicitud)
 		ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
 CREATE TABLE Solicitud_Cambios_Carrera(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-    estudiante_id VARCHAR(11) NOT NULL,
     carrera_nueva_id INT NOT NULL,
-    observacion VARCHAR(255),
-    fecha_solicitud DATETIME NOT NULL DEFAULT current_timestamp,
     coordinador_id INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
-    estado_solicitud_id INT NOT NULL,
-    
-    FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
+	solicitud_id INT NOT NULL,
+    archivoPDF MEDIUMBLOB NOT NULL,
+    FOREIGN KEY (carrera_nueva_id) REFERENCES Carrera(carrera_id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE,
-        
-	FOREIGN KEY (carrera_nueva_id) REFERENCES Carrera(carrera_id)
-		ON DELETE CASCADE
-        ON UPDATE CASCADE,
-        
 	FOREIGN KEY (coordinador_id) REFERENCES Coordinadores_Carrera(id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE,
-	FOREIGN KEY (estado_solicitud_id) REFERENCES Estado_Solicitudes(id)
+	FOREIGN KEY (solicitud_id) REFERENCES Solicitudes(numero_solicitud)
 		ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
 CREATE TABLE Solicitud_Cambio_Centro(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-    estudiante_id VARCHAR(11) NOT NULL,
     centro_nuevo_id INT NOT NULL,
-    observacion VARCHAR(255),
-    fecha_solicitud DATETIME NOT NULL DEFAULT current_timestamp,
     coordinador_id INT DEFAULT NULL, -- ver si con un trigger se cambia al coordinador de la carrera actual del estudiante
-	estado_solicitud_id INT NOT NULL,
-
-	FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
+    archivoPDF MEDIUMBLOB NOT NULL,
+	solicitud_id INT NOT NULL,
+    FOREIGN KEY (centro_nuevo_id) REFERENCES Centro_Regional(centro_regional_id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE,
-        
-	FOREIGN KEY (centro_nuevo_id) REFERENCES Centro_Regional(centro_regional_id)
-		ON DELETE CASCADE
-        ON UPDATE CASCADE,
-        
 	FOREIGN KEY (coordinador_id) REFERENCES Coordinadores_Carrera(id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE,
-	FOREIGN KEY (estado_solicitud_id) REFERENCES Estado_Solicitudes(id)
+	FOREIGN KEY (solicitud_id) REFERENCES Solicitudes(numero_solicitud)
 		ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -716,16 +709,42 @@ CREATE TABLE Tags(
     nombre VARCHAR(60)
 );
 
+CREATE TABLE Autores(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_completo VARCHAR(90)
+);
+
+CREATE TABLE Tipo_Recurso(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(60)
+);
+
 CREATE TABLE Recursos(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(130) NOT NULL,
-    archivo_pdf MEDIUMBLOB,
-    autor VARCHAR(180) NOT NULL,
+    archivo MEDIUMBLOB,
     anio YEAR,
     portada MEDIUMBLOB,
     docente_id INT NOT NULL,
+    tipo_recurso_id INT NOT NULL,
     
 	FOREIGN KEY (docente_id) REFERENCES Docente(numero_empleado)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (tipo_recurso_id) REFERENCES Tipo_Recurso(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Autores_Recursos(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    recurso_id INT NOT NULL,
+    autor_id INT NOT NULL,
+    
+    FOREIGN KEY (recurso_id) REFERENCES Recursos(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (autor_id) REFERENCES Autores(id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -756,6 +775,14 @@ CREATE TABLE Recursos_Clase(
         ON UPDATE CASCADE,
 	
     FOREIGN KEY (clase_id) REFERENCES Clase(clase_id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TABLE Recursos_Musica(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    recurso_id INT NOT NULL,
+    FOREIGN KEY (recurso_id) REFERENCES Recursos(id)
 		ON DELETE CASCADE
         ON UPDATE CASCADE
 );

@@ -173,16 +173,18 @@
             }
         }
 
-        public function insertCambioCarrera($idEstudiante, $carreraNueva, $justificacion){
+        public function insertCambioCarrera($idEstudiante, $carreraNueva, $justificacion, $archivoPdf64){
             try {
+                $archivoPdfBinario = Utilities::obtenerBinario($archivoPdf64);
                 $db = new DataBase();
                 $pdo = $db->connect();
 
-                $stmt = $pdo->prepare("CALL InsertarSolicitudCambioCarrera(:idEstudiante, :carreraNuevaId, :justificacion)");
+                $stmt = $pdo->prepare("CALL InsertarSolicitudCambioCarrera(:idEstudiante, :carreraNuevaId, :justificacion, :archivo)");
 
                 $stmt->bindParam(':idEstudiante', $idEstudiante, PDO::PARAM_STR);
                 $stmt->bindParam(':carreraNuevaId', $carreraNueva, PDO::PARAM_INT);
                 $stmt->bindParam(':justificacion', $justificacion, PDO::PARAM_STR);
+                $stmt->bindParam(':archivo', $archivoPdfBinario, PDO::PARAM_LOB);
 
                 $resultado = $stmt->execute();
 
@@ -193,16 +195,18 @@
             }
         }
 
-        public function insertCambioCentro($idEstudiante, $centroNuevo, $justificacion){
+        public function insertCambioCentro($idEstudiante, $centroNuevo, $justificacion, $archivoPdf64){
             try {
+                $archivoPdfBinario = Utilities::obtenerBinario($archivoPdf64);
                 $db = new DataBase();
                 $pdo = $db->connect();
 
-                $stmt = $pdo->prepare("CALL InsertarSolicitudCambioCentro(:idEstudiante, :centroNuevoId, :justificacion)");
+                $stmt = $pdo->prepare("CALL InsertarSolicitudCambioCentro(:idEstudiante, :centroNuevoId, :justificacion, :archivo)");
 
                 $stmt->bindParam(':idEstudiante', $idEstudiante, PDO::PARAM_STR);
                 $stmt->bindParam(':centroNuevoId', $centroNuevo, PDO::PARAM_INT);
                 $stmt->bindParam(':justificacion', $justificacion, PDO::PARAM_STR);
+                $stmt->bindParam(':archivo', $archivoPdfBinario, PDO::PARAM_LOB);
 
                 $resultado = $stmt->execute();
 

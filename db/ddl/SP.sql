@@ -42,7 +42,6 @@ DROP PROCEDURE IF EXISTS InsertarSolicitudContacto;
 DROP PROCEDURE IF EXISTS ObtenerDocentesActualesPorEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerDatosDocente;
 DROP PROCEDURE IF EXISTS ObtenerAsignaturasActualesDocente;
-DROP PROCEDURE IF EXISTS ObtenerRecursosPorDocente;
 
 DELIMITER $$
 
@@ -605,57 +604,41 @@ END $$
 
 
 
+
 CREATE PROCEDURE ObtenerSolicitudesEstudiante(
     IN p_estudiante_id VARCHAR(11)
 )
 BEGIN
-    -- Solicitud de Cambio de Centro
     SELECT 
-        scc.id AS id,
-        'Cambio de Centro' AS tipo_solicitud,
-        DATE(scc.fecha_solicitud) AS fecha_solicitud,
-        es.nombre AS estado
-    FROM Solicitud_Cambio_Centro scc
-    INNER JOIN Estado_Solicitudes es ON es.id = scc.estado_solicitud_id
-    WHERE scc.estudiante_id = p_estudiante_id
+        s.numero_solicitud AS solicitud_id,
+        ts.nombre AS tipo_solicitud,
+        DATE(s.fecha_solicitud) AS fecha_solicitud,
+        COALESCE(es.nombre, epr.nombre, 'Desconocido') AS estado,
+        
+        -- Campos de cada tipo (pueden venir NULL según el tipo)
+        scc.centro_nuevo_id,
+        sccr.carrera_nueva_id,
+        sce.seccion_id,
+        spr.estado_pago_reposicion_id
+        
+    FROM Solicitudes s
+    INNER JOIN Tipo_Solicitud ts ON ts.id = s.tipo_solicitud_id
+    LEFT JOIN Solicitud_Cambio_Centro scc ON scc.solicitud_id = s.numero_solicitud
+    LEFT JOIN Estado_Solicitudes es ON es.id = s.estado_solicitud_id
 
-    UNION ALL
+    LEFT JOIN Solicitud_Cambios_Carrera sccr ON sccr.solicitud_id = s.numero_solicitud
 
-    -- Solicitud de Cambio de Carrera
-    SELECT 
-        sccr.id,
-        'Cambio de Carrera',
-        DATE(sccr.fecha_solicitud) AS fecha_solicitud,
-        es.nombre
-    FROM Solicitud_Cambios_Carrera sccr
-    INNER JOIN Estado_Solicitudes es ON es.id = sccr.estado_solicitud_id
-    WHERE sccr.estudiante_id = p_estudiante_id
+    LEFT JOIN Solicitud_Cancelacion_Excepc sce ON sce.solicitud_id = s.numero_solicitud
 
-    UNION ALL
+    LEFT JOIN Solicitud_Pago_Reposicion spr ON spr.solicitud_id = s.numero_solicitud
+    LEFT JOIN Estado_Pago_Reposicion epr ON epr.id = spr.estado_pago_reposicion_id
 
-    -- Solicitud de Cancelación Excepcional
-    SELECT 
-        sce.id,
-        'Cancelación Excepcional',
-        DATE(sce.fecha_solicitud) AS fecha_solicitud,
-        es.nombre
-    FROM Solicitud_Cancelacion_Excepc sce
-    INNER JOIN Estado_Solicitudes es ON es.id = sce.estado_solicitud_id
-    WHERE sce.estudiante_id = p_estudiante_id
+    WHERE s.estudiante_id = p_estudiante_id
+    ORDER BY s.fecha_solicitud DESC;
+END $$
 
-    UNION ALL
 
-    -- Solicitud de Pago por Reposición
-    SELECT 
-        spr.id,
-        'Pago por Reposición',
-        DATE(spr.fecha_solicitud) AS fecha_solicitud,
-        epr.nombre
-    FROM Solicitud_Pago_Reposicion spr
-    INNER JOIN Estado_Pago_Reposicion epr ON epr.id = spr.estado_pago_reposicion_id
-    WHERE spr.estudiante_id = p_estudiante_id
-    ORDER BY DATE(fecha_solicitud) DESC;
-END$$
+
 
 
 
@@ -706,43 +689,115 @@ BEGIN
 END$$
 
 
-CREATE PROCEDURE InsertarSolicitudCambioCarrera (
-    IN p_estudiante_id VARCHAR(11),
-    IN p_carrera_nueva_id INT,
-    IN p_observacion VARCHAR(255)
-)
-BEGIN
-    INSERT INTO Solicitud_Cambios_Carrera (
-        estudiante_id,
-        carrera_nueva_id,
-        observacion,
-        estado_solicitud_id
-    ) VALUES (
-        p_estudiante_id,
-        p_carrera_nueva_id,
-        p_observacion,
-        1
-    );
-END $$
 
 CREATE PROCEDURE InsertarSolicitudCambioCentro (
     IN p_estudiante_id VARCHAR(11),
     IN p_centro_nuevo_id INT,
-    IN p_observacion VARCHAR(255)
+    IN p_observacion VARCHAR(255),
+    IN p_archivoPDF MEDIUMBLOB
 )
 BEGIN
-    INSERT INTO Solicitud_Cambio_Centro (
-        estudiante_id,
-        centro_nuevo_id,
-        observacion,
-        estado_solicitud_id
-    ) VALUES (
-        p_estudiante_id,
-        p_centro_nuevo_id,
-        p_observacion,
-        1 -- Estado 'Pendiente'
-    );
+    DECLARE v_periodo_actual_id INT;
+    DECLARE v_tipo_solicitud_id INT DEFAULT 2; -- Asumimos que 2 = Cambio de Centro Regional
+    DECLARE v_solicitud_id INT;
+
+    -- Obtener el período académico actual
+    SELECT id INTO v_periodo_actual_id
+    FROM Periodo_Academico
+    WHERE CURRENT_DATE BETWEEN fecha_inicio AND fecha_fin
+    LIMIT 1;
+
+    -- Validación de existencia previa
+    IF fn_existe_solicitud_en_periodo_actual(p_estudiante_id, v_tipo_solicitud_id) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Ya existe una solicitud de cambio de centro en el período actual.';
+    ELSE
+        -- Insertar en Solicitudes
+        INSERT INTO Solicitudes (
+            estudiante_id,
+            periodo_acad_id,
+            observacion,
+            tipo_solicitud_id,
+			estado_solicitud_id
+        ) VALUES (
+            p_estudiante_id,
+            v_periodo_actual_id,
+            p_observacion,
+            v_tipo_solicitud_id,
+            1
+        );
+
+        SET v_solicitud_id = LAST_INSERT_ID();
+
+        -- Insertar en Solicitud_Cambio_Centro
+        INSERT INTO Solicitud_Cambio_Centro (
+            centro_nuevo_id,
+            solicitud_id,
+            archivoPDF
+        ) VALUES (
+            p_centro_nuevo_id,
+            v_solicitud_id,
+            p_archivoPDF
+        );
+    END IF;
 END $$
+
+
+
+
+
+CREATE PROCEDURE InsertarSolicitudCambioCarrera (
+    IN p_estudiante_id VARCHAR(11),
+    IN p_carrera_nueva_id INT,
+    IN p_observacion VARCHAR(255),
+    IN p_archivoPDF MEDIUMBLOB
+)
+BEGIN
+    DECLARE v_periodo_actual_id INT;
+    DECLARE v_tipo_solicitud_id INT DEFAULT 3; -- Asumimos que 3 = Cambio de Carrera
+    DECLARE v_solicitud_id INT;
+
+    -- Obtener el período académico actual
+    SELECT id INTO v_periodo_actual_id
+    FROM Periodo_Academico
+    WHERE CURRENT_DATE BETWEEN fecha_inicio AND fecha_fin
+    LIMIT 1;
+
+    -- Validación de existencia previa
+    IF fn_existe_solicitud_en_periodo_actual(p_estudiante_id, v_tipo_solicitud_id) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Ya existe una solicitud de cambio de carrera en el período actual.';
+    ELSE
+        -- Insertar en Solicitudes
+        INSERT INTO Solicitudes (
+            estudiante_id,
+            periodo_acad_id,
+            observacion,
+            tipo_solicitud_id,
+            estado_solicitud_id
+        ) VALUES (
+            p_estudiante_id,
+            v_periodo_actual_id,
+            p_observacion,
+            v_tipo_solicitud_id,
+            1
+        );
+
+        SET v_solicitud_id = LAST_INSERT_ID();
+
+        -- Insertar en Solicitud_Cambios_Carrera
+        INSERT INTO Solicitud_Cambios_Carrera (
+            carrera_nueva_id,
+            solicitud_id,
+            archivoPDF
+        ) VALUES (
+            p_carrera_nueva_id,
+            v_solicitud_id,
+            p_archivoPDF
+        );
+    END IF;
+END $$
+
 
 
 CREATE PROCEDURE InsertarSolicitudPagoReposicion (
@@ -751,31 +806,54 @@ CREATE PROCEDURE InsertarSolicitudPagoReposicion (
 )
 BEGIN
     DECLARE v_periodo_id INT;
+    DECLARE v_tipo_solicitud_id INT DEFAULT 1; -- Asumimos que 1 = Pago de Reposición
+    DECLARE v_solicitud_id INT;
 
-    -- Obtener el periodo académico actual según la fecha actual
+    -- Obtener el periodo académico actual
     SELECT id INTO v_periodo_id
     FROM Periodo_Academico
     WHERE CURDATE() BETWEEN fecha_inicio AND fecha_fin
     LIMIT 1;
 
-    -- Validar si se encontró un periodo
-    IF v_periodo_id IS NOT NULL THEN
-        INSERT INTO Solicitud_Pago_Reposicion (
-            estudiante_id,
-            periodo_acad_id,
-            observacion,
-            estado_pago_reposicion_id
-        ) VALUES (
-            p_estudiante_id,
-            v_periodo_id,
-            p_observacion,
-            1 -- 'No pagado'
-        );
-    ELSE
+    -- Validar si hay período activo
+    IF v_periodo_id IS NULL THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'No se encontró un período académico activo para la fecha actual.';
     END IF;
+
+    -- Validar si ya existe una solicitud de reposición en este período
+    IF fn_existe_solicitud_en_periodo_actual(p_estudiante_id, v_tipo_solicitud_id) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Ya existe una solicitud de pago de reposición en el período actual.';
+    END IF;
+
+    -- Insertar en Solicitudes
+    INSERT INTO Solicitudes (
+        estudiante_id,
+        periodo_acad_id,
+        observacion,
+        tipo_solicitud_id,
+        estado_solicitud_id
+    ) VALUES (
+        p_estudiante_id,
+        v_periodo_id,
+        p_observacion,
+        v_tipo_solicitud_id,
+        NULL
+    );
+
+    SET v_solicitud_id = LAST_INSERT_ID();
+
+    -- Insertar en la tabla específica
+    INSERT INTO Solicitud_Pago_Reposicion (
+        estado_pago_reposicion_id,
+        solicitud_id
+    ) VALUES (
+        1, -- Estado inicial: No pagado
+        v_solicitud_id
+    );
 END $$
+
 
 
 CREATE PROCEDURE InsertarSolicitudCancelacionExcepc(
@@ -786,36 +864,51 @@ CREATE PROCEDURE InsertarSolicitudCancelacionExcepc(
 )
 BEGIN
     DECLARE v_periodo_acad_id INT;
+    DECLARE v_solicitud_id INT;
+    DECLARE v_tipo_solicitud_id INT DEFAULT 4; -- Asumimos que 4 = Cancelación Excepcional
 
-    -- Obtener el periodo académico actual según la fecha del sistema
+    -- Obtener el período académico actual
     SELECT id INTO v_periodo_acad_id
     FROM Periodo_Academico
     WHERE CURRENT_DATE BETWEEN fecha_inicio AND fecha_fin
     LIMIT 1;
 
-    -- Validar si se encontró un periodo académico
-    IF v_periodo_acad_id IS NOT NULL THEN
-        INSERT INTO Solicitud_Cancelacion_Excepc (
-            estudiante_id,
-            periodo_acad_id,
-            justificacion,
-            archivoPDF,
-            seccion_id,
-            estado_solicitud_id
-        )
-        VALUES (
-            p_estudiante_id,
-            v_periodo_acad_id,
-            p_justificacion,
-            p_archivo_pdf,
-            p_seccion_id,
-            1     -- Estado inicial: Pendiente
-        );
-    ELSE
+    -- Validar si se encontró un período académico
+    IF v_periodo_acad_id IS NULL THEN
         SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'No se encontró un periodo académico activo para la fecha actual.';
+        SET MESSAGE_TEXT = 'No se encontró un período académico activo para la fecha actual.';
     END IF;
+
+    -- Insertar en tabla central de Solicitudes
+    INSERT INTO Solicitudes (
+        estudiante_id,
+        periodo_acad_id,
+        observacion,
+        tipo_solicitud_id,
+        estado_solicitud_id
+    ) VALUES (
+        p_estudiante_id,
+        v_periodo_acad_id,
+        p_justificacion,
+        v_tipo_solicitud_id,
+        1
+    );
+
+    SET v_solicitud_id = LAST_INSERT_ID();
+
+    -- Insertar en tabla específica de Cancelación Excepcional
+    INSERT INTO Solicitud_Cancelacion_Excepc (
+        solicitud_id,
+        archivoPDF,
+        seccion_id
+    ) VALUES (
+        v_solicitud_id,
+        p_archivo_pdf,
+        p_seccion_id
+    );
 END $$
+
+
 
 
 
@@ -1028,39 +1121,6 @@ BEGIN
 END $$
 
 
-CREATE PROCEDURE ObtenerRecursosPorDocente(
-    IN p_docente_id INT
-)
-BEGIN
-    SELECT 
-        r.id AS recurso_id,
-        r.titulo,
-        r.autor,
-        GROUP_CONCAT(t.nombre ORDER BY t.nombre SEPARATOR ', ') AS tags,
-        r.portada,
-        r.anio
-    FROM Recursos r
-    LEFT JOIN Recursos_Tags rt ON r.id = rt.recurso_id
-    LEFT JOIN Tags t ON rt.tags_id = t.id
-    WHERE r.docente_id = p_docente_id
-    GROUP BY r.id, r.titulo, r.autor;
-END $$
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 DELIMITER ;
-
 
