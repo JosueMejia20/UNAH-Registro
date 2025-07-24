@@ -46,11 +46,24 @@
             }
         }
 
+        //ELIMINAR
         public function obtenerRecursosDocente($idDocente){
             try{
                 $db = new DataBase();
 
                 $datos = $db->executeQuery("CALL ObtenerRecursosPorDocente($idDocente)");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
+
+        public function obtenerTipoRecurso(){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL obtenerTiposDeRecurso()");
             
                 return $datos;
             } catch(PDOException $e){

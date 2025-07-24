@@ -1,7 +1,6 @@
- 
  // -------- Controlador del Chat --------
 import {
-    cargarRecursosDocente
+    cargarTipoRecurso
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
 
@@ -15,6 +14,69 @@ const idDocente = sessionStorage.getItem('idDocente') || '1002';
     .map(tag => tag.trim())
     .filter(tag => tag.length > 0);
 }
+
+
+const btnSubirRecurso = document.getElementById('subirRecursoModalBtn');
+const formSubirRecurso = document.getElementById('formSubirRecurso');
+btnSubirRecurso?.addEventListener('click', () => {
+    const modal = new bootstrap.Modal(document.getElementById('subirRecursoModal'));
+    modal.show();
+    cargarTipoRecurso();
+});
+
+const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+});
+
+formSubirRecurso?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(formSubirRecurso);
+      const datosJSON = {};
+
+      //Comentado porque ya se inserta la foto cuando se hace newFormData. Descongelar cuando sea necesario
+      //const archivo = document.getElementById('foto_perfil')?.files[0];
+      //if (archivo) formData.append('foto_perfil', archivo);
+
+      formData.append('idDocente', idDocente);
+
+      console.log(formData);
+
+
+    for (const [key, value] of formData.entries()) {
+      if (value instanceof File && value.name) {
+        datosJSON[key] = await toBase64(value);
+      } else {
+        if((key == 'autores') || (key == 'tags')){
+            datosJSON[key] = separarTags(value);
+        } else{
+            datosJSON[key] = value;
+        }
+      }
+    }
+
+    console.log(datosJSON);
+
+      try {
+        const response = await subirRecurso(datosJSON);
+        //const resultado = await response.json();
+
+        if (response.success) {
+          alert('Recurso subido correctamente');
+          //const nuevoPerfil = await obtenerPerfilEstudiante(matriculaEstudiante);
+          //mostrarPerfilEnVista(nuevoPerfil);
+          bootstrap.Modal.getInstance(document.getElementById('editarRecursoModal'))?.hide();
+          location.reload();
+        } else {
+          alert('Error al actualizar perfil');
+        }
+      } catch (error) {
+        alert('Error de conexión al actualizar perfil.');
+      }
+    });
+
 
 // Función para confirmar eliminación de recurso
 window.confirmarEliminacion = function(id){
@@ -73,10 +135,10 @@ window.confirmarEliminacion = function(id){
         }
         
         // Función para cargar los recursos del docente
-        const cargarMisRecursos = async (idDocente) => {
+        const cargarRecursos = async (idDocente) => {
             const misRecursos = await cargarRecursosDocente(idDocente);
             //const misRecursos = document.querySelectorAll('.recurso-card[data-propietario="true"]');
-            const gridMisRecursos = document.getElementById('gridMisRecursos');
+            const gridMisRecursos = document.getElementById('gridRecursos');
             const noMisRecursos = document.getElementById('noMisRecursos');
             
             console.log(misRecursos);
@@ -242,7 +304,7 @@ window.confirmarEliminacion = function(id){
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
             // Cargar los recursos del docente al inicio
-            cargarMisRecursos(idDocente);
+            cargarRecursos(idDocente);
             
             // Configurar eventos de filtrado
             document.getElementById('filtroCurso').addEventListener('change', filtrarRecursos);

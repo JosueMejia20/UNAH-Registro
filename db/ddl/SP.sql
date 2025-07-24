@@ -42,6 +42,7 @@ DROP PROCEDURE IF EXISTS InsertarSolicitudContacto;
 DROP PROCEDURE IF EXISTS ObtenerDocentesActualesPorEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerDatosDocente;
 DROP PROCEDURE IF EXISTS ObtenerAsignaturasActualesDocente;
+DROP PROCEDURE IF EXISTS obtenerTiposDeRecurso;
 
 DELIMITER $$
 
@@ -1118,6 +1119,11 @@ BEGIN
     INNER JOIN Dias d ON s.dias_id = d.id
     WHERE s.docente_id = p_docente_id
       AND fecha_actual BETWEEN pa.fecha_inicio AND pa.fecha_fin;
+END $$
+
+CREATE PROCEDURE obtenerTiposDeRecurso()
+BEGIN
+	SELECT * FROM Tipo_Recurso;
 END $$
 
 

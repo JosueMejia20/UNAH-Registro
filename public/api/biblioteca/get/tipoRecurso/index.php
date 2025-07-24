@@ -11,10 +11,9 @@ $biblioteca = new Biblioteca();
 
 //$idEstudiante = intval(explode("/",$_SERVER["PATH_INFO"])[1]);
 
-$idDocente = $_GET['idDocente'];
 
 header("Content-Type: application/json");
 
-$recursosDocente = $biblioteca->obtenerRecursosDocente($idDocente);
+$tiposRecurso = $biblioteca->obtenerTipoRecurso();
 
-echo json_encode($recursosDocente);
+echo json_encode($tiposRecurso);

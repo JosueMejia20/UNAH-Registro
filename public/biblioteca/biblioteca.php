@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="/../../assets/css/principal_components.css">
     <link rel="stylesheet" href="../assets/css/biblioteca_style.css">
 </head>
+
 <body class="bg-blue-gray">
     <pantalla-de-carga></pantalla-de-carga>
 
@@ -29,7 +31,9 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Mi perfil</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configuración</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión</a></li>
                         </ul>
                     </li>
@@ -44,24 +48,16 @@
             <h1 class="h3 text-unah-blue">
                 <i class="bi bi-book me-2"></i>Recursos Académicos
             </h1>
-            <button class="btn btn-unah-blue" data-bs-toggle="modal" data-bs-target="#subirRecursoModal">
+            <button class="btn btn-unah-blue" id="subirRecursoModalBtn">
                 <i class="bi bi-plus me-2"></i>Agregar Recurso
             </button>
         </div>
 
-        <!-- Pestañas para diferentes vistas -->
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="todos-tab" data-bs-toggle="tab" data-bs-target="#todos" type="button">Todos los recursos</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link mis-recursos" id="mis-recursos-tab" data-bs-toggle="tab" data-bs-target="#mis-recursos" type="button">Mis recursos</button>
-            </li>
-        </ul>
 
         <div class="tab-content bg-white border border-top-0 rounded-bottom p-3" id="myTabContent">
             <!-- Pestaña Todos los recursos -->
             <div class="tab-pane fade show active" id="todos" role="tabpanel">
+
                 <!-- Filtros y búsqueda -->
                 <div class="card mb-4">
                     <div class="card-body">
@@ -106,15 +102,15 @@
                         <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="introducción a la programación john doe programación, algoritmos, python" data-categoria="libro">
                             <div class="portada-container" onclick="verRecurso(1)">
                                 <img src="https://m.media-amazon.com/images/I/61K5jyMB5VL._AC_UF1000,1000_QL80_.jpg" alt="Portada de Introducción a la Programación" class="img-fluid portada-img">
-                                
+
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">Introducción a la Programación</h5>
                                 <p class="card-text small text-muted">John Doe, María Pérez, Carlos López</p>
                                 <p class="small text-muted"><i class="bi bi-calendar me-1"></i>2022</p>
-                                
+
                                 <p class="card-text small text-truncate">Este libro ofrece una introducción completa a los fundamentos de la programación, desde conceptos básicos hasta estructuras de datos simples. Ideal para estudiantes de primer año.</p>
-                                
+
                                 <div class="border-top pt-2 mt-2">
                                     <div class="mb-2">
                                         <span class="badge badge-tag me-1">programación</span>
@@ -136,15 +132,15 @@
                                 <div class="portada-placeholder w-100 h-100 d-flex align-items-center justify-content-center">
                                     <i class="bi bi-book text-primary opacity-50" style="font-size: 3rem;"></i>
                                 </div>
-                                
+
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">Historia del Arte Moderno: Del Renacimiento al Siglo XXI</h5>
                                 <p class="card-text small text-muted">Prof. Carlos Méndez, Robert Johnson</p>
                                 <p class="small text-muted"><i class="bi bi-calendar me-1"></i>2023</p>
-                                
+
                                 <p class="card-text small text-truncate">Análisis comparativo de los movimientos artísticos desde el Renacimiento hasta el arte contemporáneo, con énfasis en la evolución de las técnicas y su contexto histórico.</p>
-                                
+
                                 <div class="border-top pt-2 mt-2">
                                     <div class="mb-2">
                                         <span class="badge badge-tag me-1">arte</span>
@@ -164,15 +160,15 @@
                         <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 2" data-busqueda="álgebra lineal equipo matemáticas matemáticas, álgebra, ecuaciones" data-categoria="libro">
                             <div class="portada-container" onclick="verRecurso(3)">
                                 <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1348255220i/675201.jpg" alt="Portada de Álgebra Lineal" class="img-fluid portada-img">
-                                
+
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">Álgebra Lineal: Teoría y Práctica</h5>
                                 <p class="card-text small text-muted">Equipo Matemáticas, Dr. Luis González</p>
                                 <p class="small text-muted"><i class="bi bi-calendar me-1"></i>2021</p>
-                                
+
                                 <p class="card-text small text-truncate">Manual completo de álgebra lineal con enfoque teórico-práctico, incluye ejercicios resueltos y aplicaciones en diversas áreas de la ingeniería.</p>
-                                
+
                                 <div class="border-top pt-2 mt-2">
                                     <div class="mb-2">
                                         <span class="badge badge-tag me-1">matemáticas</span>
@@ -192,15 +188,15 @@
                         <div class="card h-100 shadow-sm recurso-card" data-cursos="3, 4" data-busqueda="diseño web ana gómez web, diseño, frontend" data-categoria="guia" data-propietario="true">
                             <div class="portada-container" onclick="verRecurso(4)">
                                 <img src="https://m.media-amazon.com/images/I/71Vj4WsW1mL._AC_UF1000,1000_QL80_.jpg" alt="Portada de Diseño Web Moderno" class="img-fluid portada-img">
-                                
+
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">Diseño Web Moderno: Principios y Técnicas</h5>
                                 <p class="card-text small text-muted">Prof. Carlos Méndez, Sofía Ramírez</p>
                                 <p class="small text-muted"><i class="bi bi-calendar me-1"></i>2023</p>
-                                
+
                                 <p class="card-text small text-truncate">Guía práctica actualizada con las últimas técnicas de diseño web responsive, accesibilidad y mejores prácticas de UI/UX para el desarrollo frontend moderno.</p>
-                                
+
                                 <div class="border-top pt-2 mt-2">
                                     <div class="mb-2">
                                         <span class="badge badge-tag me-1">web</span>
@@ -221,26 +217,6 @@
                     <i class="bi bi-book text-unah-blue" style="font-size: 3rem;"></i>
                     <h4>No se encontraron recursos</h4>
                     <p class="text-muted">Intenta con otros términos de búsqueda o ajusta los filtros</p>
-                </div>
-            </div>
-
-            <!-- Pestaña Mis recursos -->
-            <div class="tab-pane fade" id="mis-recursos" role="tabpanel">
-                <div class="alert alert-info mt-3">
-                    <i class="bi bi-info-circle me-2"></i>Estos son los recursos que has subido a la biblioteca. Puedes editarlos o eliminarlos en cualquier momento.
-                </div>
-                
-                <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4" id="gridMisRecursos">
-                    <!-- Los recursos del docente se cargarán aquí con JavaScript -->
-                </div>
-                
-                <div id="noMisRecursos" class="text-center py-5 bg-white rounded">
-                    <i class="bi bi-book text-unah-blue" style="font-size: 3rem;"></i>
-                    <h4>Aún no has subido recursos</h4>
-                    <p class="text-muted">Comienza agregando tu primer recurso con el botón "Agregar Recurso"</p>
-                    <button class="btn btn-unah-blue mt-3" data-bs-toggle="modal" data-bs-target="#subirRecursoModal">
-                        <i class="bi bi-plus me-2"></i>Agregar mi primer recurso
-                    </button>
                 </div>
             </div>
         </div>
@@ -292,6 +268,12 @@
                                     <label for="anio" class="form-label">Año de publicación*</label>
                                     <input type="number" class="form-control" id="anio" name="anio" min="1900" max="2099" required>
                                 </div>
+                                <div class="mb-3">
+                                    <label for="categoria" class="form-label">Tipo de recurso*</label>
+                                    <select class="form-select" id="categoria" name="categoria" required>
+
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -305,7 +287,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -325,7 +307,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="archivo_pdf" class="form-label">Archivo del recurso*</label>
                             <input type="file" class="form-control" id="archivo_pdf" name="archivo_pdf" accept=".pdf,.doc,.docx,.ppt,.pptx" required>
@@ -389,7 +371,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -401,38 +383,38 @@
                                         <option value="4">Historia Universal</option>
                                     </select>
                                 </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="cursos" class="form-label">Cursos relacionados</label>
-                                    <select class="form-select" id="cursos" name="cursos" multiple>
-                                        <option value="1">Matemáticas Avanzadas</option>
-                                        <option value="2">Literatura Contemporánea</option>
-                                        <option value="3">Programación Web</option>
-                                        <option value="4">Historia Universal</option>
-                                    </select>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="cursos" class="form-label">Cursos relacionados</label>
+                                        <select class="form-select" id="cursos" name="cursos" multiple>
+                                            <option value="1">Matemáticas Avanzadas</option>
+                                            <option value="2">Literatura Contemporánea</option>
+                                            <option value="3">Programación Web</option>
+                                            <option value="4">Historia Universal</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="portada" class="form-label">Portada (opcional)</label>
+                                        <input type="file" class="form-control" id="portada" name="portada" accept="image/*">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="portada" class="form-label">Portada (opcional)</label>
-                                    <input type="file" class="form-control" id="portada" name="portada" accept="image/*">
-                                </div>
+
+                            <div class="mb-3">
+                                <label for="archivo_pdf" class="form-label">Archivo del recurso*</label>
+                                <input type="file" class="form-control" id="archivo_pdf" name="archivo_pdf" accept=".pdf,.doc,.docx,.ppt,.pptx" required>
+                                <small class="text-muted">Formatos aceptados: PDF, Word, PowerPoint</small>
                             </div>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="archivo_pdf" class="form-label">Archivo del recurso*</label>
-                            <input type="file" class="form-control" id="archivo_pdf" name="archivo_pdf" accept=".pdf,.doc,.docx,.ppt,.pptx" required>
-                            <small class="text-muted">Formatos aceptados: PDF, Word, PowerPoint</small>
+                        <div class="modal-footer bg-blue-gray">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-unah-blue">Subir Recurso</button>
                         </div>
-                    </div>
-                    <div class="modal-footer bg-blue-gray">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-unah-blue">Subir Recurso</button>
-                    </div>
                 </form>
             </div>
         </div>
@@ -486,7 +468,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -504,26 +486,26 @@
                                     <label for="edit_portada" class="form-label">Cambiar portada (opcional)</label>
                                     <input type="file" class="form-control" id="edit_portada" name="edit_portada" accept="image/*">
                                 </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="edit_portada" class="form-label">Cambiar portada (opcional)</label>
-                                    <input type="file" class="form-control" id="edit_portada" name="edit_portada" accept="image/*">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="edit_portada" class="form-label">Cambiar portada (opcional)</label>
+                                        <input type="file" class="form-control" id="edit_portada" name="edit_portada" accept="image/*">
+                                    </div>
                                 </div>
                             </div>
+
+                            <div class="mb-3">
+                                <label for="edit_archivo" class="form-label">Cambiar archivo (opcional)</label>
+                                <input type="file" class="form-control" id="edit_archivo" name="edit_archivo" accept=".pdf,.doc,.docx,.ppt,.pptx">
+                                <small class="text-muted">Dejar en blanco para mantener el archivo actual</small>
+                            </div>
+
+                            <input type="hidden" id="recurso_id" name="recurso_id">
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="edit_archivo" class="form-label">Cambiar archivo (opcional)</label>
-                            <input type="file" class="form-control" id="edit_archivo" name="edit_archivo" accept=".pdf,.doc,.docx,.ppt,.pptx">
-                            <small class="text-muted">Dejar en blanco para mantener el archivo actual</small>
+                        <div class="modal-footer bg-blue-gray">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-unah-blue">Guardar cambios</button>
                         </div>
-                        
-                        <input type="hidden" id="recurso_id" name="recurso_id">
-                    </div>
-                    <div class="modal-footer bg-blue-gray">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-unah-blue">Guardar cambios</button>
-                    </div>
                 </form>
             </div>
         </div>
@@ -543,19 +525,19 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-danger" id="confirmarEliminarBtn">Eliminar</button>
-                        
-                        <div class="mb-3">
-                            <label for="edit_archivo" class="form-label">Cambiar archivo (opcional)</label>
-                            <input type="file" class="form-control" id="edit_archivo" name="edit_archivo" accept=".pdf,.doc,.docx,.ppt,.pptx">
-                            <small class="text-muted">Dejar en blanco para mantener el archivo actual</small>
-                        </div>
-                        
-                        <input type="hidden" id="recurso_id" name="recurso_id">
+
+                    <div class="mb-3">
+                        <label for="edit_archivo" class="form-label">Cambiar archivo (opcional)</label>
+                        <input type="file" class="form-control" id="edit_archivo" name="edit_archivo" accept=".pdf,.doc,.docx,.ppt,.pptx">
+                        <small class="text-muted">Dejar en blanco para mantener el archivo actual</small>
                     </div>
-                    <div class="modal-footer bg-blue-gray">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-unah-blue">Guardar cambios</button>
-                    </div>
+
+                    <input type="hidden" id="recurso_id" name="recurso_id">
+                </div>
+                <div class="modal-footer bg-blue-gray">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-unah-blue">Guardar cambios</button>
+                </div>
                 </form>
             </div>
         </div>
@@ -589,4 +571,5 @@
 
 
 </body>
+
 </html>
