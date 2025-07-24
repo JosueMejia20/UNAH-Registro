@@ -43,6 +43,15 @@ DROP PROCEDURE IF EXISTS ObtenerDocentesActualesPorEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerDatosDocente;
 DROP PROCEDURE IF EXISTS ObtenerAsignaturasActualesDocente;
 DROP PROCEDURE IF EXISTS obtenerTiposDeRecurso;
+DROP PROCEDURE IF EXISTS GetClasesPorDocente;
+DROP PROCEDURE IF EXISTS InsertarAutor;
+DROP PROCEDURE IF EXISTS InsertarTag;
+DROP PROCEDURE IF EXISTS InsertarRecurso;
+DROP PROCEDURE IF EXISTS RelacionarAutorRecurso;
+DROP PROCEDURE IF EXISTS RelacionarTagRecurso;
+DROP PROCEDURE IF EXISTS RelacionarClaseRecurso;
+DROP PROCEDURE IF EXISTS GetRecursosDetallados;
+
 
 DELIMITER $$
 
@@ -1125,6 +1134,118 @@ CREATE PROCEDURE obtenerTiposDeRecurso()
 BEGIN
 	SELECT * FROM Tipo_Recurso;
 END $$
+
+CREATE PROCEDURE GetClasesPorDocente(
+    IN p_docente_id INT
+)
+BEGIN
+    SELECT DISTINCT
+        c.clase_id,
+        c.codigo,
+        c.nombre_clase,
+        c.unidades_valorativas
+    FROM Seccion s
+    INNER JOIN Clase c ON s.clase_id = c.clase_id
+    WHERE s.docente_id = p_docente_id;
+END $$
+
+
+
+CREATE PROCEDURE InsertarAutor(
+    IN p_nombre_completo VARCHAR(90),
+    OUT p_autor_id INT
+)
+BEGIN
+    INSERT INTO Autores(nombre_completo) VALUES (p_nombre_completo);
+    SET p_autor_id = LAST_INSERT_ID();
+END$$
+
+
+CREATE PROCEDURE InsertarTag(
+    IN p_nombre VARCHAR(60),
+    OUT p_tag_id INT
+)
+BEGIN
+    INSERT INTO Tags(nombre) VALUES (p_nombre);
+    SET p_tag_id = LAST_INSERT_ID();
+END$$
+
+
+CREATE PROCEDURE InsertarRecurso(
+    IN p_titulo VARCHAR(130),
+    IN p_archivo MEDIUMBLOB,
+    IN p_anio YEAR,
+    IN p_portada MEDIUMBLOB,
+    IN p_docente_id INT,
+    IN p_tipo_recurso_id INT,
+    OUT p_recurso_id INT
+)
+BEGIN
+    INSERT INTO Recursos(titulo, archivo, anio, portada, docente_id, tipo_recurso_id)
+    VALUES (p_titulo, p_archivo, p_anio, p_portada, p_docente_id, p_tipo_recurso_id);
+    
+    SET p_recurso_id = LAST_INSERT_ID();
+END$$
+
+
+CREATE PROCEDURE RelacionarAutorRecurso(
+    IN p_recurso_id INT,
+    IN p_autor_id INT
+)
+BEGIN
+    INSERT INTO Autores_Recursos(recurso_id, autor_id) VALUES (p_recurso_id, p_autor_id);
+END$$
+
+
+CREATE PROCEDURE RelacionarTagRecurso(
+    IN p_recurso_id INT,
+    IN p_tag_id INT
+)
+BEGIN
+    INSERT INTO Recursos_Tags(recurso_id, tags_id) VALUES (p_recurso_id, p_tag_id);
+END$$
+
+
+CREATE PROCEDURE RelacionarClaseRecurso(
+    IN p_recurso_id INT,
+    IN p_clase_id INT
+)
+BEGIN
+    INSERT INTO Recursos_Clase(recurso_id, clase_id) VALUES (p_recurso_id, p_clase_id);
+END$$
+
+
+
+CREATE PROCEDURE GetRecursosDetallados()
+BEGIN
+    SELECT 
+        r.id,
+        r.titulo,
+        r.anio,
+        r.portada,
+        tr.nombre AS tipo_recurso,
+        
+        -- Autores separados por coma
+        (SELECT GROUP_CONCAT(a.nombre_completo SEPARATOR ', ')
+         FROM Autores a
+         INNER JOIN Autores_Recursos ar ON a.id = ar.autor_id
+         WHERE ar.recurso_id = r.id) AS autores,
+         
+        -- Tags separados por coma
+        (SELECT GROUP_CONCAT(t.nombre SEPARATOR ', ')
+         FROM Tags t
+         INNER JOIN Recursos_Tags tr2 ON t.id = tr2.tags_id
+         WHERE tr2.recurso_id = r.id) AS tags,
+         
+        (SELECT GROUP_CONCAT(CONCAT(codigo, ' - ', nombre_clase) SEPARATOR ', ')
+         FROM Clase c
+         INNER JOIN Recursos_Clase cr ON c.clase_id = cr.clase_id
+         WHERE cr.recurso_id = r.id) AS clases_asociadas
+         
+    FROM Recursos r
+    INNER JOIN Tipo_Recurso tr ON r.tipo_recurso_id = tr.id;
+END $$
+
 
 
 

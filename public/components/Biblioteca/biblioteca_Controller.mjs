@@ -27,6 +27,24 @@ export const cargarTipoRecurso = async () => {
   }
 };
 
+export const cargarClasesDocente = async (idDocente) => {
+  try {
+    const response = await fetch(`${BASE_URL}/get/clasesDocente/${idDocente}`);
+    const data = await response.json();
+    const select = document.getElementById('cursos');
+
+    limpiarOpciones(select);
+    select.appendChild(new Option('Seleccionar...', ''));
+
+    console.log(data);
+    data.forEach(item => {
+      select.appendChild(new Option(item.nombre_clase, item.clase_id));
+    });
+  } catch (err) {
+    console.error('Error al cargar tipo recurso:', err);
+  }
+};
+
 export const subirRecurso = async (datosJson) => {
   try {
     const response = await fetch(`${BASE_URL}/post/subirRecurso/index.php`, {
@@ -42,4 +60,13 @@ export const subirRecurso = async (datosJson) => {
   }
 };
 
+export const cargarRecursos = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/get/recursos`);
+    return await response.json();
+
+  } catch (err) {
+    console.error('Error al cargar tipo recurso:', err);
+  }
+};
 

@@ -1,6 +1,9 @@
  // -------- Controlador del Chat --------
 import {
-    cargarTipoRecurso
+    cargarTipoRecurso,
+    subirRecurso,
+    cargarClasesDocente,
+    cargarRecursos
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
 
@@ -22,6 +25,7 @@ btnSubirRecurso?.addEventListener('click', () => {
     const modal = new bootstrap.Modal(document.getElementById('subirRecursoModal'));
     modal.show();
     cargarTipoRecurso();
+    cargarClasesDocente(idDocente);
 });
 
 const toBase64 = file => new Promise((resolve, reject) => {
@@ -135,8 +139,8 @@ window.confirmarEliminacion = function(id){
         }
         
         // Función para cargar los recursos del docente
-        const cargarRecursos = async (idDocente) => {
-            const misRecursos = await cargarRecursosDocente(idDocente);
+        const cargarRecursosDetalle = async () => {
+            const misRecursos = await cargarRecursos();
             //const misRecursos = document.querySelectorAll('.recurso-card[data-propietario="true"]');
             const gridMisRecursos = document.getElementById('gridRecursos');
             const noMisRecursos = document.getElementById('noMisRecursos');
@@ -304,7 +308,7 @@ window.confirmarEliminacion = function(id){
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
             // Cargar los recursos del docente al inicio
-            cargarRecursos(idDocente);
+            cargarRecursosDetalle();
             
             // Configurar eventos de filtrado
             document.getElementById('filtroCurso').addEventListener('change', filtrarRecursos);
@@ -320,20 +324,6 @@ window.confirmarEliminacion = function(id){
                     const id = this.getAttribute('data-id');
                     verRecurso(id);
                 });
-            });
-            
-            // Configurar formulario para subir recurso
-            document.getElementById('formSubirRecurso').addEventListener('submit', function(e) {
-                e.preventDefault();
-                // Aquí iría la lógica para subir el recurso
-                alert('Recurso subido exitosamente');
-                
-                // Cerrar el modal
-                const modal = bootstrap.Modal.getInstance(document.getElementById('subirRecursoModal'));
-                modal.hide();
-                
-                // Recargar la lista de recursos
-                cargarMisRecursos(idDocente);
             });
             
             // Configurar formulario para editar recurso

@@ -10,26 +10,28 @@ $biblioteca = new Biblioteca();
 
 // Responder a la peticion
 
-//$idInscripcion = intval(explode("/",$_SERVER["PATH_INFO"])[1]);
-//$valor = intval(explode("/",$_SERVER["PATH_INFO"])[2]);
 
 header("Content-Type: application/json");
 
-//$inscripcionesByRevisor = $admisiones->getInscripcionesByRevisor($idRevisor);
-//echo $idInscripcion;
-//echo $valor;
+
 
 $postData = json_decode(file_get_contents("php://input"),true);
-//echo json_encode($putData);
 
-$idDocente = $postData["carreraNueva"];
-$justificacion = $postData["justificacionCambioCarrera"];
-$idEstudiante = $postData["matricula"];
-$archivoPdf = $postData["archivoPDF"];
 
+
+$titulo = $postData["titulo"];
+$tags = $postData["tags"];
+$descripcion = $postData["descripcion"];
+$categoria = $postData["categoria"];
+$autores = $postData["autores"];
+$anio = $postData["anio"];
+$idDocente = $postData["idDocente"];
+$archivoPdf = $postData["archivo_pdf"];
+$portada = $postData["portada"];
+$cursos = $postData["cursos"];
 
 try{
-    $resultado = $estudiantes->insertCambioCarrera($idEstudiante, $carreraNueva, $justificacion, $archivoPdf);
+    $resultado = $biblioteca->insertarRecursoCompleto($titulo, $tags, $descripcion, $categoria, $autores, $anio, $idDocente, $archivoPdf, $portada,$cursos);
     if($resultado){
         echo json_encode([
             'success'=> true,
@@ -50,7 +52,3 @@ try{
         'message'=> 'Excepcion: '. $e->getMessage()
     ]);
 }
-
-//echo $putData;
-
-//$admisiones->cambiarEstadoInscripcion($idInscripcion,$valor);

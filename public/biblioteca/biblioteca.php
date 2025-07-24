@@ -188,15 +188,23 @@
                         <div class="card h-100 shadow-sm recurso-card" data-cursos="3, 4" data-busqueda="diseño web ana gómez web, diseño, frontend" data-categoria="guia" data-propietario="true">
                             <div class="portada-container" onclick="verRecurso(4)">
                                 <img src="https://m.media-amazon.com/images/I/71Vj4WsW1mL._AC_UF1000,1000_QL80_.jpg" alt="Portada de Diseño Web Moderno" class="img-fluid portada-img">
-
+                                <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
+                                    <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;" data-bs-toggle="modal" data-bs-target="#editarRecursoModal" onclick="cargarDatosEdicion(4)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;" onclick="confirmarEliminacion(4)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="card-body">
+                                <span class="badge text-bg-primary mb-2">Guía de estudio</span>
                                 <h5 class="card-title">Diseño Web Moderno: Principios y Técnicas</h5>
                                 <p class="card-text small text-muted">Prof. Carlos Méndez, Sofía Ramírez</p>
                                 <p class="small text-muted"><i class="bi bi-calendar me-1"></i>2023</p>
-
+                                
                                 <p class="card-text small text-truncate">Guía práctica actualizada con las últimas técnicas de diseño web responsive, accesibilidad y mejores prácticas de UI/UX para el desarrollo frontend moderno.</p>
-
+                                
                                 <div class="border-top pt-2 mt-2">
                                     <div class="mb-2">
                                         <span class="badge badge-tag me-1">web</span>
