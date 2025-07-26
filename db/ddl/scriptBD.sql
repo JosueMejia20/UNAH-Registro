@@ -727,6 +727,7 @@ CREATE TABLE Recursos(
     portada MEDIUMBLOB,
     docente_id INT NOT NULL,
     tipo_recurso_id INT NOT NULL,
+    descripcion VARCHAR (200) NOT NULL,
     
 	FOREIGN KEY (docente_id) REFERENCES Docente(numero_empleado)
 		ON DELETE CASCADE

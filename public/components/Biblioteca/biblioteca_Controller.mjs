@@ -22,6 +22,16 @@ export const cargarTipoRecurso = async () => {
     data.forEach(item => {
       select.appendChild(new Option(item.nombre, item.id));
     });
+
+    const selectEdit = document.getElementById('edit_categoria');
+
+    limpiarOpciones(selectEdit);
+    selectEdit.appendChild(new Option('Seleccionar...', ''));
+
+    console.log(data);
+    data.forEach(item => {
+      selectEdit.appendChild(new Option(item.nombre, item.id));
+    });
   } catch (err) {
     console.error('Error al cargar tipo recurso:', err);
   }
@@ -39,6 +49,16 @@ export const cargarClasesDocente = async (idDocente) => {
     console.log(data);
     data.forEach(item => {
       select.appendChild(new Option(item.nombre_clase, item.clase_id));
+    });
+
+    const selectEdit = document.getElementById('edit_cursos');
+
+    limpiarOpciones(selectEdit);
+    selectEdit.appendChild(new Option('Seleccionar...', ''));
+
+    console.log(data);
+    data.forEach(item => {
+      selectEdit.appendChild(new Option(item.nombre_clase, item.clase_id));
     });
   } catch (err) {
     console.error('Error al cargar tipo recurso:', err);
@@ -69,4 +89,16 @@ export const cargarRecursos = async () => {
     console.error('Error al cargar tipo recurso:', err);
   }
 };
+
+export const recursoDetalle = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/get/verRecurso/${id}`);
+    return await response.json();
+
+  } catch (err) {
+    console.error('Error al cargar tipo recurso:', err);
+  }
+};
+
+
 

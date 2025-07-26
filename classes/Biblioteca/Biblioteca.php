@@ -95,13 +95,14 @@
         $portada_binaria = Utilities::obtenerBinario($portada);
 
         // Insertar recurso
-        $stmt = $pdo->prepare("CALL InsertarRecurso(:titulo, :archivo, :anio, :portada, :docente_id, :tipo_recurso_id, @recurso_id)");
+        $stmt = $pdo->prepare("CALL InsertarRecurso(:titulo, :archivo, :anio, :portada, :docente_id, :tipo_recurso_id, :descripcion,@recurso_id)");
         $stmt->bindParam(':titulo', $titulo, PDO::PARAM_STR);
         $stmt->bindParam(':archivo', $archivo_binario, PDO::PARAM_LOB);
         $stmt->bindParam(':anio', $anio, PDO::PARAM_INT);
         $stmt->bindParam(':portada', $portada_binaria, PDO::PARAM_LOB);
         $stmt->bindParam(':docente_id', $idDocente, PDO::PARAM_INT);
         $stmt->bindParam(':tipo_recurso_id', $categoria, PDO::PARAM_INT);
+        $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
         $stmt->execute();
 
         $result = $pdo->query("SELECT @recurso_id AS recurso_id")->fetch(PDO::FETCH_ASSOC);
@@ -157,6 +158,18 @@
                 $db = new DataBase();
 
                 $datos = $db->executeQuery("CALL GetRecursosDetallados()");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
+
+        public function verRecurso($idRecurso){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL RecursoDetalle($idRecurso)");
             
                 return $datos;
             } catch(PDOException $e){

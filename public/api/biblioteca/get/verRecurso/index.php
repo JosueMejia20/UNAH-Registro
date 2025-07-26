@@ -10,11 +10,14 @@ $biblioteca = new Biblioteca();
 
 header("Content-Type: application/json");
 
-$recursos = $biblioteca->obtenerRecursos();
+$idRecurso= intval(explode("/",$_SERVER["PATH_INFO"])[1]);
+
+
+$recursos = $biblioteca->verRecurso($idRecurso);
 
 foreach ($recursos as &$recurso) {
-    if (isset($recurso['portada'])) {
-        $recurso['portada'] = base64_encode($recurso['portada']);
+    if (isset($recurso['archivo'])) {
+        $recurso['archivo'] = base64_encode($recurso['archivo']);
     }
 }
 
