@@ -4,7 +4,10 @@ import {
     subirRecurso,
     cargarClasesDocente,
     cargarRecursos,
-    recursoDetalle
+    recursoDetalle,
+    recursoPortadaArchivo,
+    editarRecurso,
+    eliminarRecurso
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
 
@@ -84,24 +87,20 @@ formSubirRecurso?.addEventListener('submit', async (e) => {
 
 
 // Función para confirmar eliminación de recurso
-function confirmarEliminacion(id) {
+const confirmarEliminacion = async (id) => {
     const modal = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
     modal.show();
-    /*document.getElementById('confirmarEliminarBtn').onclick = function() {
-        // Aquí iría la lógica para eliminar el recurso
-        console.log(`Recurso ${id} eliminado`);
-                
-        // Cerrar el modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('confirmarEliminarModal'));
-        modal.hide();
-                
-        // Recargar la lista de recursos
-      // cargarMisRecursos(idDocente);
-    };*/
 
-    // Mostrar el modal de confirmación
-    // const modal = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
-    // modal.show();
+    document.getElementById('confirmarEliminarBtn').addEventListener("click", async () => {
+        const respuesta = await eliminarRecurso(id);
+        
+        if (respuesta.success) {
+            alert("Recurso eliminado correctamente.");
+            location.reload();
+        } else {
+            alert(respuesta.mensaje || "No se pudo eliminar.");
+        }     
+    });
 }
 
 // Función para cargar los recursos del docente
@@ -197,14 +196,31 @@ const verRecurso = async (id) => {
     modal.show();
 }
 
-const editarFormulario = async(form) => {
+const editarFormulario = async(form,id) => {
     form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(form);
     const datosJSON = {};
     formData.append('idDocente', idDocente);
 
-    console.log(formData);
+    const idRecurso = id;
+    const portadaArchivo = await recursoPortadaArchivo(idRecurso);
+    //console.log(portadaArchivo);
+
+    const portada = formData.get('edit_portada');
+    const archivo = formData.get('edit_archivo');
+
+    //console.log(portada);
+    if(portada.size === 0 ){
+        formData.set('edit_portada',portadaArchivo[0].portada);
+    }
+    if(archivo.size === 0 ){
+        formData.set('edit_archivo',portadaArchivo[0].archivo);
+    }
+
+    //console.log(formData);
+
+    
 
 
     for (const [key, value] of formData.entries()) {
@@ -225,14 +241,14 @@ const editarFormulario = async(form) => {
         const response = await editarRecurso(datosJSON);
 
         if (response.success) {
-            alert('Recurso subido correctamente');
+            alert('Recurso actualizado correctamente');
             bootstrap.Modal.getInstance(document.getElementById('editarRecursoModal'))?.hide();
             location.reload();
         } else {
-            alert('Error al actualizar perfil');
+            alert('Error al actualizar recurso');
         }
     } catch (error) {
-        alert('Error de conexión al actualizar perfil.');
+        alert('Error de conexión al actualizar recurso.');
     }
 });
 };
@@ -256,7 +272,7 @@ const cargarDatosEdicion = async (id) =>{
     document.getElementById('edit_tags').value = recurso[0].tags;
     document.getElementById('recurso_id').value = id;
 
-    editarFormulario(formEditarRecurso);
+    editarFormulario(formEditarRecurso,id);
 }
 
 document.addEventListener('DOMContentLoaded', function () {

@@ -98,7 +98,46 @@ export const recursoDetalle = async (id) => {
   } catch (err) {
     console.error('Error al cargar tipo recurso:', err);
   }
+
 };
 
+export const recursoPortadaArchivo = async (id) => {
+  try {
+    const response = await fetch(`${BASE_URL}/get/portadaArchivo/${id}`);
+    return await response.json();
 
+  } catch (err) {
+    console.error('Error al cargar tipo recurso:', err);
+  }
+
+};
+
+export const editarRecurso = async (datosJson) => {
+  try {
+    const response = await fetch(`${BASE_URL}/put/updateRecurso`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datosJson),
+    });
+    if (!response.ok) throw new Error('No se pudo actualizar el recurso');
+    return await response.json();
+  } catch (error) {
+    console.error('Error al actualizar recurso:', error);
+    return null;
+  }
+};
+
+export const eliminarRecurso = async (idRecurso) => {
+    try {
+        const response = await fetch(`${BASE_URL}/delete/eliminarRecurso/index.php`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idRecurso: idRecurso})
+        });
+        return await response.json();
+    } catch (error) {
+        console.error('Error al cancelar:', error);
+        return { success: false, mensaje: 'Error en la cancelación' };
+    }
+};
 

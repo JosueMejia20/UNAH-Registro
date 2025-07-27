@@ -52,6 +52,9 @@ DROP PROCEDURE IF EXISTS RelacionarTagRecurso;
 DROP PROCEDURE IF EXISTS RelacionarClaseRecurso;
 DROP PROCEDURE IF EXISTS GetRecursosDetallados;
 DROP PROCEDURE IF EXISTS RecursoDetalle;
+DROP PROCEDURE IF EXISTS RecursoPortadaArchivo;
+DROP PROCEDURE IF EXISTS ActualizarRecurso;
+DROP PROCEDURE IF EXISTS EliminarRecurso;
 
 
 DELIMITER $$
@@ -1257,7 +1260,6 @@ BEGIN
         r.archivo,
         r.anio,
         r.descripcion,
-        
         -- Autores separados por coma
         (SELECT GROUP_CONCAT(a.nombre_completo SEPARATOR ', ')
          FROM Autores a
@@ -1272,6 +1274,54 @@ BEGIN
     FROM Recursos r
     WHERE r.id = p_recurso_id;
 END $$
+
+CREATE PROCEDURE RecursoPortadaArchivo(IN p_recurso_id INT)
+BEGIN
+    SELECT 
+        r.id,
+        r.archivo,
+		r.portada
+    FROM Recursos r
+    WHERE r.id = p_recurso_id;
+END $$
+
+
+CREATE PROCEDURE ActualizarRecurso(
+    IN p_recurso_id INT,
+    IN p_titulo VARCHAR(130),
+    IN p_archivo MEDIUMBLOB,
+    IN p_anio YEAR,
+    IN p_portada MEDIUMBLOB,
+    IN p_tipo_recurso_id INT,
+    IN p_descripcion VARCHAR(200)
+)
+BEGIN
+    UPDATE Recursos
+    SET titulo = p_titulo,
+        archivo = p_archivo,
+        anio = p_anio,
+        portada = p_portada,
+        tipo_recurso_id = p_tipo_recurso_id,
+        descripcion = p_descripcion
+    WHERE id = p_recurso_id;
+
+    DELETE FROM Autores_Recursos WHERE recurso_id = p_recurso_id;
+    DELETE FROM Recursos_Tags WHERE recurso_id = p_recurso_id;
+    DELETE FROM Recursos_Clase WHERE recurso_id = p_recurso_id;
+
+   -- Desde el PHP hay que volver a hacer las relaciones e inserciones en autores, tags y clases.
+END$$
+
+
+CREATE PROCEDURE EliminarRecurso(
+    IN p_recurso_id INT
+)
+BEGIN
+    DELETE FROM Recursos
+    WHERE id = p_recurso_id;
+END$$
+
+
 
 
 

@@ -177,6 +177,98 @@
             }
         }
 
+        public function recursoPortadaArchivo($idRecurso){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL RecursoPortadaArchivo($idRecurso)");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
+
+        public function updateRecurso($anio, $archivo, $autores,$categoria,$cursos,$descripcion,$portada,$tags, $titulo, $idRecurso){
+            try {
+        $db = new DataBase();
+        $pdo = $db->connect();
+        $pdo->beginTransaction();
+
+        // Convertir base64 a binario
+        $archivo_binario = Utilities::obtenerBinario($archivo);
+        $portada_binaria = Utilities::obtenerBinario($portada);
+
+        // Insertar recurso
+        $stmt = $pdo->prepare("CALL ActualizarRecurso(:recurso_id, :titulo, :archivo, :anio, :portada, :tipo_recurso, :descripcion)");
+        $stmt->bindParam(':recurso_id', $idRecurso, PDO::PARAM_INT);
+        $stmt->bindParam(':titulo', $titulo, PDO::PARAM_STR);
+        $stmt->bindParam(':archivo', $archivo_binario, PDO::PARAM_LOB);
+        $stmt->bindParam(':anio', $anio, PDO::PARAM_INT);
+        $stmt->bindParam(':portada', $portada_binaria, PDO::PARAM_LOB);
+        $stmt->bindParam(':tipo_recurso', $categoria, PDO::PARAM_INT);
+        $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // Insertar autores y relacionarlos
+        foreach ($autores as $nombreAutor) {
+            $stmt = $pdo->prepare("CALL InsertarAutor(:nombre, @autor_id)");
+            $stmt->bindParam(':nombre', $nombreAutor, PDO::PARAM_STR);
+            $stmt->execute();
+            $res = $pdo->query("SELECT @autor_id AS autor_id")->fetch(PDO::FETCH_ASSOC);
+            $autorId = $res['autor_id'];
+
+            $stmt = $pdo->prepare("CALL RelacionarAutorRecurso(:recursoId, :autorId)");
+            $stmt->bindParam(':recursoId', $idRecurso, PDO::PARAM_INT);
+            $stmt->bindParam(':autorId', $autorId, PDO::PARAM_INT);
+            $stmt->execute();
+        }
+
+        // Insertar tags y relacionarlos
+        foreach ($tags as $nombreTag) {
+            $stmt = $pdo->prepare("CALL InsertarTag(:nombre, @tag_id)");
+            $stmt->bindParam(':nombre', $nombreTag, PDO::PARAM_STR);
+            $stmt->execute();
+            $res = $pdo->query("SELECT @tag_id AS tag_id")->fetch(PDO::FETCH_ASSOC);
+            $tagId = $res['tag_id'];
+
+            $stmt = $pdo->prepare("CALL RelacionarTagRecurso(:recursoId, :tagId)");
+            $stmt->bindParam(':recursoId', $idRecurso, PDO::PARAM_INT);
+            $stmt->bindParam(':tagId', $tagId, PDO::PARAM_INT);
+            $stmt->execute();
+        }
+        //Relacionar Clase con Recurso
+        $stmt = $pdo->prepare("CALL RelacionarClaseRecurso(:recursoId, :claseId)");
+        $stmt->bindParam(':recursoId', $idRecurso, PDO::PARAM_INT);
+        $stmt->bindParam(':claseId', $cursos, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $pdo->commit();
+        return true;
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            throw $e;
+            }
+        }
+
+        public function deleteRecurso($idRecurso){
+            try {
+                $db = new DataBase();
+                $pdo = $db->connect();
+
+                $stmt = $pdo->prepare("CALL EliminarRecurso(:idRecurso)");
+
+                $stmt->bindParam(':idRecurso', $idRecurso, PDO::PARAM_INT);
+
+                $resultado = $stmt->execute();
+
+                return $resultado;
+            } catch (PDOException $e) {
+                // Manejo de error
+                echo "Error al eliminar: " . $e->getMessage();
+            }
+        }
+
 
     }
 
