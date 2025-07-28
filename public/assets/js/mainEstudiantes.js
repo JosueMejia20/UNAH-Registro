@@ -42,10 +42,10 @@ function obtenerMatriculaDesdeSesion() {
 }
 
 const asignarImagenBase64 = (imgTag, base64String, mime = 'image/jpeg') => {
-      imgTag.src = base64String
-        ? `data:${mime};base64,${base64String}`
-        : 'https://via.placeholder.com/300x400?text=Sin+Documento';
-    };
+  imgTag.src = base64String
+    ? `data:${mime};base64,${base64String}`
+    : 'https://via.placeholder.com/300x400?text=Sin+Documento';
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
   const ruta = window.location.pathname;
@@ -60,13 +60,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (perfilGlobal) {
       mostrarPerfilEnVista(perfilGlobal);
-      if(fotoPerfil != null){
-          asignarImagenBase64(imgTagFotoPerfil, fotoPerfil[0]["foto_perfil"]);
-      } else{
+      if (fotoPerfil != null) {
+        asignarImagenBase64(imgTagFotoPerfil, fotoPerfil[0]["foto_perfil"]);
+      } else {
         imgTagFotoPerfil.src = '';
       }
       const materias = await obtenerMateriasActuales(matriculaEstudiante);
-     // console.log(fotoPerfil[0]["foto_perfil"]);
+      // console.log(fotoPerfil[0]["foto_perfil"]);
       mostrarMateriasEnTabla(materias);
     }
 
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       reader.onerror = reject;
     });
 
-    
+
 
 
     form?.addEventListener('submit', async (e) => {
@@ -102,15 +102,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.log(formData);
 
 
-    for (const [key, value] of formData.entries()) {
-      if (value instanceof File && value.name) {
-        datosJSON[key] = await toBase64(value);
-      } else {
-        datosJSON[key] = value;
+      for (const [key, value] of formData.entries()) {
+        if (value instanceof File && value.name) {
+          datosJSON[key] = await toBase64(value);
+        } else {
+          datosJSON[key] = value;
+        }
       }
-    }
 
-    console.log(datosJSON);
+      console.log(datosJSON);
 
       try {
         const response = await actualizarPerfil(datosJSON);
@@ -135,6 +135,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     inicializarVistaMatricula(); // Declarada abajo
   }
 
+  if (ruta.includes('certificado.php')) {
+    inicializarVistaCertificado();
+  }
+
   // De acuerdo se agreguen mas metodos para las demas vistas. Se deben agregar mas if en esta parte de aca
 });
 
@@ -142,13 +146,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ==========================
 // FUNCIÓN - VISTA MATRÍCULA
 // ==========================
- const inicializarVistaMatricula = async () => {
+const inicializarVistaMatricula = async () => {
 
   const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
 
   const selectClasificacion = document.querySelector('#departamentosClases');
   console.log(selectClasificacion);
-  
+
   const selectAsignatura = document.querySelector("#clasesDepartamentos");
   console.log(selectAsignatura);
 
@@ -171,42 +175,42 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const llenarSelect = (select, items, textKey, valueKey) => {
-  if (!select) return;
-  items.forEach(item => {
-    const option = document.createElement("option");
-    option.textContent = item[textKey];
-    option.value = item[valueKey];
-    select.appendChild(option);
-  });
-};
+    if (!select) return;
+    items.forEach(item => {
+      const option = document.createElement("option");
+      option.textContent = item[textKey];
+      option.value = item[valueKey];
+      select.appendChild(option);
+    });
+  };
 
-const llenarSelectHorarios = (select, items, textKeyCodigo, textKeyDias, textKeyHoraIni, textKeyHoraFin, valueKey) => {
-  if (!select) return;
-  items.forEach(item => {
-    const option = document.createElement("option");
-    option.textContent = `${item[textKeyCodigo]} - ${item[textKeyDias]} ${item[textKeyHoraIni]}-${item[textKeyHoraFin]}`;
-    option.value = item[valueKey];
-    select.appendChild(option);
-  });
-};
+  const llenarSelectHorarios = (select, items, textKeyCodigo, textKeyDias, textKeyHoraIni, textKeyHoraFin, valueKey) => {
+    if (!select) return;
+    items.forEach(item => {
+      const option = document.createElement("option");
+      option.textContent = `${item[textKeyCodigo]} - ${item[textKeyDias]} ${item[textKeyHoraIni]}-${item[textKeyHoraFin]}`;
+      option.value = item[valueKey];
+      select.appendChild(option);
+    });
+  };
 
-function separarDias(cadena) {
-  const dias = [];
-  for (let i = 0; i < cadena.length; i += 2) {
-    dias.push(cadena.substring(i, i + 2));
+  function separarDias(cadena) {
+    const dias = [];
+    for (let i = 0; i < cadena.length; i += 2) {
+      dias.push(cadena.substring(i, i + 2));
+    }
+    return dias;
   }
-  return dias;
-}
 
   const materiasActuales = await obtenerMateriasActuales(matriculaEstudiante);
   //console.log(materiasActuales);
   const datosHorario = [];
 
-  materiasActuales.forEach((materia)=>{
+  materiasActuales.forEach((materia) => {
     const diasSeparados = separarDias(materia.dias);
 
 
-    diasSeparados.forEach((dia)=>{
+    diasSeparados.forEach((dia) => {
       datosHorario.push({
         dia: dia,
         hora: materia.horario,
@@ -227,7 +231,7 @@ function separarDias(cadena) {
     //uso de map para simplificar la iteracion sobre datosHorario (que es un arreglo de json)
     //datosHorario puede extenderse mucho, ya que guarda por dia y no por materia. Si dos materias
     //son de lunes a viernes, entonces serian 10 registros (2*5)
-    const horasUnicas = [...new Set(datosHorario.map(d=>d.hora))].sort();
+    const horasUnicas = [...new Set(datosHorario.map(d => d.hora))].sort();
 
     //Para almacenar hora > {dia>materia}
     const horarioMap = {};
@@ -255,7 +259,7 @@ function separarDias(cadena) {
     horasUnicas.forEach(hora => {
       stringBuilderHtml += `<tr>`;
       stringBuilderHtml += `<td>${hora}</td>`; //Primera columna, la hora
-      
+
       diasOrden.forEach(dia => {
         const contenido = horarioMap[hora][dia];
 
@@ -287,11 +291,11 @@ function separarDias(cadena) {
   };
 
   if (idEstudiante) {
-  const departamentos = await obtenerDepartamentosPorClases('20201003849');
-  console.log(departamentos);
-  limpiarSelect(selectClasificacion);
-  llenarSelect(selectClasificacion, departamentos, "nombre_departamento", "departamento_id");
-}
+    const departamentos = await obtenerDepartamentosPorClases('20201003849');
+    console.log(departamentos);
+    limpiarSelect(selectClasificacion);
+    llenarSelect(selectClasificacion, departamentos, "nombre_departamento", "departamento_id");
+  }
 
   // Eventos
   selectClasificacion?.addEventListener("change", async () => {
@@ -300,7 +304,7 @@ function separarDias(cadena) {
     const clasificacion = selectClasificacion.value;
 
     if (clasificacion !== "Selecciona una clasificación") {
-      const asignaturas = await obtenerAsignaturasPorDepartamento('20201003849',clasificacion);
+      const asignaturas = await obtenerAsignaturasPorDepartamento('20201003849', clasificacion);
       llenarSelect(selectAsignatura, asignaturas, "nombre_clase", "clase_id");
     }
   });
@@ -311,7 +315,7 @@ function separarDias(cadena) {
 
     if (asignatura !== "Selecciona una asignatura") {
       const horarios = await obtenerHorariosPorAsignatura(asignatura);
-     // llenarSelect(selectHorario, horarios, "descripcion");
+      // llenarSelect(selectHorario, horarios, "descripcion");
       llenarSelectHorarios(selectHorario, horarios, "codigo_seccion", "dias", "hora_inicio", "hora_fin", "seccion_id")
     }
   });
@@ -331,8 +335,8 @@ function separarDias(cadena) {
     if (respuesta.success) {
       alert("¡Matrícula realizada con éxito!");
       //generarHorarioEjemplo(datosHorario, tablaHorario);
-     // mostrarSeccionesCancelables();
-     location.reload();
+      // mostrarSeccionesCancelables();
+      location.reload();
     } else {
       alert(respuesta.mensaje || "No se pudo realizar la matrícula.");
     }
@@ -372,6 +376,20 @@ function separarDias(cadena) {
   mostrarSeccionesCancelables();
   generarHorarioEjemplo(datosHorario, tablaHorario);
 };
+
+const inicializarVistaCertificado = async () => {
+  const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
+  const btnDescargarCertificado = document.getElementById('btnDescargarCertificado');
+
+  btnDescargarCertificado.addEventListener("click", () => {
+    const url = `cert.php?cuenta=${encodeURIComponent(matriculaEstudiante)}`;
+    const nuevaVentana = window.open(url, '_blank');
+
+    nuevaVentana.onload = () => {
+      nuevaVentana.print();
+    };
+  });
+}
 /*
 document.addEventListener('DOMContentLoaded', () => {
   inicializarVistaMatricula();

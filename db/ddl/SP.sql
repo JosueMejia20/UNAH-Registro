@@ -55,6 +55,7 @@ DROP PROCEDURE IF EXISTS RecursoDetalle;
 DROP PROCEDURE IF EXISTS RecursoPortadaArchivo;
 DROP PROCEDURE IF EXISTS ActualizarRecurso;
 DROP PROCEDURE IF EXISTS EliminarRecurso;
+DROP PROCEDURE IF EXISTS ObtenerHistorialEstudiante;
 
 
 DELIMITER $$
@@ -1319,6 +1320,30 @@ CREATE PROCEDURE EliminarRecurso(
 BEGIN
     DELETE FROM Recursos
     WHERE id = p_recurso_id;
+END$$
+
+
+
+CREATE PROCEDURE ObtenerHistorialEstudiante (
+    IN p_numero_cuenta VARCHAR(11)
+)
+BEGIN
+    SELECT 
+        e.numero_cuenta,
+        concat(p.nombre_completo, ' ', p.apellido_completo) AS nombre_completo,
+        c.codigo,
+        c.nombre_clase,
+        c.unidades_valorativas,
+        es.nota,
+        ec.nombre AS estado_clase
+    FROM Estudiantes_Secciones es
+    INNER JOIN Estudiante e ON es.estudiante_id = e.numero_cuenta
+    INNER JOIN Usuario u ON e.usuario_id = u.usuario_id
+    INNER JOIN Persona p ON u.persona_id = p.dni
+    INNER JOIN Seccion s ON es.seccion_id = s.id
+    INNER JOIN Clase c ON s.clase_id = c.clase_id
+    INNER JOIN Estados_Clase ec ON es.estado_clase_id = ec.id
+    WHERE e.numero_cuenta = p_numero_cuenta;
 END$$
 
 

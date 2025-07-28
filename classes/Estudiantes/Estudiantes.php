@@ -416,4 +416,16 @@
                 return "Error en la base de datos: ".$e->getMessage();
             }
         }
+
+        public function obtenerHistorial($cuenta){
+            try{
+                $db = new DataBase();
+
+                $datos = $db->executeQuery("CALL ObtenerHistorialEstudiante('".$cuenta."')");
+            
+                return $datos;
+            } catch(PDOException $e){
+                return "Error en la base de datos: ".$e->getMessage();
+            }
+        }
     }

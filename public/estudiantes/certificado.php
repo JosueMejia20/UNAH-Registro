@@ -47,27 +47,13 @@
                         <p class="text-muted mb-4">Este documento contiene tu historial académico completo en la UNAH</p>
                                 
                             <div class="alert alert-unah mb-4">
-                                <p class="mb-0">El certificado incluye todas las asignaturas cursadas, calificaciones obtenidas y estado actual de tu matrícula.</p>
+                                <p class="mb-0">El certificado incluye todas las asignaturas cursadas y calificaciones obtenidas</p>
                             </div>
                                 
-                            <button class="btn btn-unah btn-lg">
+                            <button id="btnDescargarCertificado" class="btn btn-unah btn-lg">
                                 Descargar Certificado
                             </button>
-                                
-                        <div class="mt-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="incluirPendientes" checked>
-                                <label class="form-check-label" for="incluirPendientes">Incluir materias pendientes</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="incluirPromedio" checked>
-                                <label class="form-check-label" for="incluirPromedio">Incluir promedio acumulado</label>
-                            </div>
-                        </div>
                     </div>
-                        <div class="card-footer text-muted">
-                            <small>Última descarga: 15/03/2023</small>
-                        </div>
                 </div>
             </div>
         </div>
