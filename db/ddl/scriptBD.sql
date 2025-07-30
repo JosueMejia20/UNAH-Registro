@@ -307,7 +307,7 @@ CREATE TABLE Docente(
     centro_reg_id INT NOT NULL,
     usuario_id INT NOT NULL,
 	departamento_id INT NOT NULL,
-    foto BLOB, -- para guardar la ruta de la foto
+    foto MEDIUMBLOB, -- para guardar la ruta de la foto
     
     FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id)
 		ON DELETE CASCADE
@@ -788,7 +788,47 @@ CREATE TABLE Recursos_Musica(
         ON UPDATE CASCADE
 );
 
+-- Docentes
 
+CREATE TABLE Introduccion_Clase(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    seccion_id INT NOT NULL UNIQUE,
+    archivo_pdf MEDIUMBLOB,
+    video LONGBLOB,
+    descripcion VARCHAR(400),
+    fecha_subida DATETIME DEFAULT current_timestamp,
+    
+    FOREIGN KEY (seccion_id) REFERENCES Seccion(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- catalogo
+CREATE TABLE Estados_Lista_Espera(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(40) not null
+);
+
+CREATE TABLE Lista_Espera_Secciones(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    estudiante_id VARCHAR(11) NOT NULL,
+    seccion_id INT NOT NULL,
+	fecha_solicitud DATETIME NOT NULL DEFAULT current_timestamp,
+    estado_espera_id INT NOT NULL,
+    posicion INT NOT NULL,
+    
+    unique(estudiante_id, seccion_id),
+    
+	FOREIGN KEY (estudiante_id) REFERENCES Estudiante(numero_cuenta)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (seccion_id) REFERENCES Seccion(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (estado_espera_id) REFERENCES Estados_Lista_Espera(id)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
 
 
 

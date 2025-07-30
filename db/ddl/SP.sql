@@ -56,6 +56,7 @@ DROP PROCEDURE IF EXISTS RecursoPortadaArchivo;
 DROP PROCEDURE IF EXISTS ActualizarRecurso;
 DROP PROCEDURE IF EXISTS EliminarRecurso;
 DROP PROCEDURE IF EXISTS ObtenerHistorialEstudiante;
+DROP PROCEDURE IF EXISTS ActualizarFotoDocente;
 
 
 DELIMITER $$
@@ -1098,15 +1099,27 @@ CREATE PROCEDURE ObtenerDatosDocente (
     IN p_numero_empleado INT
 )
 BEGIN
-    SELECT 
+    SELECT
+		d.numero_empleado AS numero_empleado,
         CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_completo,
         du.nombre_departamento,
+        f.nombre_facultad,
         u.correo_institucional,
-        p.numero_telefono
+        p.numero_telefono,
+        d.foto AS foto_perfil,
+        cr.nombre_centro AS centro_regional,
+        (
+            SELECT GROUP_CONCAT(r.nombre_rol SEPARATOR ', ')
+            FROM Usuario_Rol ur
+            INNER JOIN Rol r ON ur.rol_id = r.rol_id
+            WHERE ur.usuario_id = u.usuario_id
+        ) AS cargos
     FROM Docente d
     INNER JOIN Persona p ON d.persona_id = p.dni
     INNER JOIN Usuario u ON d.usuario_id = u.usuario_id
     INNER JOIN Departamento_Uni du ON d.departamento_id = du.departamento_id
+    INNER JOIN Facultad f ON du.facultad_id = f.facultad_id
+    INNER JOIN Centro_Regional cr ON d.centro_reg_id = cr.centro_regional_id
     WHERE d.numero_empleado = p_numero_empleado;
 END $$
 
@@ -1347,8 +1360,15 @@ BEGIN
 END$$
 
 
-
-
+CREATE PROCEDURE ActualizarFotoDocente (
+    IN p_numero_empleado INT,
+    IN p_foto MEDIUMBLOB
+)
+BEGIN
+    UPDATE Docente
+    SET foto = p_foto
+    WHERE numero_empleado = p_numero_empleado;
+END $$
 
 
 DELIMITER ;

@@ -106,6 +106,55 @@ VALUES ('20221007890', '20201003849', 2, NOW());
 INSERT INTO Solicitudes_Contacto (emisor_id, receptor_id, estado_solicitud_id, fecha_solicitud)
 VALUES ('20231001122', '20201003849', 1, NOW());
 
+-- INSERTS PARA SECCIONES
+-- Secciones para clase_id = 2
+INSERT INTO Seccion (codigo_seccion, hora_inicio, hora_fin, clase_id, docente_id, cupos, periodo_acad_id, dias_id, aula_id)
+VALUES 
+('SEC-201', '08:00:00', '09:30:00', 2, 1002, 30, 1, 1, 1),
+('SEC-202', '10:00:00', '11:30:00', 2, 1003, 25, 1, 2, 2);
+
+-- Secciones para clase_id = 3
+INSERT INTO Seccion (codigo_seccion, hora_inicio, hora_fin, clase_id, docente_id, cupos, periodo_acad_id, dias_id, aula_id)
+VALUES 
+('SEC-301', '13:00:00', '14:30:00', 3, 1002, 40, 1, 3, 3),
+('SEC-302', '15:00:00', '16:30:00', 3, 1003, 35, 1, 4, 4);
+
+-- Secciones para clase_id = 4
+INSERT INTO Seccion (codigo_seccion, hora_inicio, hora_fin, clase_id, docente_id, cupos, periodo_acad_id, dias_id, aula_id)
+VALUES 
+('SEC-401', '08:00:00', '09:30:00', 4, 1002, 32, 1, 5, 1),
+('SEC-402', '10:00:00', '11:30:00', 4, 1003, 28, 1, 1, 2);
+
+-- Secciones para clase_id = 5
+INSERT INTO Seccion (codigo_seccion, hora_inicio, hora_fin, clase_id, docente_id, cupos, periodo_acad_id, dias_id, aula_id)
+VALUES 
+('SEC-501', '13:00:00', '14:30:00', 5, 1002, 38, 1, 2, 3),
+('SEC-502', '15:00:00', '16:30:00', 5, 1003, 26, 1, 3, 4);
+
+-- Secciones para clase_id = 6
+INSERT INTO Seccion (codigo_seccion, hora_inicio, hora_fin, clase_id, docente_id, cupos, periodo_acad_id, dias_id, aula_id)
+VALUES 
+('SEC-601', '08:00:00', '09:30:00', 6, 1002, 20, 1, 4, 5),
+('SEC-602', '10:00:00', '11:30:00', 6, 1003, 18, 1, 5, 1);
+
+
+-- INSERTS PARA HISTORIAL ACADEMICO
+-- Estudiante inscrito a 10 secciones con diferentes notas
+INSERT INTO Estudiantes_Secciones (estudiante_id, seccion_id, nota, estado_clase_id)
+VALUES 
+('20201003849', 1, 87, 1),  
+('20201003849', 2, 73, 1),
+('20201003849', 3, 91, 1),
+('20201003849', 4, 52, 2),  
+('20201003849', 5, 0, 4),   
+('20201003849', 6, 60, 2),
+('20201003849', 7, 75, 1),
+('20201003849', 8, 44, 2),
+('20201003849', 9, 66, 1),
+('20201003849', 12, 0, 4);
+
+
+
 
 -- INSERTS PARA RECURSOS
 INSERT INTO Recursos (titulo, archivo_pdf, autor, anio, docente_id, portada)

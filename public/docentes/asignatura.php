@@ -20,7 +20,15 @@
     ]'></unah-sidebar>
 
     <div class="container_principal">
-        <h1 class="main-title">Asignaturas Asignadas</h1>
+        <div class="perfil-card">
+          <div class="imagen-perfil">
+            <img src="ruta-de-la-imagen.jpg" alt="Foto de perfil">
+          </div>
+          <div class="info-perfil">
+            <p class="titulo">Asignaturas</p>
+            <p class="nombre">Ricardo Figueroa</p>
+          </div>
+        </div>
 
             <table class="requests-table">
                 <thead>

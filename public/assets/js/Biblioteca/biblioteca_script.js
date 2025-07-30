@@ -5,7 +5,7 @@ import {
     cargarClasesDocente,
     cargarRecursos
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
-
+// ESTE ARCHIVO YA NO SE ESTA UTILIZANDO. ELIMINAR
 
 const idDocente = sessionStorage.getItem('idDocente') || '1002';
 
