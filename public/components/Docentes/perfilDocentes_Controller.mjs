@@ -28,3 +28,18 @@ export const subirFotoDocente = async (datosJson) => {
   }
 };
 
+export const obtenerFotoDocente = async (idDocente) => {
+  try {
+    const response = await fetch(`${BASE_URL}/get/fotoPerfilDocente/index.php?idDocente=${idDocente}`);
+    //const data = await response.json();
+
+    if (!response.ok) throw new Error('Error al obtener contactos');
+    return await response.json();
+  } catch (error) {
+    console.error('Error al cargar contactos:', error);
+    return [];
+  }
+};
+
+
+

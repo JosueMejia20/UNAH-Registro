@@ -17,7 +17,8 @@ customElements.define("unah-sidebar", UnahSidebar);
 // -------- Controlador del Perfil Docentes - Docentes --------
 import {
     obtenerInfoDocente,
-    subirFotoDocente
+    subirFotoDocente,
+    obtenerFotoDocente
 } from '../../../../components/Docentes/perfilDocentes_Controller.mjs';
 
 
@@ -29,15 +30,18 @@ const toBase64 = file => new Promise((resolve, reject) => {
 });
 
 const asignarImagenBase64 = (imgTag, base64String, mime = 'image/jpeg') => {
-  imgTag.src = base64String
-    ? `data:${mime};base64,${base64String}`
-    : 'https://via.placeholder.com/300x400?text=Sin+Documento';
+    imgTag.src = base64String
+        ? `data:${mime};base64,${base64String}`
+        : 'https://via.placeholder.com/300x400?text=Sin+Documento';
 };
 
 const idDocente = sessionStorage.getItem('idDocente') || '1002';
 
 const cargarDatosDocente = async () => {
     const datos = await obtenerInfoDocente(idDocente);
+    const foto = await obtenerFotoDocente(idDocente);
+
+    console.log(foto);
 
     const fotoPerfil = document.getElementById('foto-perfil-docente');
     const numeroEmpleado = document.getElementById('numero-empleado');
@@ -58,56 +62,58 @@ const cargarDatosDocente = async () => {
     facultad.innerHTML = `<span class="label">Facultad:</span>${datos[0].nombre_facultad}`;
     departamento.innerHTML = `<span class="label">Nivel Academico:</span>${datos[0].nombre_departamento}`;
 
-    if(datos[0].foto_perfil != null){
-        const fotoDocente = toBase64(datos[0].foto_perfil);
-        asignarImagenBase64(fotoPerfil, fotoDocente)
+    
+    if(foto != null){
+        asignarImagenBase64(fotoPerfil, foto[0].foto_perfil);
     }
 }
 
 const btnSubirFoto = document.getElementById('btn-subir-foto');
 const form = document.getElementById('formSubirFoto');
-btnSubirFoto?.addEventListener('click', () => {
-    const modal = new bootstrap.Modal(document.getElementById('modalSubirFoto'));
-    modal.show();
-});
 
-form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
-    const datosJSON = {};
-
-    formData.append('idDocente', idDocente);
-
-    console.log(formData);
-
-
-    for (const [key, value] of formData.entries()) {
-        if (value instanceof File && value.name) {
-            datosJSON[key] = await toBase64(value);
-        } else {
-            datosJSON[key] = value;
-        }
-    }
-
-    console.log(datosJSON);
-
-    try {
-        const response = await subirFotoDocente(datosJSON);
-        //const resultado = await response.json();
-
-        if (response.success) {
-            alert('Foto subida correctamente');
-            bootstrap.Modal.getInstance(document.getElementById('modalSubirFoto'))?.hide();
-            location.reload();
-        } else {
-            alert('Error al subir foto');
-        }
-    } catch (error) {
-        alert('Error de conexión al subir foto.');
-    }
-});
 
 document.addEventListener('DOMContentLoaded', function () {
     // Cargar los recursos del docente al inicio
     cargarDatosDocente();
+
+    btnSubirFoto?.addEventListener('click', () => {
+        const modal = new bootstrap.Modal(document.getElementById('modalSubirFoto'));
+        modal.show();
+    });
+
+    form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const datosJSON = {};
+
+        formData.append('idDocente', idDocente);
+
+        console.log(formData);
+
+
+        for (const [key, value] of formData.entries()) {
+            if (value instanceof File && value.name) {
+                datosJSON[key] = await toBase64(value);
+            } else {
+                datosJSON[key] = value;
+            }
+        }
+
+        console.log(datosJSON);
+
+        try {
+            const response = await subirFotoDocente(datosJSON);
+            //const resultado = await response.json();
+
+            if (response.success) {
+                alert('Foto subida correctamente');
+                bootstrap.Modal.getInstance(document.getElementById('modalSubirFoto'))?.hide();
+                location.reload();
+            } else {
+                alert('Error al subir foto');
+            }
+        } catch (error) {
+            alert('Error de conexión al subir foto.');
+        }
+    });
 });

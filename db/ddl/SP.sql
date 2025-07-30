@@ -57,6 +57,7 @@ DROP PROCEDURE IF EXISTS ActualizarRecurso;
 DROP PROCEDURE IF EXISTS EliminarRecurso;
 DROP PROCEDURE IF EXISTS ObtenerHistorialEstudiante;
 DROP PROCEDURE IF EXISTS ActualizarFotoDocente;
+DROP PROCEDURE IF EXISTS ObtenerFotoPerfilDocente;
 
 
 DELIMITER $$
@@ -1106,7 +1107,6 @@ BEGIN
         f.nombre_facultad,
         u.correo_institucional,
         p.numero_telefono,
-        d.foto AS foto_perfil,
         cr.nombre_centro AS centro_regional,
         (
             SELECT GROUP_CONCAT(r.nombre_rol SEPARATOR ', ')
@@ -1368,6 +1368,18 @@ BEGIN
     UPDATE Docente
     SET foto = p_foto
     WHERE numero_empleado = p_numero_empleado;
+END $$
+
+
+
+CREATE PROCEDURE ObtenerFotoPerfilDocente (
+    IN p_numero_empleado INT
+)
+BEGIN
+    SELECT
+		d.foto AS foto_perfil
+    FROM Docente d
+    WHERE d.numero_empleado = p_numero_empleado;
 END $$
 
 
