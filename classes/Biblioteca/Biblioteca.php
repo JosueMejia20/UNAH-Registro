@@ -4,7 +4,7 @@
 
     class Biblioteca {
 
-        public function verificarUsuarioBiblioteca(int $idUsuario){
+        public function verificarUsuarioBiblioteca(int $idUsuario) {
             try {
                 $db = new DataBase();
                 $pdo = $db->connect();
@@ -13,38 +13,51 @@
                                 SELECT r.rol_id 
                                 FROM Rol r
                                 INNER JOIN Usuario_Rol ur ON r.rol_id = ur.rol_id
-                                WHERE ur.usuario_id = ?;";
+                                WHERE ur.usuario_id = ?;
+                            ";
 
                 $stmtRoles = $pdo->prepare($queryRoles);
                 $stmtRoles->execute([$idUsuario]);
-                $roles = $stmtRoles->fetchAll(PDO::FETCH_COLUMN);
+                $roles = array_map('intval', $stmtRoles->fetchAll(PDO::FETCH_COLUMN));
 
-                $roles = array_map('intval', $roles);
+                //roles
+                $REVISOR = 1;
+                $ESTUDIANTE = 2;
+                $DOCENTE = 3;
+                $COORDINADOR = 4;
+                $JEFE_DEPT = 5;
+                $ADMIN = 6;
 
+                // Si solo tiene un rol
                 if (count($roles) === 1) {
-                    if ($roles[0] === 1) {
-                        return 0; // revisores no tienen permiso
-                    } elseif ($roles[0] === 2) {
-                        return 1; // Solo estudiante
+                    if ($roles[0] === $REVISOR) {
+                        return 0; // Revisor no tiene acceso
+                    } elseif (in_array($roles[0], [$ESTUDIANTE, $DOCENTE])) {
+                        return 1; // Estudiante o Docente usuarios nivel 1
+                    } elseif (in_array($roles[0], [$ADMIN, $COORDINADOR, $JEFE_DEPT])) {
+                        return 2; // Usuario de nivel 2
                     }
                 }
 
-                $superiores = [3, 4, 5];
+                // Si tiene múltiples roles
 
-                if (!in_array(2, $roles) && !empty(array_intersect($roles, $superiores))) {
-                    return 2;
+                $nivel2 = [$COORDINADOR, $JEFE_DEPT, $ADMIN];
+
+                if (in_array($ESTUDIANTE, $roles) || in_array($DOCENTE, $roles)) {
+                    return 1; // Tiene rol de estudiante o docente nivel 1
                 }
 
-                if (in_array(2, $roles)) {
-                    return 1;
+                if (!empty(array_intersect($roles, $nivel2))) {
+                    return 2; // Tiene algún rol de nivel 2
                 }
 
-                return 0; // No tiene permisos válidos
+                return 0; // sin acceso al modulo
 
-            } catch(PDOException $e){
-                return "Error en la base de datos: ".$e->getMessage();
+            } catch (PDOException $e) {
+                return "Error en la base de datos: " . $e->getMessage();
             }
         }
+
 
         //ELIMINAR
         public function obtenerRecursosDocente($idDocente){
@@ -275,8 +288,8 @@
 
 
 
-/* prueba
-$ob = new Biblioteca();
-echo 'esto es lo que retorna: '.$ob->verificarUsuarioBiblioteca(1);*/
+//prueba
+// $ob = new Biblioteca();
+// echo 'esto es lo que retorna: '.$ob->verificarUsuarioBiblioteca(3);
 
     

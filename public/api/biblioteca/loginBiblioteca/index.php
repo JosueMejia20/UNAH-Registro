@@ -1,6 +1,6 @@
 <?php
 
-$pathToRoot = '/../../../../../';
+$pathToRoot = '/../../../../';
 
 require_once __DIR__ . $pathToRoot.'classes/Biblioteca/Biblioteca.php';
 require_once __DIR__ . $pathToRoot.'classes/db/DataBase.php';
@@ -19,13 +19,16 @@ $password = $data['password'] ?? null;
 
 header("Content-Type: application/json");
 
+session_start();
 
 try{
     $resultadoLogin = Utilities::login($correo, $password);
-    //si $resultadoLogin = 0 false; si es = 1 true; esto valida que las credenciales existan en la tabla Usuario
     if($resultadoLogin){
         
+        
         if($biblioteca->verificarUsuarioBiblioteca($resultadoLogin)==1){
+            $_SESSION['usuario_id'] = $resultadoLogin;
+
             echo json_encode([
             'success'=> true,
             'message'=> 'Se ha iniciado sesion correctamente',
@@ -33,6 +36,8 @@ try{
             'tipoUsuario'=> 1
         ]);
         } elseif($biblioteca->verificarUsuarioBiblioteca($resultadoLogin)==2){
+            $_SESSION['usuario_id'] = $resultadoLogin;
+            
             echo json_encode([
             'success'=> true,
             'message'=> 'Se ha iniciado sesion correctamente',
