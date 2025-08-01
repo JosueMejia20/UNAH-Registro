@@ -67,14 +67,12 @@ const mostrarInfoDocente = async (idDocente) => {
     const tituloNombreDocente = document.querySelector("#tituloNombreDocente");
     const pDepartamentoDocente = document.querySelector("#pDepartamentoDocente");
     const pCorreoInstitucionalDocente = document.querySelector("#pCorreoInstitucionalDocente");
-    const pNumeroTelefonoDocente = document.querySelector("#pNumeroTelefonoDocente");
 
     const infoDocente = await cargarInfoDocente(idDocente);
 
     tituloNombreDocente.textContent = infoDocente[0].nombre_completo;
     pDepartamentoDocente.textContent = `Profesor del ${infoDocente[0].nombre_departamento}`;
     pCorreoInstitucionalDocente.textContent = infoDocente[0].correo_institucional;
-    pNumeroTelefonoDocente.textContent = infoDocente[0].numero_telefono;
 
     //Mostrar la tabla de asignaturas
     const asignaturas = await cargarAsignaturasDocente(idDocente);
@@ -90,8 +88,7 @@ const mostrarAsignaturasEnTabla = (materias) => {
     fila.innerHTML = `
       <td>${materia.codigo_clase}</td>
       <td>${materia.nombre_clase}</td>
-      <td>${materia.horario}</td>
-      <td>${materia.aula}</td>
+      <td>${materia.codigo_seccion}</td>
     `;
     tbody.appendChild(fila);
   });

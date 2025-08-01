@@ -58,6 +58,9 @@ DROP PROCEDURE IF EXISTS EliminarRecurso;
 DROP PROCEDURE IF EXISTS ObtenerHistorialEstudiante;
 DROP PROCEDURE IF EXISTS ActualizarFotoDocente;
 DROP PROCEDURE IF EXISTS ObtenerFotoPerfilDocente;
+DROP PROCEDURE IF EXISTS ObtenerClasesEstudiante;
+DROP PROCEDURE IF EXISTS InsertarEvaluacionDocente;
+
 
 
 DELIMITER $$
@@ -1136,6 +1139,7 @@ BEGIN
     SELECT 
         c.codigo AS codigo_clase,
         c.nombre_clase AS nombre_clase,
+        s.codigo_seccion AS codigo_seccion,
         CONCAT(d.nombre, ', ', TIME_FORMAT(s.hora_inicio, '%H:%i'), '-', TIME_FORMAT(s.hora_fin, '%H:%i')) AS horario,
         CONCAT(e.nombre, '-', a.nombre) AS aula
     FROM Seccion s
@@ -1381,6 +1385,61 @@ BEGIN
     FROM Docente d
     WHERE d.numero_empleado = p_numero_empleado;
 END $$
+
+
+
+CREATE PROCEDURE ObtenerClasesEstudiante (
+    IN p_numero_cuenta VARCHAR(11)
+)
+BEGIN
+    SELECT DISTINCT
+        c.clase_id,
+        c.nombre_clase,
+        c.codigo,
+        c.unidades_valorativas
+    FROM (
+        -- Clases ya cursadas
+        SELECT s.clase_id
+        FROM Estudiantes_Secciones es
+        INNER JOIN Seccion s ON es.seccion_id = s.id
+        WHERE es.estudiante_id = p_numero_cuenta
+
+        UNION
+
+        -- Clases actuales (matriculadas)
+        SELECT s.clase_id
+        FROM Estudiantes_Matricula em
+        INNER JOIN Seccion s ON em.seccion_id = s.id
+        WHERE em.estudiante_id = p_numero_cuenta
+    ) AS clases_ids
+    INNER JOIN Clase c ON clases_ids.clase_id = c.clase_id;
+END $$
+
+
+CREATE PROCEDURE InsertarEvaluacionDocente(
+    IN p_estudiante_id VARCHAR(11),
+    IN p_seccion_id INT,
+    IN p_observacion VARCHAR(255),
+    IN p_evidencia_pdf MEDIUMBLOB,
+    IN p_evaluacion JSON
+)
+BEGIN
+    INSERT INTO Evaluacion_Docente(
+        estudiante_id,
+        seccion_id,
+        observacion,
+        evidencia_pdf,
+        evaluacion
+    ) VALUES (
+        p_estudiante_id,
+        p_seccion_id,
+        p_observacion,
+        p_evidencia_pdf,
+        p_evaluacion
+    );
+END $$
+
+
 
 
 DELIMITER ;

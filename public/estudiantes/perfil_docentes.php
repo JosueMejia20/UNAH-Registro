@@ -68,7 +68,6 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <p id="pCorreoInstitucionalDocente" ><i class="fas fa-envelope me-2 text-muted"></i></p>
-                                            <p id="pNumeroTelefonoDocente"><i class="fas fa-phone me-2 text-muted"></i></p>
                                         </div>
                                     </div>
                                 </div>
@@ -84,8 +83,7 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Asignatura</th>
-                                            <th>Horario</th>
-                                            <th>Aula</th>
+                                            <th>Seccion</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tablaAsignaturasDocente">

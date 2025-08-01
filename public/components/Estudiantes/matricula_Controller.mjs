@@ -79,3 +79,14 @@ export const cancelarSecciones = async (idsSecciones, estudiante) => {
     }
 };
 
+//Obtener clases cursando y cursadas
+export const obtenerClasesEstudiante = async (matricula) => {
+    try {
+        const response = await fetch(`${API_BASE}/get/clasesEstudiante/index.php?matricula=${matricula}`);
+        if (!response.ok) throw new Error('Error al obtener materias');
+        return await response.json();
+  } catch (error) {
+        console.error('Error al cargar materias:', error);
+        return [];
+  }
+};

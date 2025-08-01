@@ -32,7 +32,8 @@ import {
   obtenerHorariosPorAsignatura,
   matricularSeccion,
   obtenerSeccionesActuales,
-  cancelarSecciones
+  cancelarSecciones,
+  obtenerClasesEstudiante
 } from '../../components/Estudiantes/matricula_Controller.mjs';
 
 let perfilGlobal = null;
@@ -98,6 +99,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       //if (archivo) formData.append('foto_perfil', archivo);
 
       formData.append('matricula', matriculaEstudiante);
+
+      const fotoEstudiante = await obtenerFotoPerfilEstudiante(matriculaEstudiante);
+
+      const foto = formData.get('foto_perfil');
+
+      if (foto.size === 0) {
+        if (fotoEstudiante == null) {
+          formData.set('foto_perfil', null);
+        } else {
+          formData.set('foto_perfil', fotoEstudiante[0].foto_perfil);
+        }
+
+      }
 
       console.log(formData);
 
@@ -309,14 +323,34 @@ const inicializarVistaMatricula = async () => {
     }
   });
 
+  const clasesCursadasYCursando = await obtenerClasesEstudiante(matriculaEstudiante);
   selectAsignatura?.addEventListener("change", async () => {
     limpiarSelect(selectHorario);
-    const asignatura = selectAsignatura.value;
+
+    //console.log(clasesCursadasYCursando);
+    const asignatura = parseInt(selectAsignatura.value);
+    //console.log(asignatura);
 
     if (asignatura !== "Selecciona una asignatura") {
-      const horarios = await obtenerHorariosPorAsignatura(asignatura);
-      // llenarSelect(selectHorario, horarios, "descripcion");
-      llenarSelectHorarios(selectHorario, horarios, "codigo_seccion", "dias", "hora_inicio", "hora_fin", "seccion_id")
+
+      const claseEncontrada = clasesCursadasYCursando.find(c => c.clase_id === asignatura);
+
+      if (claseEncontrada) {
+        const opcionRoja = document.createElement("option");
+        opcionRoja.textContent = "Ya cursaste o estas cursando esta clase.";
+        opcionRoja.disabled = true;
+        opcionRoja.selected = true;
+        opcionRoja.style.backgroundColor = "red";
+        opcionRoja.style.color = "white";
+
+        selectHorario.appendChild(opcionRoja);
+        //console.log("Ya cursó o está cursando la clase con id:", claseEncontrada.clase_id);
+        //selectHorario.innerHTML = "Ya llevo esta clase";
+      } else {
+        const horarios = await obtenerHorariosPorAsignatura(asignatura);
+        // llenarSelect(selectHorario, horarios, "descripcion");
+        llenarSelectHorarios(selectHorario, horarios, "codigo_seccion", "dias", "hora_inicio", "hora_fin", "seccion_id")
+      }
     }
   });
 

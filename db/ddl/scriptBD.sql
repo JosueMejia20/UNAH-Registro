@@ -569,6 +569,7 @@ CREATE TABLE Evaluacion_Docente(
     seccion_id INT NOT NULL,
     observacion VARCHAR(255),
     fecha_evaluacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    evidencia_pdf MEDIUMBLOB,
     evaluacion JSON,
     UNIQUE(estudiante_id, seccion_id),
     

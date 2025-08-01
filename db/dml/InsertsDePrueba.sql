@@ -58,6 +58,18 @@ INSERT INTO Seccion (codigo_seccion, hora_inicio, hora_fin, clase_id, docente_id
 ('1001', '10:00:00', '11:30:00', 1, 1002, 30, 7, 7, 6),
 ('1201', '12:00:00', '13:30:00', 1, 1002, 25, 7, 8, 9);
 
+-- Secciones con clase id=2
+INSERT INTO Seccion (codigo_seccion, hora_inicio, hora_fin, clase_id, docente_id, cupos, periodo_acad_id, dias_id, aula_id) VALUES
+('0800', '08:00:00', '09:30:00', 2, 1002, 30, 8, 1, 3),
+('1000', '10:00:00', '11:30:00', 2, 1002, 30, 8, 2, 5),
+('1200', '12:00:00', '13:30:00', 2, 1002, 25, 8, 3, 2),
+('1400', '14:00:00', '15:30:00', 2, 1002, 20, 8, 4, 7),
+('1600', '16:00:00', '17:30:00', 2, 1002, 15, 8, 5, 1),
+
+('0801', '08:00:00', '09:30:00', 2, 1002, 30, 7, 6, 4),
+('1001', '10:00:00', '11:30:00', 2, 1002, 30, 7, 7, 6),
+('1201', '12:00:00', '13:30:00', 2, 1002, 25, 7, 8, 9);
+
 INSERT INTO Seccion (codigo_seccion, hora_inicio, hora_fin, clase_id, docente_id, cupos, periodo_acad_id, dias_id, aula_id) VALUES
 ('1204', '12:00:00', '13:30:00', 1, 1003, 25, 8, 8, 9);
 
@@ -152,47 +164,5 @@ VALUES
 ('20201003849', 8, 44, 2),
 ('20201003849', 9, 66, 1),
 ('20201003849', 12, 0, 4);
-
-
-
-
--- INSERTS PARA RECURSOS
-INSERT INTO Recursos (titulo, archivo_pdf, autor, anio, docente_id, portada)
-VALUES 
-('Fundamentos de Álgebra Lineal', NULL, 'Dr. Manuel López', 2020, 1002, NULL),
-('Programación Orientada a Objetos en Java', NULL, 'Ing. Carla Rivas', 2022, 1002, NULL),
-('Teoría de Autómatas y Lenguajes Formales', NULL, 'MSc. Jorge Salgado', 2021, 1002, NULL),
-('Bases de Datos Relacionales', NULL, 'Lic. Silvia Medina', 2023, 1002, NULL),
-('Inteligencia Artificial: Fundamentos y Aplicaciones', NULL, 'PhD. Luisa Castro', 2024, 1002, NULL);
-
--- INserts para TAGS
-INSERT INTO Tags (nombre) VALUES 
-('Matemáticas'),
-('Programación'),
-('Bases de Datos'),
-('Inteligencia Artificial'),
-('Teoría de la Computación');
-
-
--- INSERTS PARA RECURSOS_TAGS
--- Recurso 1: Fundamentos de Álgebra Lineal → Matemáticas
-INSERT INTO Recursos_Tags (recurso_id, tags_id) VALUES (1, 1);
-
--- Recurso 2: POO en Java → Programación
-INSERT INTO Recursos_Tags (recurso_id, tags_id) VALUES (2, 2);
-
--- Recurso 3: Autómatas → Teoría de la Computación
-INSERT INTO Recursos_Tags (recurso_id, tags_id) VALUES (3, 5);
-
--- Recurso 4: Bases de Datos Relacionales → Bases de Datos
-INSERT INTO Recursos_Tags (recurso_id, tags_id) VALUES (4, 3);
-
--- Recurso 5: IA → Inteligencia Artificial, Programación
-INSERT INTO Recursos_Tags (recurso_id, tags_id) VALUES 
-(5, 4),
-(5, 2);
-
-
-
 
 
