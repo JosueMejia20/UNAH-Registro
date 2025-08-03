@@ -10,9 +10,9 @@ const limpiarOpciones = (select) => {
 /**
  *  Vista en General
  */
-export const cargarSolicitudes = async (matricula) => {
+export const cargarSolicitudes = async (matricula, pagina) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/solicitudesRecientes?matricula=${matricula}`);
+    const response = await fetch(`${BASE_URL}/get/solicitudesRecientes?matricula=${matricula}&pagina=${pagina}`);
     //const data = await response.json();
 
     if (!response.ok) throw new Error('Error al obtener materias');

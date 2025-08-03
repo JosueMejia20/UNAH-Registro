@@ -46,7 +46,6 @@
                       <th>Tipo</th>
                       <th>Fecha</th>
                       <th>Estado</th>
-                      <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody id="tablaBodySolicitudes">
@@ -55,7 +54,7 @@
                 </table>
               </div>
 
-              <nav aria-label="Page navigation">
+              <nav id="paginacion-solicitudes" aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
                   <li class="page-item disabled">
                     <a class="page-link" href="#" tabindex="-1">Anterior</a>

@@ -12,9 +12,10 @@ $estudiantes = new Estudiantes();
 //$idEstudiante = intval(explode("/",$_SERVER["PATH_INFO"])[1]);
 
 $idEstudiante = $_GET['matricula'];
+$pagina = $_GET['pagina'];
 
 header("Content-Type: application/json");
 
-$info = $estudiantes->obtenerSolicitudesRecientes($idEstudiante);
+$info = $estudiantes->obtenerSolicitudesRecientes($idEstudiante, $pagina);
 
 echo json_encode($info);

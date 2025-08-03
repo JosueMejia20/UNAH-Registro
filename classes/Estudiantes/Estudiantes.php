@@ -255,14 +255,36 @@ class Estudiantes
         }
     }
 
-    public function obtenerSolicitudesRecientes($idEstudiante)
+    public function obtenerSolicitudesRecientes($idEstudiante, $pagina)
     {
         try {
             $db = new DataBase();
 
-            $datos = $db->executeQuery("CALL ObtenerSolicitudesEstudiante($idEstudiante)");
+            $limite = 5;
+            $offset = ($pagina - 1) * $limite;
 
-            return $datos;
+            $totalResultado = $db->executeQuery("CALL ContarSolicitudesEstudiante($idEstudiante)");
+            $totalRegistros = $totalResultado[0]['total'] ?? 0;
+            $totalPaginas = ceil($totalRegistros / $limite);
+
+            $pdo = $db->connect();
+
+            $stmt = $pdo->prepare("CALL ObtenerSolicitudesEstudiante(:idEstudiante, :limite, :offset)");
+            $stmt->bindParam(':idEstudiante', $idEstudiante, PDO::PARAM_STR);
+            $stmt->bindParam(':limite', $limite, PDO::PARAM_INT);
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            
+
+            return [
+                'solicitudes'=>$solicitudes,
+                'pagina_actual'=>$pagina,
+                'total_paginas'=>$totalPaginas
+            ];
         } catch (PDOException $e) {
             return "Error en la base de datos: " . $e->getMessage();
         }
@@ -479,7 +501,7 @@ class Estudiantes
         try {
             if ($archivoPDF != null) {
                 $archivoPdfBinario = Utilities::obtenerBinario($archivoPDF);
-            } else{
+            } else {
                 $archivoPdfBinario = null;
             }
             $db = new DataBase();

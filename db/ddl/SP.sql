@@ -60,6 +60,7 @@ DROP PROCEDURE IF EXISTS ActualizarFotoDocente;
 DROP PROCEDURE IF EXISTS ObtenerFotoPerfilDocente;
 DROP PROCEDURE IF EXISTS ObtenerClasesEstudiante;
 DROP PROCEDURE IF EXISTS InsertarEvaluacionDocente;
+DROP PROCEDURE IF EXISTS ContarSolicitudesEstudiante;
 
 
 
@@ -626,7 +627,9 @@ END $$
 
 
 CREATE PROCEDURE ObtenerSolicitudesEstudiante(
-    IN p_estudiante_id VARCHAR(11)
+    IN p_estudiante_id VARCHAR(11),
+    IN p_limite INT,
+    IN p_offset INT
 )
 BEGIN
     SELECT 
@@ -654,9 +657,19 @@ BEGIN
     LEFT JOIN Estado_Pago_Reposicion epr ON epr.id = spr.estado_pago_reposicion_id
 
     WHERE s.estudiante_id = p_estudiante_id
-    ORDER BY s.fecha_solicitud DESC;
+    ORDER BY s.fecha_solicitud DESC
+    LIMIT p_limite OFFSET p_offset;
 END $$
 
+
+CREATE PROCEDURE ContarSolicitudesEstudiante(
+    IN p_estudiante_id VARCHAR(11)
+)
+BEGIN
+    SELECT COUNT(*) AS total
+    FROM Solicitudes
+    WHERE estudiante_id = p_estudiante_id;
+END $$
 
 
 
