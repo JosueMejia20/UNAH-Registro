@@ -5,6 +5,30 @@ require_once __DIR__ . '/../Utilities/Utilities.php';
 
 class Docentes
 {
+
+    public function verificarUsuarioDocente(int $idUsuario):int {
+
+        try{
+            $db = new DataBase();
+            $pdo = $db->connect();
+
+            $stmt = $pdo->prepare("SELECT isDocente(:idUsuario) AS resultado");
+
+            $stmt->bindParam(':idUsuario', $idUsuario, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return isset($resultado['resultado']) ? (int)$resultado['resultado'] : 0;
+
+        }catch (PDOException $e){
+            error_log("Error en verificarUsuarioDocente: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+
     public function getDocenteInfo($idDocente)
     {
         try {
@@ -57,3 +81,7 @@ class Docentes
         }
     }
 }
+
+// prueba
+// $docente = new Docentes();
+// echo $docente->verificarUsuarioDocente(758) , "    ";

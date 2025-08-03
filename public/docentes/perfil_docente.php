@@ -1,3 +1,13 @@
+<?php
+    session_start();
+
+    if (!isset($_SESSION['usuario_id'])) {
+        header("Location: loginDocente.php");
+        exit();
+    }
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,7 +43,7 @@
           <p id="nombre-docente" class="nombre"></p>
         </div>
         <div class="col-md-4 text-end">
-          <button class="btn btn-yellow me-2" id="btn-subir-foto">Editar Perfil</button>
+          <button class="btn btn-yellow me-2" id="btn-subir-foto">Actualizar Foto de Perfil</button>
         </div>
       </div>
     </div>

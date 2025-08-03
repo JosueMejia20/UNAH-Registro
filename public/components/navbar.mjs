@@ -30,7 +30,7 @@ class UnahNavbar extends HTMLElement {
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="admisionesDropdown">
                                 <li><a class="dropdown-item" href="../estudiantes/index.php?vista=login_estudiantes">Estudiantes</a></li>
-                                <li><a class="dropdown-item" href="../docentes/index.php?vista=perfil_docente">Docentes</a></li>
+                                <li><a class="dropdown-item" href="../docentes/index.php?vista=loginDocente">Docentes</a></li>
                                 <li><a class="dropdown-item" href="../coordinador/index.php?vista=perfil_coordinador">Coordinador</a></li>
                                 <li><a class="dropdown-item" href="../jefe/index.php?vista=perfil_jefe">Jefe de Departamento</a></li>
                                 <li><a class="dropdown-item" href="../admisiones/index.php?vista=login_revisores">Revisores</a></li>
