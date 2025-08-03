@@ -162,4 +162,24 @@ export const validarCredenciales = async (cuenta, contrasena) => {
     }
 };
 
+export const obtenerIdEstudiante = async (usuarioId) => {
+  try {
+    const response = await fetch(`${BASE_URL}/get/obtenerIdEstudiante/${usuarioId}`);
+    return await response.json();
+
+  } catch (err) {
+    console.error('Error al cargar id de estudiante:', err);
+  }
+};
+
+export const obtenerIdDocente = async (usuarioId) => {
+  try {
+    const response = await fetch(`${BASE_URL}/get/obtenerIdDocente/${usuarioId}`);
+    return await response.json();
+
+  } catch (err) {
+    console.error('Error al cargar id de docente:', err);
+  }
+};
+
 

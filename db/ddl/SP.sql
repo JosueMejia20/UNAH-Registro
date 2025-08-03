@@ -61,6 +61,8 @@ DROP PROCEDURE IF EXISTS ObtenerFotoPerfilDocente;
 DROP PROCEDURE IF EXISTS ObtenerClasesEstudiante;
 DROP PROCEDURE IF EXISTS InsertarEvaluacionDocente;
 DROP PROCEDURE IF EXISTS ContarSolicitudesEstudiante;
+DROP PROCEDURE IF EXISTS ObtenerNumeroCuentaEstudiante;
+DROP PROCEDURE IF EXISTS ObtenerNumeroEmpleadoDocente;
 
 
 
@@ -1179,9 +1181,12 @@ BEGIN
         c.codigo,
         c.nombre_clase,
         c.unidades_valorativas
-    FROM Seccion s
-    INNER JOIN Clase c ON s.clase_id = c.clase_id
-    WHERE s.docente_id = p_docente_id;
+    FROM Docente d
+    INNER JOIN Departamento_Uni dep ON d.departamento_id = dep.departamento_id
+    INNER JOIN Carrera ca ON ca.departamento_id = dep.departamento_id
+    INNER JOIN Clases_Carrera cc ON cc.carrera_id = ca.carrera_id
+    INNER JOIN Clase c ON c.clase_id = cc.clase_id
+    WHERE d.numero_empleado = p_docente_id;
 END $$
 
 
@@ -1451,6 +1456,34 @@ BEGIN
         p_evaluacion
     );
 END $$
+
+
+CREATE PROCEDURE ObtenerNumeroCuentaEstudiante(
+    IN p_usuario_id INT,
+    OUT p_numero_cuenta VARCHAR(11)
+)
+BEGIN
+    SELECT numero_cuenta
+    INTO p_numero_cuenta
+    FROM Estudiante
+    WHERE usuario_id = p_usuario_id
+    LIMIT 1;
+END $$
+
+
+CREATE PROCEDURE ObtenerNumeroEmpleadoDocente(
+    IN p_usuario_id INT,
+    OUT p_numero_empleado INT
+)
+BEGIN
+    SELECT numero_empleado
+    INTO p_numero_empleado
+    FROM Docente
+    WHERE usuario_id = p_usuario_id
+    LIMIT 1;
+END $$
+
+
 
 
 

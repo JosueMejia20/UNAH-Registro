@@ -8,11 +8,26 @@ import {
     recursoPortadaArchivo,
     editarRecurso,
     eliminarRecurso,
-    validarCredenciales
+    validarCredenciales,
+    obtenerIdEstudiante,
+    obtenerIdDocente
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
 
-const idDocente = sessionStorage.getItem('idDocente') || '1002';
+//const idDocente = sessionStorage.getItem('idDocente') || '1002';
+let idDocente = null;
+let idEstudiante = null;
+
+if (rol === 1) {
+    idEstudiante = await obtenerIdEstudiante(usuarioId);
+    console.log(idEstudiante);
+    console.log('ae');
+}
+if (rol === 2 || rol === 3) {
+    idDocente = await obtenerIdDocente(usuarioId);
+    console.log(idDocente);
+    console.log('as');
+}
 
 function separarTags(cadena) {
     if (!cadena) return [];
@@ -25,8 +40,12 @@ function separarTags(cadena) {
 
 
 const btnSubirRecurso = document.getElementById('subirRecursoModalBtn');
+if (rol == 1 || rol == 2) {
+    btnSubirRecurso.style = "display: none";
+}
 const formSubirRecurso = document.getElementById('formSubirRecurso');
 btnSubirRecurso?.addEventListener('click', () => {
+    //console.log(usuarioId);
     const modal = new bootstrap.Modal(document.getElementById('subirRecursoModal'));
     modal.show();
     cargarTipoRecurso();
@@ -94,21 +113,24 @@ const confirmarEliminacion = async (id) => {
 
     document.getElementById('confirmarEliminarBtn').addEventListener("click", async () => {
         const respuesta = await eliminarRecurso(id);
-        
+
         if (respuesta.success) {
             alert("Recurso eliminado correctamente.");
             location.reload();
         } else {
             alert(respuesta.mensaje || "No se pudo eliminar.");
-        }     
+        }
     });
 }
 
 // Función para cargar los recursos del docente
 const cargarRecursosDetalle = async () => {
+
     const misRecursos = await cargarRecursos();
     //const misRecursos = document.querySelectorAll('.recurso-card[data-propietario="true"]');
     const gridMisRecursos = document.getElementById('gridRecursos');
+
+    console.log("AAAAAAAAAA");
 
     console.log(misRecursos);
 
@@ -122,19 +144,34 @@ const cargarRecursosDetalle = async () => {
 
             const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
 
+            /* let botonesEliminarModificar = '';
+ 
+             if (rol == 3) {
+                 botonesEliminarModificar = `
+                 <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
+                 <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
+                 <i class="bi bi-pencil"></i>
+                 </button>
+                 <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center eliminar-btn" style="width: 30px; height: 30px;" data-id-eliminar="${recurso.id}">
+                 <i class="bi bi-trash"></i>
+                 </button>
+                 </div>`;
+             }*/
+
+
             const html = `
                     <div id="colRecurso" class="col">
                         <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
                             <div class="portada-container">
                                 <img src="data:image/jpeg;base64,${recurso.portada}">
                                 <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
-                                    <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center eliminar-btn" style="width: 30px; height: 30px;" data-id-eliminar="${recurso.id}">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
+                <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
+                <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center eliminar-btn" style="width: 30px; height: 30px;" data-id-eliminar="${recurso.id}">
+                <i class="bi bi-trash"></i>
+                </button>
+                </div>
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">${recurso.titulo}</h5>
@@ -197,64 +234,64 @@ const verRecurso = async (id) => {
     modal.show();
 }
 
-const editarFormulario = async(form,id) => {
+const editarFormulario = async (form, id) => {
     form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
-    const datosJSON = {};
-    formData.append('idDocente', idDocente);
+        e.preventDefault();
+        const formData = new FormData(form);
+        const datosJSON = {};
+        formData.append('idDocente', idDocente);
 
-    const idRecurso = id;
-    const portadaArchivo = await recursoPortadaArchivo(idRecurso);
-    //console.log(portadaArchivo);
+        const idRecurso = id;
+        const portadaArchivo = await recursoPortadaArchivo(idRecurso);
+        //console.log(portadaArchivo);
 
-    const portada = formData.get('edit_portada');
-    const archivo = formData.get('edit_archivo');
+        const portada = formData.get('edit_portada');
+        const archivo = formData.get('edit_archivo');
 
-    //console.log(portada);
-    if(portada.size === 0 ){
-        formData.set('edit_portada',portadaArchivo[0].portada);
-    }
-    if(archivo.size === 0 ){
-        formData.set('edit_archivo',portadaArchivo[0].archivo);
-    }
+        //console.log(portada);
+        if (portada.size === 0) {
+            formData.set('edit_portada', portadaArchivo[0].portada);
+        }
+        if (archivo.size === 0) {
+            formData.set('edit_archivo', portadaArchivo[0].archivo);
+        }
 
-    //console.log(formData);
-
-    
+        //console.log(formData);
 
 
-    for (const [key, value] of formData.entries()) {
-        if (value instanceof File && value.name) {
-            datosJSON[key] = await toBase64(value);
-        } else {
-            if ((key == 'edit_autores') || (key == 'edit_tags')) {
-                datosJSON[key] = separarTags(value);
+
+
+        for (const [key, value] of formData.entries()) {
+            if (value instanceof File && value.name) {
+                datosJSON[key] = await toBase64(value);
             } else {
-                datosJSON[key] = value;
+                if ((key == 'edit_autores') || (key == 'edit_tags')) {
+                    datosJSON[key] = separarTags(value);
+                } else {
+                    datosJSON[key] = value;
+                }
             }
         }
-    }
 
-    console.log(datosJSON);
+        console.log(datosJSON);
 
-    try {
-        const response = await editarRecurso(datosJSON);
+        try {
+            const response = await editarRecurso(datosJSON);
 
-        if (response.success) {
-            alert('Recurso actualizado correctamente');
-            bootstrap.Modal.getInstance(document.getElementById('editarRecursoModal'))?.hide();
-            location.reload();
-        } else {
-            alert('Error al actualizar recurso');
+            if (response.success) {
+                alert('Recurso actualizado correctamente');
+                bootstrap.Modal.getInstance(document.getElementById('editarRecursoModal'))?.hide();
+                location.reload();
+            } else {
+                alert('Error al actualizar recurso');
+            }
+        } catch (error) {
+            alert('Error de conexión al actualizar recurso.');
         }
-    } catch (error) {
-        alert('Error de conexión al actualizar recurso.');
-    }
-});
+    });
 };
 
-const cargarDatosEdicion = async (id) =>{
+const cargarDatosEdicion = async (id) => {
     const formEditarRecurso = document.getElementById('formEditarRecurso');
     const modal = new bootstrap.Modal(document.getElementById('editarRecursoModal'));
     modal.show();
@@ -273,19 +310,40 @@ const cargarDatosEdicion = async (id) =>{
     document.getElementById('edit_tags').value = recurso[0].tags;
     document.getElementById('recurso_id').value = id;
 
-    editarFormulario(formEditarRecurso,id);
-}
+    editarFormulario(formEditarRecurso, id);
+};
 
-document.addEventListener('DOMContentLoaded', function () {
+/*
+document.addEventListener('DOMContentLoaded',function () {
     // Cargar los recursos del docente al inicio
-    cargarRecursosDetalle();
-});
+    console.log("DOM CARGADO");
+    try{
+       cargarRecursosDetalle();
+    } catch(error){
+        console.error(error);
+    }
+    
+});*/
+
+// Reemplaza tu event listener actual con:
+window.onload = async function() {
+  console.log("Window completamente cargado - INICIO");
+  
+  try {
+    await cargarRecursosDetalle();
+  } catch (error) {
+    console.error("Error fatal:", error);
+  }
+  
+  console.log("Window completamente cargado - FIN");
+};
 
 
 
 
 
 //login
+/*
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     const btnLogin = form.querySelector('.btn-login');
@@ -319,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cuenta = document.getElementById('email').value.trim();
         const contrasena = document.getElementById('password').value;
-        
+
         const resultado = await validarCredenciales(cuenta, contrasena);
 
         // Quitar spinner
@@ -327,25 +385,20 @@ document.addEventListener('DOMContentLoaded', () => {
         spinner.classList.add('d-none');
         btnText.textContent = 'Ingresar';
 
-      /*  if (!resultado.success) {
-            alert(resultado.message || 'Credenciales inválidas');
-            return;
-        }
-*/
         if (resultado.success) {
             btnLogin.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Bienvenido';
             btnLogin.classList.add('btn-success');
 
             setTimeout(() => {
-            alert("Acceso exitoso. Redirigiendo...");
-            window.location.href = "../../../biblioteca/biblioteca.php";
-        }, 1000);
-      } else {
+                alert("Acceso exitoso. Redirigiendo...");
+                window.location.href = "../../../biblioteca/biblioteca.php";
+            }, 1000);
+        } else {
             btnText.textContent = "Ingresar";
             spinner.classList.add('d-none');
             btnLogin.disabled = false;
             alert("Credenciales incorrectas. Intente de nuevo.");
-      }
+        }
 
     });
-});
+});*/

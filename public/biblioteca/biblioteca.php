@@ -1,7 +1,7 @@
 <?php
     session_start();
 
-    if (!isset($_SESSION['usuario_id'])) {
+    if (!isset($_SESSION['usuario_id'], $_SESSION['rol'])) {
         header("Location: login_biblioteca.php");
         exit();
     }
@@ -330,6 +330,12 @@
     <unah-footer></unah-footer>
 
     <!-- Scripts -->
+     <script>
+        const usuarioId = <?php echo json_encode($_SESSION['usuario_id']); ?>;
+        const rol = <?php echo json_encode($_SESSION['rol']); ?>;
+        console.log("ID del usuario desde sesion PHP:", usuarioId);
+        console.log("ID del rol desde sesion PHP:", rol);
+     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="/assets/js/mainBiblioteca.js"></script>
     <script type="module" src="/assets/js/main.js"></script>

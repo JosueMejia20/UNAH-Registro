@@ -28,6 +28,7 @@ try{
         
         if($biblioteca->verificarUsuarioBiblioteca($resultadoLogin)==1){
             $_SESSION['usuario_id'] = $resultadoLogin;
+            $_SESSION['rol'] = $biblioteca->verificarUsuarioBiblioteca($resultadoLogin);
 
             echo json_encode([
             'success'=> true,
@@ -37,12 +38,24 @@ try{
         ]);
         } elseif($biblioteca->verificarUsuarioBiblioteca($resultadoLogin)==2){
             $_SESSION['usuario_id'] = $resultadoLogin;
+            $_SESSION['rol'] = $biblioteca->verificarUsuarioBiblioteca($resultadoLogin);
+            
+            echo json_encode([
+            'success'=> true,
+            'message'=> 'Se ha iniciado sesion correctamente',
+            'idDocente'=> $resultadoLogin,
+            'tipoUsuario'=> 2
+        ]);
+        }
+         elseif($biblioteca->verificarUsuarioBiblioteca($resultadoLogin)==3){
+            $_SESSION['usuario_id'] = $resultadoLogin;
+            $_SESSION['rol'] = $biblioteca->verificarUsuarioBiblioteca($resultadoLogin);
             
             echo json_encode([
             'success'=> true,
             'message'=> 'Se ha iniciado sesion correctamente',
             'idSuperior'=> $resultadoLogin,
-            'tipoUsuario'=> 2
+            'tipoUsuario'=> 3
         ]);
         }else {
             echo json_encode([
