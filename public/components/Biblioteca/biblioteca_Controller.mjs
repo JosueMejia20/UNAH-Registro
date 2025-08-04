@@ -80,15 +80,28 @@ export const subirRecurso = async (datosJson) => {
   }
 };
 
-export const cargarRecursos = async () => {
+export const cargarRecursos = async (idDocente) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/recursos`);
+    const response = await fetch(`${BASE_URL}/get/recursos/${idDocente}`);
     return await response.json();
 
   } catch (err) {
     console.error('Error al cargar tipo recurso:', err);
   }
 };
+
+export const cargarRecursosEstudiante = async (idEstudiante) => {
+  try {
+    const response = await fetch(`${BASE_URL}/get/recursosEstudiante/${idEstudiante}`);
+    return await response.json();
+
+  } catch (err) {
+    console.error('Error al cargar tipo recurso:', err);
+  }
+};
+
+
+
 
 export const recursoDetalle = async (id) => {
   try {
@@ -100,6 +113,9 @@ export const recursoDetalle = async (id) => {
   }
 
 };
+
+
+
 
 export const recursoPortadaArchivo = async (id) => {
   try {

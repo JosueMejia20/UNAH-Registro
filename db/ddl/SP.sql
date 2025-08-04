@@ -63,6 +63,7 @@ DROP PROCEDURE IF EXISTS InsertarEvaluacionDocente;
 DROP PROCEDURE IF EXISTS ContarSolicitudesEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerNumeroCuentaEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerNumeroEmpleadoDocente;
+DROP PROCEDURE IF EXISTS GetRecursosDetalladosEstudiante;
 
 
 
@@ -1257,7 +1258,9 @@ END$$
 
 
 
-CREATE PROCEDURE GetRecursosDetallados()
+CREATE PROCEDURE GetRecursosDetallados(
+	IN p_docente_id INT
+)
 BEGIN
     SELECT 
         r.id,
@@ -1285,8 +1288,71 @@ BEGIN
          WHERE cr.recurso_id = r.id) AS clases_asociadas
          
     FROM Recursos r
-    INNER JOIN Tipo_Recurso tr ON r.tipo_recurso_id = tr.id;
+    INNER JOIN Tipo_Recurso tr ON r.tipo_recurso_id = tr.id
+    
+    WHERE EXISTS (
+        SELECT 1
+        FROM Recursos_Clase rc
+        INNER JOIN Clases_Carrera cc ON rc.clase_id = cc.clase_id
+        INNER JOIN Carrera ca ON cc.carrera_id = ca.carrera_id
+        INNER JOIN Departamento_Uni du ON ca.departamento_id = du.departamento_id
+        INNER JOIN Docente d ON d.departamento_id = du.departamento_id
+        WHERE rc.recurso_id = r.id
+          AND d.numero_empleado = p_docente_id
+    );
 END $$
+
+
+CREATE PROCEDURE GetRecursosDetalladosEstudiante(
+    IN p_estudiante_id VARCHAR(11)
+)
+BEGIN
+    SELECT 
+        r.id,
+        r.titulo,
+        r.anio,
+        r.portada,
+        r.descripcion,
+        tr.nombre AS tipo_recurso,
+
+        -- Autores separados por coma
+        (SELECT GROUP_CONCAT(a.nombre_completo SEPARATOR ', ')
+         FROM Autores a
+         INNER JOIN Autores_Recursos ar ON a.id = ar.autor_id
+         WHERE ar.recurso_id = r.id) AS autores,
+
+        -- Tags separados por coma
+        (SELECT GROUP_CONCAT(t.nombre SEPARATOR ', ')
+         FROM Tags t
+         INNER JOIN Recursos_Tags rt ON t.id = rt.tags_id
+         WHERE rt.recurso_id = r.id) AS tags,
+
+        -- Clases asociadas
+        (SELECT GROUP_CONCAT(CONCAT(c.codigo, ' - ', c.nombre_clase) SEPARATOR ', ')
+         FROM Clase c
+         INNER JOIN Recursos_Clase rc2 ON c.clase_id = rc2.clase_id
+         WHERE rc2.recurso_id = r.id) AS clases_asociadas
+
+    FROM Recursos r
+    INNER JOIN Tipo_Recurso tr ON r.tipo_recurso_id = tr.id
+    WHERE EXISTS (
+        SELECT 1
+        FROM Recursos_Clase rc
+        INNER JOIN Clases_Carrera cc ON rc.clase_id = cc.clase_id
+        INNER JOIN Carrera ca ON cc.carrera_id = ca.carrera_id
+        INNER JOIN Departamento_Uni du ON ca.departamento_id = du.departamento_id
+        WHERE rc.recurso_id = r.id
+          AND du.departamento_id = (
+              SELECT c.departamento_id
+              FROM Estudiante e
+              INNER JOIN Carrera c ON e.carrera_id = c.carrera_id
+              WHERE e.numero_cuenta = p_estudiante_id
+              LIMIT 1
+          )
+    );
+END $$
+
+
 
 CREATE PROCEDURE RecursoDetalle(IN p_recurso_id INT)
 BEGIN

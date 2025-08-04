@@ -199,12 +199,25 @@ class Biblioteca
         }
     }
 
-    public function obtenerRecursos()
+    public function obtenerRecursos($idDocente)
     {
         try {
             $db = new DataBase();
 
-            $datos = $db->executeQuery("CALL GetRecursosDetallados()");
+            $datos = $db->executeQuery("CALL GetRecursosDetallados($idDocente)");
+
+            return $datos;
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
+        }
+    }
+
+    public function obtenerRecursosEstudiante($idEstudiante)
+    {
+        try {
+            $db = new DataBase();
+
+            $datos = $db->executeQuery("CALL GetRecursosDetalladosEstudiante($idEstudiante)");
 
             return $datos;
         } catch (PDOException $e) {

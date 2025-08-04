@@ -10,9 +10,9 @@ $biblioteca = new Biblioteca();
 
 header("Content-Type: application/json");
 
-$idDocente = intval(explode("/",$_SERVER["PATH_INFO"])[1]);
+$idEstudiante = intval(explode("/",$_SERVER["PATH_INFO"])[1]);
 
-$recursos = $biblioteca->obtenerRecursos($idDocente);
+$recursos = $biblioteca->obtenerRecursosEstudiante($idEstudiante);
 
 foreach ($recursos as &$recurso) {
     if (isset($recurso['portada'])) {

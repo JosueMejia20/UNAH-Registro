@@ -10,7 +10,8 @@ import {
     eliminarRecurso,
     validarCredenciales,
     obtenerIdEstudiante,
-    obtenerIdDocente
+    obtenerIdDocente,
+    cargarRecursosEstudiante
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
 
@@ -126,13 +127,13 @@ const confirmarEliminacion = async (id) => {
 // Función para cargar los recursos del docente
 const cargarRecursosDetalle = async () => {
 
-    const misRecursos = await cargarRecursos();
+    const misRecursos = await cargarRecursos(idDocente);
     //const misRecursos = document.querySelectorAll('.recurso-card[data-propietario="true"]');
     const gridMisRecursos = document.getElementById('gridRecursos');
 
-    console.log("AAAAAAAAAA");
+    //console.log("AAAAAAAAAA");
 
-    console.log(misRecursos);
+    //console.log(misRecursos);
 
     if (!misRecursos) return;
     if (misRecursos.length > 0) {
@@ -144,7 +145,7 @@ const cargarRecursosDetalle = async () => {
 
             const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
 
-            /* let botonesEliminarModificar = '';
+             let botonesEliminarModificar = '';
  
              if (rol == 3) {
                  botonesEliminarModificar = `
@@ -156,7 +157,7 @@ const cargarRecursosDetalle = async () => {
                  <i class="bi bi-trash"></i>
                  </button>
                  </div>`;
-             }*/
+             }
 
 
             const html = `
@@ -164,14 +165,7 @@ const cargarRecursosDetalle = async () => {
                         <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
                             <div class="portada-container">
                                 <img src="data:image/jpeg;base64,${recurso.portada}">
-                                <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
-                <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
-                <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center eliminar-btn" style="width: 30px; height: 30px;" data-id-eliminar="${recurso.id}">
-                <i class="bi bi-trash"></i>
-                </button>
-                </div>
+                                ${botonesEliminarModificar}
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">${recurso.titulo}</h5>
@@ -220,6 +214,66 @@ const cargarRecursosDetalle = async () => {
         gridMisRecursos.innerHTML = '';
     }
 }
+
+const cargarRecursosDetalleEstudiante = async () => {
+
+    //Debe de cambiar el procedimiento almacenado que ejecuta esa funcion de peticion
+    //Por el momento recupera solamente todos los recursos que pertenecen al mismo departamento del estudiante
+    //Se hizo por departamento porque copia la logica del docente. Pero debe cambiar a solamente mostrar los recursos de su carrera
+    // Aparte hacer el JOIN entre las clases de Estudiantes_Secciones, Estudiante_Matricula y Recursos_Clase.
+    const misRecursos = await cargarRecursosEstudiante(idEstudiante);
+    const gridMisRecursos = document.getElementById('gridRecursos');
+
+
+    if (!misRecursos) return;
+    if (misRecursos.length > 0) {
+        gridMisRecursos.innerHTML = '';
+        misRecursos.forEach(recurso => {
+            const tagsArray = separarTags(recurso.tags);
+            console.log(tagsArray);
+
+            const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
+
+
+            const html = `
+                    <div id="colRecurso" class="col">
+                        <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
+                            <div class="portada-container">
+                                <img src="data:image/jpeg;base64,${recurso.portada}">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">${recurso.titulo}</h5>
+                                <p class="card-text small text-muted">${recurso.autores}</p>
+                                <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
+                                
+                                <p class="card-text small text-truncate">${recurso.descripcion}</p>
+                                
+                                <div class="border-top pt-2 mt-2">
+                                    <div class="mb-2">
+                                        ${tagsHTML}
+                                    </div>
+                                    <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
+                                        <i class="bi bi-eye me-1"></i> Ver documento
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+            gridMisRecursos.innerHTML += html;
+        });
+        document.querySelectorAll('.ver-recurso').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                verRecurso(id);
+            });
+        });
+
+    } else {
+        gridMisRecursos.innerHTML = '';
+    }
+}
+
 
 // Función para ver un recurso
 const verRecurso = async (id) => {
@@ -325,17 +379,18 @@ document.addEventListener('DOMContentLoaded',function () {
     
 });*/
 
-// Reemplaza tu event listener actual con:
 window.onload = async function() {
-  console.log("Window completamente cargado - INICIO");
   
   try {
-    await cargarRecursosDetalle();
+    if(rol == 2 || rol == 3){
+        await cargarRecursosDetalle();
+    } else{
+        await cargarRecursosDetalleEstudiante();
+    }
   } catch (error) {
     console.error("Error fatal:", error);
   }
   
-  console.log("Window completamente cargado - FIN");
 };
 
 
