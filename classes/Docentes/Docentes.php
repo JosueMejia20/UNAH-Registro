@@ -80,6 +80,25 @@ class Docentes
             return "Error en la base de datos: " . $e->getMessage();
         }
     }
+
+    public function getNumeroDocenteByUsuarioId($usuarioId) {
+        try {
+            $db = new DataBase();
+            $pdo = $db->connect();
+
+            $stmt = $pdo->prepare("CALL ObtenerNumeroEmpleadoDocente(:usuarioId, @numeroEmpleado)");
+            $stmt->bindParam(':usuarioId', $usuarioId, PDO::PARAM_INT);
+            $stmt->execute();
+            $stmt->closeCursor();
+
+            $resultado = $pdo->query("SELECT @numeroEmpleado AS numeroEmpleado")->fetch(PDO::FETCH_ASSOC);
+
+            return isset($resultado['numeroEmpleado']) ? (string)$resultado['numeroEmpleado'] : "";
+        }catch(PDOException $e) {
+            echo 'error en base de datos: '.$e->getMessage();
+            return "";
+        }
+    }
 }
 
 // prueba
