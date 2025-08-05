@@ -51,24 +51,12 @@
                         <th>Correo</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="listaEstudiantes">
                     <tr>
                         <td>111</td>
                         <td>Isac Lainez</td>
                         <td>Ingenieria en Sistemas</td>
                         <td>isaclainez@unah.hn</td>
-                    </tr>
-                    <tr>
-                        <td>222</td>
-                        <td>Fernando Lopez</td>
-                        <td>Ingenieria en Sistemas</td>
-                        <td>ferlopez@unah.hn</td>
-                    </tr>
-                    <tr>
-                        <td>333</td>
-                        <td>Nohely Sierra</td>
-                        <td>Ingenieria en Sistemas</td>
-                        <td>nohelys@unah.hn</td>                 
                     </tr>
                 </tbody>
             </table>
@@ -79,6 +67,6 @@
     </div>
 
 
-    <script type="module" src="../../assets/js/mainEstudiantes.js"></script>
+    <script type="module" src="../../assets/js/Docentes/mainVerListaEstudiantes.js"></script>
 </body>
 </html>

@@ -19,29 +19,38 @@ import {
     obtenerInfoAsignatura
 } from '../../../../components/Docentes/asignaturaDocente.mjs';
 
-const idDocente = sessionStorage.getItem('idDocente') || '1002';
+const idDocente = sessionStorage.getItem('idDocente') || '1002';
 
-const cargarAsignaturaDocente = async()=> {
+
+const cargarAsignaturaDocente = async () => {
     const datos = await obtenerInfoAsignatura(idDocente);
     console.log(datos)
-    const tablaAsignaturas= document.getElementById("tablaAsignaturas")
-    tablaAsignaturas.innerHTML=""
-    datos.forEach(asignatura=>{
+    const tablaAsignaturas = document.getElementById("tablaAsignaturas")
+    tablaAsignaturas.innerHTML = ""
+    datos.forEach(asignatura => {
 
-        const fila = document.createElement("tr")
-        fila.innerHTML=`<td>${asignatura.codigo_clase}</td>
-        <td>${asignatura.nombre_clase}</td><td>${asignatura.departamento_clase}</td><td>${asignatura.codigo_seccion}</td>
-        <td>
-            <a href="lista_estudiantes.php">
-                <button class="action-btn">Ver Lista</button> 
-            </a>  
-        </td>
-            <td><button class="action-btn">Descargar</button></td>
+        const fila = document.createElement("tr");
+
+        const botonVer = document.createElement("button");
+        botonVer.textContent = "Ver Lista";
+        botonVer.classList.add("action-btn");
+        botonVer.addEventListener("click", () => {
+            window.location.href = `lista_estudiantes.php?idSeccion=${asignatura.id}`;
+        });
+
+        fila.innerHTML = `
+        <td>${asignatura.codigo_clase}</td>
+        <td>${asignatura.nombre_clase}</td>
+        <td>${asignatura.departamento_clase}</td>
+        <td>${asignatura.codigo_seccion}</td>
+        <td></td>
+        <td><button class="action-btn">Descargar</button></td>
 `;
+        fila.children[4].appendChild(botonVer);
         tablaAsignaturas.appendChild(fila);
     })
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     cargarAsignaturaDocente()
 })

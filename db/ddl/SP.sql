@@ -64,6 +64,7 @@ DROP PROCEDURE IF EXISTS ContarSolicitudesEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerNumeroCuentaEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerNumeroEmpleadoDocente;
 DROP PROCEDURE IF EXISTS GetRecursosDetalladosEstudiante;
+DROP PROCEDURE IF EXISTS ObtenerEstudiantesPorSeccion;
 
 
 
@@ -1553,6 +1554,25 @@ BEGIN
     WHERE usuario_id = p_usuario_id
     LIMIT 1;
 END $$
+
+
+CREATE PROCEDURE ObtenerEstudiantesPorSeccion(
+    IN p_seccion_id INT
+)
+BEGIN
+    SELECT 
+        e.numero_cuenta AS numero_cuenta,
+        CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_estudiante,
+        c.nombre_carrera AS carrera,
+        u.correo_institucional AS correo
+    FROM Estudiantes_Matricula em
+    INNER JOIN Estudiante e ON em.estudiante_id = e.numero_cuenta
+    INNER JOIN Usuario u ON e.usuario_id = u.usuario_id
+    INNER JOIN Persona p ON u.persona_id = p.dni
+    INNER JOIN Carrera c ON e.carrera_id = c.carrera_id
+    WHERE em.seccion_id = p_seccion_id;
+END $$
+
 
 
 

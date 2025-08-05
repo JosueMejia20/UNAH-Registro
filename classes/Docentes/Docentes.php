@@ -106,7 +106,8 @@ class Docentes
             $pdo = $db->connect();
 
             $sql = "
-                SELECT 
+                SELECT
+                    s.id,
                     c.codigo AS codigo_clase,
                     c.nombre_clase,
                     duni.nombre_departamento AS departamento_clase,
@@ -130,6 +131,16 @@ class Docentes
             } catch (PDOException $e) {
                 return "Error en la base de datos: " . $e->getMessage();
             }
+    }
+
+    public function getEstudiantes($idSeccion){
+        try {
+            $db = new DataBase();
+            $datos = $db->executeQuery("CALL ObtenerEstudiantesPorSeccion($idSeccion)");
+            return $datos;
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
+        }
     }
 }
 
