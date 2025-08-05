@@ -99,6 +99,38 @@ class Docentes
             return "";
         }
     }
+
+    public function getInfo($idDocente){
+        try {
+            $db = new DataBase();
+            $pdo = $db->connect();
+
+            $sql = "
+                SELECT 
+                    c.codigo AS codigo_clase,
+                    c.nombre_clase,
+                    duni.nombre_departamento AS departamento_clase,
+                    s.codigo_seccion
+                FROM Seccion s
+                JOIN Clase c ON s.clase_id = c.clase_id
+                JOIN Departamento_Uni duni ON c.departamento_id = duni.departamento_id
+                JOIN Periodo_Academico pa ON s.periodo_acad_id = pa.id
+                WHERE s.docente_id = :idDocente
+                AND CURDATE() BETWEEN pa.fecha_inicio AND pa.fecha_fin
+            ";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':idDocente', $idDocente, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $resultados;
+
+            } catch (PDOException $e) {
+                return "Error en la base de datos: " . $e->getMessage();
+            }
+    }
 }
 
 // prueba

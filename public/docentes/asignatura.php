@@ -46,18 +46,16 @@
                         <th>Codigo de Clase</th>
                         <th>Nombre de Clase</th>
                         <th>Departamento</th>
-                        <th>Carrera</th>
                         <th>Seccion</th>
                         <th>Lista de Estudiantes</th>
                         <th>Descargar Lista</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tablaAsignaturas">
                     <tr>
                         <td>IS111</td>
                         <td>Programacion 2</td>
                         <td>Ingenieria</td>
-                        <td>Ingenieria en Sistemas</td>
                         <td>0900</td>
                         <td>
                             <a href="lista_estudiantes.php">
@@ -66,37 +64,11 @@
                         </td>
                         <td><button class="action-btn">Descargar</button></td>
                     </tr>
-                    <tr>
-                        <td>IS222</td>
-                        <td>Bases de Datos</td>
-                        <td>Ingenieria</td>
-                        <td>Ingenieria en Sistemas</td>
-                        <td>1000</td>
-                        <td>
-                            <a href="lista_estudiantes.php">
-                                <button class="action-btn">Ver Lista</button> 
-                            </a>                     
-                        </td>
-                        <td><button class="action-btn">Descargar</button></td>
-                    </tr>
-                    <tr>
-                        <td>IS333</td>
-                        <td>Lenguajes de Programacion</td>
-                        <td>Ingenieria</td>
-                        <td>Ingenieria en Sistemas</td>
-                        <td>1100</td>
-                        <td>  
-                            <a href="lista_estudiantes.php">
-                                <button class="action-btn">Ver Lista</button> 
-                            </a>
-                        </td>
-                        <td><button class="action-btn">Descargar</button></td>
-                    </tr>
                 </tbody>
             </table>
     </div>
 
 
-    <script type="module" src="../../assets/js/mainEstudiantes.js"></script>
+    <script type="module" src="../../assets/js/Docentes/mainAsignaturaDocente.js"></script>
 </body>
 </html>
