@@ -39,7 +39,7 @@ export const cargarTipoRecurso = async () => {
 
 export const cargarClasesDocente = async (idDocente) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/clasesDocente/${idDocente}`);
+    const response = await fetch(`${BASE_URL}/get/clasesDocente/index.php/${idDocente}`);
     const data = await response.json();
     const select = document.getElementById('cursos');
 
@@ -82,7 +82,7 @@ export const subirRecurso = async (datosJson) => {
 
 export const cargarRecursos = async (idDocente) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/recursos/${idDocente}`);
+    const response = await fetch(`${BASE_URL}/get/recursos/index.php/${idDocente}`);
     return await response.json();
 
   } catch (err) {
@@ -92,7 +92,7 @@ export const cargarRecursos = async (idDocente) => {
 
 export const cargarRecursosEstudiante = async (idEstudiante) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/recursosEstudiante/${idEstudiante}`);
+    const response = await fetch(`${BASE_URL}/get/recursosEstudiante/index.php/${idEstudiante}`);
     return await response.json();
 
   } catch (err) {
@@ -105,7 +105,7 @@ export const cargarRecursosEstudiante = async (idEstudiante) => {
 
 export const recursoDetalle = async (id) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/verRecurso/${id}`);
+    const response = await fetch(`${BASE_URL}/get/verRecurso/index.php/${id}`);
     return await response.json();
 
   } catch (err) {
@@ -119,7 +119,7 @@ export const recursoDetalle = async (id) => {
 
 export const recursoPortadaArchivo = async (id) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/portadaArchivo/${id}`);
+    const response = await fetch(`${BASE_URL}/get/portadaArchivo/index.php/${id}`);
     return await response.json();
 
   } catch (err) {
@@ -130,7 +130,7 @@ export const recursoPortadaArchivo = async (id) => {
 
 export const editarRecurso = async (datosJson) => {
   try {
-    const response = await fetch(`${BASE_URL}/put/updateRecurso`, {
+    const response = await fetch(`${BASE_URL}/put/updateRecurso/index.php`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(datosJson),
@@ -180,7 +180,7 @@ export const validarCredenciales = async (cuenta, contrasena) => {
 
 export const obtenerIdEstudiante = async (usuarioId) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/obtenerIdEstudiante/${usuarioId}`);
+    const response = await fetch(`${BASE_URL}/get/obtenerIdEstudiante/index.php/${usuarioId}`);
     return await response.json();
 
   } catch (err) {
@@ -190,7 +190,7 @@ export const obtenerIdEstudiante = async (usuarioId) => {
 
 export const obtenerIdDocente = async (usuarioId) => {
   try {
-    const response = await fetch(`${BASE_URL}/get/obtenerIdDocente/${usuarioId}`);
+    const response = await fetch(`${BASE_URL}/get/obtenerIdDocente/index.php/${usuarioId}`);
     return await response.json();
 
   } catch (err) {
