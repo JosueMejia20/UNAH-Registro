@@ -145,10 +145,10 @@ const cargarRecursosDetalle = async () => {
 
             const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
 
-             let botonesEliminarModificar = '';
- 
-             if (rol == 3) {
-                 botonesEliminarModificar = `
+            let botonesEliminarModificar = '';
+
+            if (rol == 3) {
+                botonesEliminarModificar = `
                  <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
                  <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
                  <i class="bi bi-pencil"></i>
@@ -157,7 +157,7 @@ const cargarRecursosDetalle = async () => {
                  <i class="bi bi-trash"></i>
                  </button>
                  </div>`;
-             }
+            }
 
 
             const html = `
@@ -281,7 +281,9 @@ const verRecurso = async (id) => {
     console.log(recurso);
     document.getElementById('visorPdfModalTitle').textContent = recurso[0].titulo;
     document.getElementById('pdfMetadata').textContent = `Autores: ${recurso[0].autores}`;
-    document.getElementById('pdfViewer').src = `data:application/pdf;base64,${recurso[0].archivo}`;
+    document.getElementById('pdfViewer').src = `data:application/pdf;base64,${recurso[0].archivo}#toolbar=0&navpanes=0`;
+    document.getElementById('pdfViewer').setAttribute('sandbox', 'allow-scripts allow-same-origin');
+    document.getElementById('pdfViewer').setAttribute('disable-download',"");
 
     // Mostrar el modal
     const modal = new bootstrap.Modal(document.getElementById('visorPdfModal'));
@@ -379,18 +381,19 @@ document.addEventListener('DOMContentLoaded',function () {
     
 });*/
 
-window.onload = async function() {
-  
-  try {
-    if(rol == 2 || rol == 3){
-        await cargarRecursosDetalle();
-    } else{
-        await cargarRecursosDetalleEstudiante();
+
+window.onload = async function () {
+
+    try {
+        if (rol == 2 || rol == 3) {
+            await cargarRecursosDetalle();
+        } else {
+            await cargarRecursosDetalleEstudiante();
+        }
+    } catch (error) {
+        console.error("Error fatal:", error);
     }
-  } catch (error) {
-    console.error("Error fatal:", error);
-  }
-  
+
 };
 
 

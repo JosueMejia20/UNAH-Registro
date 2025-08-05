@@ -1338,16 +1338,21 @@ BEGIN
     WHERE EXISTS (
         SELECT 1
         FROM Recursos_Clase rc
-        INNER JOIN Clases_Carrera cc ON rc.clase_id = cc.clase_id
-        INNER JOIN Carrera ca ON cc.carrera_id = ca.carrera_id
-        INNER JOIN Departamento_Uni du ON ca.departamento_id = du.departamento_id
         WHERE rc.recurso_id = r.id
-          AND du.departamento_id = (
-              SELECT c.departamento_id
-              FROM Estudiante e
-              INNER JOIN Carrera c ON e.carrera_id = c.carrera_id
-              WHERE e.numero_cuenta = p_estudiante_id
-              LIMIT 1
+          AND rc.clase_id IN (
+              -- Clases que el estudiante curso
+              SELECT s.clase_id
+              FROM Estudiantes_Secciones es
+              INNER JOIN Seccion s ON es.seccion_id = s.id
+              WHERE es.estudiante_id = p_estudiante_id
+              
+              UNION
+
+              -- Clases que el estudiante esta cursando
+              SELECT s.clase_id
+              FROM Estudiantes_Matricula em
+              INNER JOIN Seccion s ON em.seccion_id = s.id
+              WHERE em.estudiante_id = p_estudiante_id
           )
     );
 END $$

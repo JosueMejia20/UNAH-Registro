@@ -17,6 +17,29 @@ INSERT INTO Persona (dni, nombre_completo, apellido_completo, numero_telefono, c
 ('0801199312348', 'Luis Alberto', 'Hernández Mejía', '9345-6789', 'luis.hernandez@example.com', 4, 'M', '1993-09-10'),
 ('0801199612349', 'Gabriela Sofía', 'Ortiz Pineda', '9789-1234', 'gabriela.ortiz@example.com', 5, 'F', '1996-01-28');
 
+-- PERSONA JEFE
+INSERT INTO Persona (dni, nombre_completo, apellido_completo, numero_telefono, correo_personal, direccion_id, genero, fecha_nacimiento) VALUES
+('1202200219235', 'El Jefe', 'Mero Mero', '9876-5452', 'eljefe@example.com', 1, 'M', '1990-03-15');
+
+INSERT INTO Usuario (persona_id, correo_institucional, contrasenia) VALUES
+('1202200219235', 'jefe@unah.edu.hn', '1234');
+
+INSERT INTO Usuario_Rol (usuario_id, rol_id) VALUES (6, 5);
+
+INSERT INTO Docente (numero_empleado, persona_id, centro_reg_id, usuario_id, departamento_id, foto) 
+VALUES (3434, '1202200219235', 1, 6, 1, NULL);
+
+-- PERSONA DOCENTE
+INSERT INTO Persona (dni, nombre_completo, apellido_completo, numero_telefono, correo_personal, direccion_id, genero, fecha_nacimiento) VALUES
+('1302199920201', 'El Docente', 'Docente Docente', '3123-5452', 'eldocente@example.com', 1, 'M', '1990-03-15');
+
+INSERT INTO Usuario (persona_id, correo_institucional, contrasenia) VALUES
+('1302199920201', 'docente@unah.edu.hn', '1234');
+
+INSERT INTO Docente (numero_empleado, persona_id, centro_reg_id, usuario_id, departamento_id, foto) 
+VALUES (2020, '1302199920201', 1, 7, 2, NULL);
+
+
 -- Usuarios
 INSERT INTO Usuario (persona_id, correo_institucional, contrasenia) VALUES
 ('0801199012345', 'ana.gonzalez@unah.edu.hn', '1234'),
