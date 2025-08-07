@@ -114,6 +114,33 @@ class Biblioteca
             return "Error en la base de datos: " . $e->getMessage();
         }
     }
+    
+
+    public function obtenerTodoTitulo()
+    {
+        try {
+            $db = new DataBase();
+
+            $datos = $db->executeQuery("CALL getTitulosRecurso()");
+
+            return $datos;
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
+        }
+    }
+
+    public function obtenerTodoAutor()
+    {
+        try {
+            $db = new DataBase();
+
+            $datos = $db->executeQuery("CALL getAutoresRecurso()");
+
+            return $datos;
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
+        }
+    }
 
     public function obtenerClasesDocente($idDocente)
     {

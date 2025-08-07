@@ -37,6 +37,17 @@ export const cargarTipoRecurso = async () => {
   }
 };
 
+export const getSugerencias = async (tipo) => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/biblioteca/autocompletado/index.php?tipo=${tipo}`);
+    if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error(`Error obteniendo ${tipo}:`, error);
+    return [];
+  }
+};
+
 export const cargarClasesDocente = async (idDocente) => {
   try {
     const response = await fetch(`${BASE_URL}/get/clasesDocente/index.php/${idDocente}`);
@@ -65,18 +76,49 @@ export const cargarClasesDocente = async (idDocente) => {
   }
 };
 
-export const cargarClasesEstudiantes = async (idEstudiante) => {
+export const filtroCursoDocente = async (idDocente) => {
+  try {
+    const response = await fetch(`${BASE_URL}/get/clasesDocente/index.php/${idDocente}`);
+    const data = await response.json();
+    const select = document.getElementById('filtroCurso');
+
+    limpiarOpciones(select);
+    select.appendChild(new Option('Todas los cursos...', ''));
+
+    data.forEach(item => {
+      select.appendChild(new Option(item.nombre_clase, item.nombre_clase));
+    });
+
+    const selectEdit = document.getElementById('edit_cursos');
+
+    limpiarOpciones(selectEdit);
+    selectEdit.appendChild(new Option('Todas los cursos...', ''));
+
+    data.forEach(item => {
+      selectEdit.appendChild(new Option(item.nombre_clase, item.nombre_clase));
+    });
+
+    // ⬅ Aquí devolvemos los datos para que la otra función los use
+    return data;
+
+  } catch (err) {
+    console.error('Error al cargar tipo recurso:', err);
+    return [];
+  }
+};
+
+export const filtroCursoEstudiantes = async (idEstudiante) => {
   try {
     const response = await fetch(`${BASE_URL}/get/clasesEstudiante/index.php/${idEstudiante}`);
     const data = await response.json();
-    const select = document.getElementById('cursos');
+    const select = document.getElementById('filtroCurso');
 
     limpiarOpciones(select);
     select.appendChild(new Option('Todas los cursos...', ''));
 
     console.log(data);
     data.forEach(item => {
-      select.appendChild(new Option(item.nombre_clase, item.clase_id));
+      select.appendChild(new Option(item.nombre_clase, item.nombre_clase));
     });
 
     const selectEdit = document.getElementById('edit_cursos');
@@ -86,7 +128,7 @@ export const cargarClasesEstudiantes = async (idEstudiante) => {
 
     console.log(data);
     data.forEach(item => {
-      selectEdit.appendChild(new Option(item.nombre_clase, item.clase_id));
+      selectEdit.appendChild(new Option(item.nombre_clase, item.nombre_clase));
     });
   } catch (err) {
     console.error('Error al cargar tipo recurso:', err);
@@ -172,38 +214,38 @@ export const editarRecurso = async (datosJson) => {
 };
 
 export const eliminarRecurso = async (idRecurso) => {
-    try {
-        const response = await fetch(`${BASE_URL}/delete/eliminarRecurso/index.php`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ idRecurso: idRecurso})
-        });
-        return await response.json();
-    } catch (error) {
-        console.error('Error al cancelar:', error);
-        return { success: false, mensaje: 'Error en la cancelación' };
-    }
+  try {
+    const response = await fetch(`${BASE_URL}/delete/eliminarRecurso/index.php`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idRecurso: idRecurso })
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Error al cancelar:', error);
+    return { success: false, mensaje: 'Error en la cancelación' };
+  }
 };
 
 export const validarCredenciales = async (cuenta, contrasena) => {
-    try {
-        const res = await fetch(`${BASE_URL}/loginBiblioteca/index.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username: cuenta,
-                password: contrasena
-            }),
-        });
+  try {
+    const res = await fetch(`${BASE_URL}/loginBiblioteca/index.php`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: cuenta,
+        password: contrasena
+      }),
+    });
 
-        if (!res.ok) throw new Error('Error de red');
+    if (!res.ok) throw new Error('Error de red');
 
-        const data = await res.json();
-        return data;
-    } catch (error) {
-        console.error('Error en login:', error);
-        return { success: false, message: 'Error de conexión' };
-    }
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error('Error en login:', error);
+    return { success: false, message: 'Error de conexión' };
+  }
 };
 
 export const obtenerIdEstudiante = async (usuarioId) => {

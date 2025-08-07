@@ -12,9 +12,7 @@ import {
     obtenerIdEstudiante,
     obtenerIdDocente,
     cargarRecursosEstudiante,
-    filtroCursoEstudiantes,
-    filtroCursoDocente,
-    getSugerencias
+    cargarClasesEstudiantes
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
 import { UnahModal } from '../../components/modal.mjs';
@@ -138,14 +136,6 @@ const cargarRecursosDetalle = async () => {
     if (misRecursos.length > 0) {
         gridMisRecursos.innerHTML = '';
         misRecursos.forEach(recurso => {
-            // Aquí sí puedes acceder a recurso.clases_asociadas
-            const nombresClases = recurso.clases_asociadas
-                ? recurso.clases_asociadas
-                      .split(',')
-                      .map(c => c.trim().replace(/^[A-Z0-9]+\s*-\s*/, ''))
-                      .join(', ')
-                : '';
-
             const tagsArray = separarTags(recurso.tags);
             const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
 
@@ -164,7 +154,7 @@ const cargarRecursosDetalle = async () => {
 
             const html = `
                 <div id="colRecurso" class="col">
-                    <div class="card h-100 shadow-sm recurso-card" data-cursos="${nombresClases}" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
+                    <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
                         <div class="portada-container">
                             <img src="data:image/jpeg;base64,${recurso.portada}">
                             ${botonesEliminarModificar}
@@ -186,7 +176,6 @@ const cargarRecursosDetalle = async () => {
             gridMisRecursos.innerHTML += html;
         });
 
-        // Listeners
         document.querySelectorAll('.ver-recurso').forEach(btn => {
             btn.addEventListener('click', function () {
                 const id = this.getAttribute('data-id');
@@ -211,7 +200,6 @@ const cargarRecursosDetalle = async () => {
     }
 };
 
-
 const cargarRecursosDetalleEstudiante = async () => {
     const misRecursos = await cargarRecursosEstudiante(idEstudiante);
     const gridMisRecursos = document.getElementById('gridRecursos');
@@ -220,21 +208,12 @@ const cargarRecursosDetalleEstudiante = async () => {
     if (misRecursos.length > 0) {
         gridMisRecursos.innerHTML = '';
         misRecursos.forEach(recurso => {
-
-            // Aquí sí puedes acceder a recurso.clases_asociadas
-            const nombresClasesES = recurso.clases_asociadas
-                ? recurso.clases_asociadas
-                      .split(',')
-                      .map(c => c.trim().replace(/^[A-Z0-9]+\s*-\s*/, ''))
-                      .join(', ')
-                : '';
-
             const tagsArray = separarTags(recurso.tags);
             const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
 
             const html = `
                 <div id="colRecurso" class="col">
-                    <div class="card h-100 shadow-sm recurso-card" data-cursos="${nombresClasesES}" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
+                    <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
                         <div class="portada-container">
                             <img src="data:image/jpeg;base64,${recurso.portada}">
                         </div>
@@ -350,29 +329,6 @@ const cargarDatosEdicion = async (id) => {
     editarFormulario(formEditarRecurso, id);
 };
 
-// ------------------- Autocompletado -------------------
-document.addEventListener('DOMContentLoaded', async () => {
-    // Autores
-    const autores = await getSugerencias('autores');
-    llenarDatalist('listaAutores', autores.map(a => a.autor));
-
-    // Títulos
-    const titulos = await getSugerencias('titulos');
-    llenarDatalist('listaTitulos', titulos.map(t => t.titulo));
-});
-
-function llenarDatalist(id, valores) {
-    const datalist = document.getElementById(id);
-    datalist.innerHTML = '';
-    valores.forEach(valor => {
-        if (valor && valor.trim() !== '') {
-            const option = document.createElement('option');
-            option.value = valor;
-            datalist.appendChild(option);
-        }
-    });
-}
-
 // ------------------- Cargar filtro de cursos -------------------
 const cargarFiltroCursos = async () => {
     const selectFiltro = document.getElementById('cursos');
@@ -384,26 +340,27 @@ const cargarFiltroCursos = async () => {
     let clases = [];
 
     if (rol === 1 && idEstudiante) {
-        clases = await filtroCursoEstudiantes(idEstudiante); // Devuelve nombre_clase
+        clases = await cargarClasesEstudiantes(idEstudiante); // Para estudiantes
     } else if ((rol === 2 || rol === 3) && idDocente) {
-        clases = await filtroCursoDocente(idDocente); // Devuelve nombre_clase
+        clases = await cargarClasesDocente(idDocente); // Para docentes o jefes
     }
 
     console.log('Clases cargadas para filtro:', clases);
 
-    // Agregar las clases como opciones (usamos nombre_clase como value)
+    // Agregar las clases como opciones
     clases?.forEach(clase => {
         const option = document.createElement('option');
-        option.value = clase.nombre_clase; // Usamos nombre de la clase como valor
-        option.textContent = clase.nombre_clase;
+        option.value = clase.clase_id; // Usamos clase_id según tu consola
+        option.textContent = clase.nombre_clase; // Usamos nombre_clase según tu consola
         selectFiltro.appendChild(option);
     });
 };
 
 
+
 // ------------------- Filtrar recursos -------------------
 function filtrarRecursos() {
-    const filtroCurso = document.getElementById('filtroCurso')?.value.trim() || '';
+    const filtroCurso = document.getElementById('cursos')?.value || '';
     const filtroCategoria = document.getElementById('filtroCategoria')?.value.toLowerCase() || '';
     const busqueda = document.getElementById('busquedaRecursos')?.value.toLowerCase() || '';
 
@@ -411,16 +368,11 @@ function filtrarRecursos() {
     let resultadosEncontrados = false;
 
     recursos.forEach(recurso => {
-        const cursosData = recurso.getAttribute('data-cursos') || '';
-        // separar los nombres de las clases y limpiar espacios
-        const cursos = cursosData.split(',').map(c => c.trim());
-
+        const cursos = recurso.getAttribute('data-cursos')?.split(',').map(c => c.trim()) || [];
         const categoria = recurso.getAttribute('data-categoria')?.toLowerCase() || '';
         const textoBusqueda = recurso.getAttribute('data-busqueda')?.toLowerCase() || '';
 
-        // Si filtroCurso está vacío (""), mostramos todo; si no, chequeamos si incluye la clase filtrada
         const coincideCurso = filtroCurso === '' || cursos.includes(filtroCurso);
-
         const coincideCategoria = filtroCategoria === '' || categoria === filtroCategoria;
         const coincideBusqueda = busqueda === '' || textoBusqueda.includes(busqueda);
 
@@ -441,10 +393,6 @@ function filtrarRecursos() {
 
 
 
-
-
-
-
 // ------------------- Inicialización -------------------
 window.onload = async function () {
     try {
@@ -453,11 +401,11 @@ window.onload = async function () {
             await cargarFiltroCursos();
         } else {
             await cargarRecursosDetalleEstudiante();
-            await cargarFiltroCursos();
+            await cargarFiltroCursos(); 
         }
 
         // Listeners de filtro
-        document.getElementById('filtroCurso')?.addEventListener('change', filtrarRecursos);
+        document.getElementById('cursos')?.addEventListener('change', filtrarRecursos);
         document.getElementById('filtroCategoria')?.addEventListener('input', filtrarRecursos);
         document.getElementById('busquedaRecursos')?.addEventListener('input', filtrarRecursos);
     } catch (error) {

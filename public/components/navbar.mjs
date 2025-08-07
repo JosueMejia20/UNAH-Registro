@@ -18,7 +18,7 @@ class UnahNavbar extends HTMLElement {
                             <a class="nav-link active" href="../index.php">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../musica/index.php?vista=musica">Musica</a>
+                            <a class="nav-link" href="../musica/index.php?vista=musicalogin">Musica</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="../biblioteca/index.php?vista=login_biblioteca">Biblioteca Virtual</a>

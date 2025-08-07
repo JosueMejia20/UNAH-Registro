@@ -66,6 +66,8 @@ DROP PROCEDURE IF EXISTS ObtenerNumeroEmpleadoDocente;
 DROP PROCEDURE IF EXISTS GetRecursosDetalladosEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerEstudiantesPorSeccion;
 DROP PROCEDURE IF EXISTS GetClasesPorEstudiante;
+DROP PROCEDURE IF EXISTS getTitulosRecurso;
+DROP PROCEDURE IF EXISTS getAutoresRecurso;
 
 
 
@@ -1602,6 +1604,17 @@ BEGIN
     WHERE em.seccion_id = p_seccion_id;
 END $$
 
+CREATE PROCEDURE getTitulosRecurso()
+BEGIN
+    SELECT DISTINCT titulo 
+    FROM Recursos 
+    WHERE titulo IS NOT NULL AND titulo <> '';
+END $$
+
+CREATE PROCEDURE getAutoresRecurso()
+BEGIN
+    SELECT DISTINCT nombre_completo FROM Autores ORDER BY nombre_completo;
+END $$
 
 
 

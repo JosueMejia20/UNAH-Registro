@@ -65,12 +65,12 @@
              <div class="card mb-4">
                  <div class="card-body">
                      <div class="row g-3">
-                         <!-- <div class="col-md-6">
+                         <div class="col-md-6">
                              <label for="filtroCurso" class="form-label">Filtrar por curso</label>
-                             <select id="cursos" class="form-select">
+                             <select id="filtroCurso" class="form-select">
                                  <option value="">Todos los cursos</option>
                              </select>
-                         </div> -->
+                         </div>
                          <div class="col-md-6">
                              <label for="busquedaRecursos" class="form-label">Buscar recursos</label>
                              <div class="input-group">
@@ -133,11 +133,13 @@
                              <div class="col-md-6">
                                  <div class="mb-3">
                                      <label for="titulo" class="form-label">Título*</label>
-                                     <input type="text" class="form-control" id="titulo" name="titulo" required>
+                                     <input type="text" class="form-control" id="titulo" name="titulo" list="listaTitulos" required>
+                                     <datalist id="listaTitulos"></datalist>
                                  </div>
                                  <div class="mb-3">
                                      <label for="autores" class="form-label">Autor(es)*</label>
-                                     <input type="text" class="form-control" id="autores" name="autores" value="Prof. Carlos Méndez" required>
+                                     <input type="text" class="form-control" id="autores" name="autores" list="listaAutores" required>
+                                     <datalist id="listaAutores"></datalist>
                                      <small class="text-muted">Separar múltiples autores con comas</small>
                                  </div>
                                  <div class="mb-3">
