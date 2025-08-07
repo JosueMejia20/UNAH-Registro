@@ -115,7 +115,8 @@ nav .navbar-unah .btn-unah-secondary:hover {
 .sidebar {
   background-color: var(--unah-blue);
   color: white;
-  height: calc(100vh - 60px); /* Altura ajustada para no tapar navbar */
+  height: calc(100vh - 60px);
+  /* Altura ajustada para no tapar navbar */
   width: 250px;
   position: fixed;
   top: 60px;
@@ -309,12 +310,43 @@ nav .navbar-unah .btn-unah-secondary:hover {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-text {
   color: white;
   margin-top: 20px;
   font-size: 1.2rem;
+}
+
+
+/* Overlay de carga */
+#overlayCarga {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+#overlayCarga .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    color: white;
+}
+
+unah-modal {
+  position: fixed !important;
+  z-index: 2000 !important; /* por encima del modal Bootstrap (1055) */
 }

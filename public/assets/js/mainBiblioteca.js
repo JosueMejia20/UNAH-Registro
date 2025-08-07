@@ -1,4 +1,4 @@
-// -------- Controlador del Chat --------
+// -------- Controlador del Chat / Recursos Biblioteca --------
 import {
     cargarTipoRecurso,
     subirRecurso,
@@ -11,44 +11,47 @@ import {
     validarCredenciales,
     obtenerIdEstudiante,
     obtenerIdDocente,
-    cargarRecursosEstudiante
+    cargarRecursosEstudiante,
+    filtroPorClases
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
+import { UnahModal } from '../../components/modal.mjs';
+customElements.define("unah-modal", UnahModal);
 
-//const idDocente = sessionStorage.getItem('idDocente') || '1002';
+// Referencias globales
+const modal = document.querySelector('unah-modal');
+const overlayCarga = document.getElementById('overlayCarga');
+
 let idDocente = null;
 let idEstudiante = null;
 
+// Asignar IDs según rol
 if (rol === 1) {
     idEstudiante = await obtenerIdEstudiante(usuarioId);
-    console.log(idEstudiante);
-    console.log('ae');
 }
 if (rol === 2 || rol === 3) {
     idDocente = await obtenerIdDocente(usuarioId);
-    console.log(idDocente);
-    console.log('as');
 }
 
+// ------------------- Función para separar tags -------------------
 function separarTags(cadena) {
     if (!cadena) return [];
-
     return cadena
         .split(',')
         .map(tag => tag.trim())
         .filter(tag => tag.length > 0);
 }
 
-
+// ------------------- Subir recurso -------------------
 const btnSubirRecurso = document.getElementById('subirRecursoModalBtn');
 if (rol == 1 || rol == 2) {
     btnSubirRecurso.style = "display: none";
 }
 const formSubirRecurso = document.getElementById('formSubirRecurso');
+
 btnSubirRecurso?.addEventListener('click', () => {
-    //console.log(usuarioId);
-    const modal = new bootstrap.Modal(document.getElementById('subirRecursoModal'));
-    modal.show();
+    const modalBootstrap = new bootstrap.Modal(document.getElementById('subirRecursoModal'));
+    modalBootstrap.show();
     cargarTipoRecurso();
     cargarClasesDocente(idDocente);
 });
@@ -62,134 +65,117 @@ const toBase64 = file => new Promise((resolve, reject) => {
 
 formSubirRecurso?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    overlayCarga.style.display = 'flex';
+
     const formData = new FormData(formSubirRecurso);
     const datosJSON = {};
-
-    //Comentado porque ya se inserta la foto cuando se hace newFormData. Descongelar cuando sea necesario
-    //const archivo = document.getElementById('foto_perfil')?.files[0];
-    //if (archivo) formData.append('foto_perfil', archivo);
-
     formData.append('idDocente', idDocente);
-
-    console.log(formData);
-
 
     for (const [key, value] of formData.entries()) {
         if (value instanceof File && value.name) {
             datosJSON[key] = await toBase64(value);
         } else {
-            if ((key == 'autores') || (key == 'tags')) {
-                datosJSON[key] = separarTags(value);
-            } else {
-                datosJSON[key] = value;
-            }
+            datosJSON[key] = (key === 'autores' || key === 'tags') ? separarTags(value) : value;
         }
     }
-
-    console.log(datosJSON);
 
     try {
         const response = await subirRecurso(datosJSON);
-        //const resultado = await response.json();
+        overlayCarga.style.display = 'none';
 
         if (response.success) {
-            alert('Recurso subido correctamente');
-            //const nuevoPerfil = await obtenerPerfilEstudiante(matriculaEstudiante);
-            //mostrarPerfilEnVista(nuevoPerfil);
-            bootstrap.Modal.getInstance(document.getElementById('subirRecursoModal'))?.hide();
-            location.reload();
+            // Cerrar modal antes de notificación
+            const subirRecursoModal = bootstrap.Modal.getInstance(document.getElementById('subirRecursoModal'));
+            subirRecursoModal?.hide();
+
+            modal.show('Recurso subido correctamente.', () => {
+                location.reload();
+            });
         } else {
-            alert('Error al actualizar perfil');
+            modal.show('Error al subir el recurso.');
         }
     } catch (error) {
-        alert('Error de conexión al actualizar perfil.');
+        overlayCarga.style.display = 'none';
+        modal.show('Error de conexión al subir el recurso.');
     }
 });
 
-
-// Función para confirmar eliminación de recurso
+// ------------------- Confirmar eliminación de recurso -------------------
 const confirmarEliminacion = async (id) => {
-    const modal = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
-    modal.show();
+    const modalBootstrap = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
+    modalBootstrap.show();
 
-    document.getElementById('confirmarEliminarBtn').addEventListener("click", async () => {
+    const btnConfirmar = document.getElementById('confirmarEliminarBtn');
+
+    // Evitar múltiples listeners
+    btnConfirmar.replaceWith(btnConfirmar.cloneNode(true));
+    const nuevoBtn = document.getElementById('confirmarEliminarBtn');
+
+    nuevoBtn.addEventListener("click", async () => {
+        overlayCarga.style.display = 'flex';
+
         const respuesta = await eliminarRecurso(id);
 
+        overlayCarga.style.display = 'none';
+        modalBootstrap.hide();
+
         if (respuesta.success) {
-            alert("Recurso eliminado correctamente.");
-            location.reload();
+            modal.show("Recurso eliminado correctamente.", () => location.reload());
         } else {
-            alert(respuesta.mensaje || "No se pudo eliminar.");
+            modal.show(respuesta.mensaje || "No se pudo eliminar.");
         }
     });
 }
 
-// Función para cargar los recursos del docente
+// ------------------- Cargar recursos (Docente/Estudiante) -------------------
 const cargarRecursosDetalle = async () => {
-
     const misRecursos = await cargarRecursos(idDocente);
-    //const misRecursos = document.querySelectorAll('.recurso-card[data-propietario="true"]');
     const gridMisRecursos = document.getElementById('gridRecursos');
-
-    //console.log("AAAAAAAAAA");
-
-    //console.log(misRecursos);
 
     if (!misRecursos) return;
     if (misRecursos.length > 0) {
         gridMisRecursos.innerHTML = '';
         misRecursos.forEach(recurso => {
-            //tagsString = recurso.tags;
             const tagsArray = separarTags(recurso.tags);
-            console.log(tagsArray);
-
             const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
 
             let botonesEliminarModificar = '';
-
             if (rol == 3) {
                 botonesEliminarModificar = `
                  <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
-                 <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
-                 <i class="bi bi-pencil"></i>
-                 </button>
-                 <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center eliminar-btn" style="width: 30px; height: 30px;" data-id-eliminar="${recurso.id}">
-                 <i class="bi bi-trash"></i>
-                 </button>
+                     <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
+                         <i class="bi bi-pencil"></i>
+                     </button>
+                     <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center eliminar-btn" style="width: 30px; height: 30px;" data-id-eliminar="${recurso.id}">
+                         <i class="bi bi-trash"></i>
+                     </button>
                  </div>`;
             }
 
-
             const html = `
-                    <div id="colRecurso" class="col">
-                        <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
-                            <div class="portada-container">
-                                <img src="data:image/jpeg;base64,${recurso.portada}">
-                                ${botonesEliminarModificar}
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">${recurso.titulo}</h5>
-                                <p class="card-text small text-muted">${recurso.autores}</p>
-                                <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
-                                
-                                <p class="card-text small text-truncate">${recurso.descripcion}</p>
-                                
-                                <div class="border-top pt-2 mt-2">
-                                    <div class="mb-2">
-                                        ${tagsHTML}
-                                    </div>
-                                    <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
-                                        <i class="bi bi-eye me-1"></i> Ver documento
-                                    </button>
-                                </div>
+                <div id="colRecurso" class="col">
+                    <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
+                        <div class="portada-container">
+                            <img src="data:image/jpeg;base64,${recurso.portada}">
+                            ${botonesEliminarModificar}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${recurso.titulo}</h5>
+                            <p class="card-text small text-muted">${recurso.autores}</p>
+                            <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
+                            <p class="card-text small text-truncate">${recurso.descripcion}</p>
+                            <div class="border-top pt-2 mt-2">
+                                <div class="mb-2">${tagsHTML}</div>
+                                <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
+                                    <i class="bi bi-eye me-1"></i> Ver documento
+                                </button>
                             </div>
                         </div>
                     </div>
-                    `;
-            //const clone = recurso.cloneNode(true);
-            //gridMisRecursos.appendChild(clone);
+                </div>`;
             gridMisRecursos.innerHTML += html;
         });
+
         document.querySelectorAll('.ver-recurso').forEach(btn => {
             btn.addEventListener('click', function () {
                 const id = this.getAttribute('data-id');
@@ -202,7 +188,6 @@ const cargarRecursosDetalle = async () => {
                 confirmarEliminacion(id);
             });
         });
-
         document.querySelectorAll('.editar-btn').forEach(btn => {
             btn.addEventListener('click', function () {
                 const id = this.getAttribute('data-id-editar');
@@ -213,98 +198,80 @@ const cargarRecursosDetalle = async () => {
     } else {
         gridMisRecursos.innerHTML = '';
     }
-}
+};
 
 const cargarRecursosDetalleEstudiante = async () => {
-
-    //Debe de cambiar el procedimiento almacenado que ejecuta esa funcion de peticion
-    //Por el momento recupera solamente todos los recursos que pertenecen al mismo departamento del estudiante
-    //Se hizo por departamento porque copia la logica del docente. Pero debe cambiar a solamente mostrar los recursos de su carrera
-    // Aparte hacer el JOIN entre las clases de Estudiantes_Secciones, Estudiante_Matricula y Recursos_Clase.
     const misRecursos = await cargarRecursosEstudiante(idEstudiante);
     const gridMisRecursos = document.getElementById('gridRecursos');
-
 
     if (!misRecursos) return;
     if (misRecursos.length > 0) {
         gridMisRecursos.innerHTML = '';
         misRecursos.forEach(recurso => {
             const tagsArray = separarTags(recurso.tags);
-            console.log(tagsArray);
-
             const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
 
-
             const html = `
-                    <div id="colRecurso" class="col">
-                        <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
-                            <div class="portada-container">
-                                <img src="data:image/jpeg;base64,${recurso.portada}">
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">${recurso.titulo}</h5>
-                                <p class="card-text small text-muted">${recurso.autores}</p>
-                                <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
-                                
-                                <p class="card-text small text-truncate">${recurso.descripcion}</p>
-                                
-                                <div class="border-top pt-2 mt-2">
-                                    <div class="mb-2">
-                                        ${tagsHTML}
-                                    </div>
-                                    <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
-                                        <i class="bi bi-eye me-1"></i> Ver documento
-                                    </button>
-                                </div>
+                <div id="colRecurso" class="col">
+                    <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
+                        <div class="portada-container">
+                            <img src="data:image/jpeg;base64,${recurso.portada}">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${recurso.titulo}</h5>
+                            <p class="card-text small text-muted">${recurso.autores}</p>
+                            <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
+                            <p class="card-text small text-truncate">${recurso.descripcion}</p>
+                            <div class="border-top pt-2 mt-2">
+                                <div class="mb-2">${tagsHTML}</div>
+                                <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
+                                    <i class="bi bi-eye me-1"></i> Ver documento
+                                </button>
                             </div>
                         </div>
                     </div>
-                    `;
+                </div>`;
             gridMisRecursos.innerHTML += html;
         });
+
         document.querySelectorAll('.ver-recurso').forEach(btn => {
             btn.addEventListener('click', function () {
                 const id = this.getAttribute('data-id');
                 verRecurso(id);
             });
         });
-
     } else {
         gridMisRecursos.innerHTML = '';
     }
-}
+};
 
-
-// Función para ver un recurso
+// ------------------- Ver recurso -------------------
 const verRecurso = async (id) => {
     const recurso = await recursoDetalle(id);
-    console.log(recurso);
     document.getElementById('visorPdfModalTitle').textContent = recurso[0].titulo;
     document.getElementById('pdfMetadata').textContent = `Autores: ${recurso[0].autores}`;
     document.getElementById('pdfViewer').src = `data:application/pdf;base64,${recurso[0].archivo}#toolbar=0&navpanes=0`;
     document.getElementById('pdfViewer').setAttribute('sandbox', 'allow-scripts allow-same-origin');
-    document.getElementById('pdfViewer').setAttribute('disable-download',"");
+    document.getElementById('pdfViewer').setAttribute('disable-download', "");
 
-    // Mostrar el modal
-    const modal = new bootstrap.Modal(document.getElementById('visorPdfModal'));
-    modal.show();
-}
+    const modalBootstrap = new bootstrap.Modal(document.getElementById('visorPdfModal'));
+    modalBootstrap.show();
+};
 
+// ------------------- Editar recurso -------------------
 const editarFormulario = async (form, id) => {
     form?.addEventListener('submit', async (e) => {
         e.preventDefault();
+        overlayCarga.style.display = 'flex';
+
         const formData = new FormData(form);
         const datosJSON = {};
         formData.append('idDocente', idDocente);
 
-        const idRecurso = id;
-        const portadaArchivo = await recursoPortadaArchivo(idRecurso);
-        //console.log(portadaArchivo);
-
+        const portadaArchivo = await recursoPortadaArchivo(id);
         const portada = formData.get('edit_portada');
         const archivo = formData.get('edit_archivo');
 
-        //console.log(portada);
         if (portada.size === 0) {
             formData.set('edit_portada', portadaArchivo[0].portada);
         }
@@ -312,51 +279,44 @@ const editarFormulario = async (form, id) => {
             formData.set('edit_archivo', portadaArchivo[0].archivo);
         }
 
-        //console.log(formData);
-
-
-
-
         for (const [key, value] of formData.entries()) {
             if (value instanceof File && value.name) {
                 datosJSON[key] = await toBase64(value);
             } else {
-                if ((key == 'edit_autores') || (key == 'edit_tags')) {
-                    datosJSON[key] = separarTags(value);
-                } else {
-                    datosJSON[key] = value;
-                }
+                datosJSON[key] = (key == 'edit_autores' || key == 'edit_tags') ? separarTags(value) : value;
             }
         }
 
-        console.log(datosJSON);
-
         try {
             const response = await editarRecurso(datosJSON);
+            overlayCarga.style.display = 'none';
 
             if (response.success) {
-                alert('Recurso actualizado correctamente');
-                bootstrap.Modal.getInstance(document.getElementById('editarRecursoModal'))?.hide();
-                location.reload();
+                // Cerrar modal antes de notificación
+                const editarRecursoModal = bootstrap.Modal.getInstance(document.getElementById('editarRecursoModal'));
+                editarRecursoModal?.hide();
+
+                modal.show('Recurso actualizado correctamente.', () => {
+                    location.reload();
+                });
             } else {
-                alert('Error al actualizar recurso');
+                modal.show('Error al actualizar recurso.');
             }
         } catch (error) {
-            alert('Error de conexión al actualizar recurso.');
+            overlayCarga.style.display = 'none';
+            modal.show('Error de conexión al actualizar recurso.');
         }
     });
 };
 
 const cargarDatosEdicion = async (id) => {
     const formEditarRecurso = document.getElementById('formEditarRecurso');
-    const modal = new bootstrap.Modal(document.getElementById('editarRecursoModal'));
-    modal.show();
+    const modalBootstrap = new bootstrap.Modal(document.getElementById('editarRecursoModal'));
+    modalBootstrap.show();
     cargarTipoRecurso();
     cargarClasesDocente(idDocente);
 
     const recurso = await recursoDetalle(id);
-
-    console.log(recurso)
 
     document.getElementById('edit_titulo').value = recurso[0].titulo;
     document.getElementById('edit_autores').value = recurso[0].autores;
@@ -369,94 +329,81 @@ const cargarDatosEdicion = async (id) => {
     editarFormulario(formEditarRecurso, id);
 };
 
-/*
-document.addEventListener('DOMContentLoaded',function () {
-    // Cargar los recursos del docente al inicio
-    console.log("DOM CARGADO");
-    try{
-       cargarRecursosDetalle();
-    } catch(error){
-        console.error(error);
-    }
-    
-});*/
+// ------------------- Cargar filtro de cursos -------------------
+const cargarFiltroCursos = async (idDocente) => {
+    const selectFiltro = document.getElementById('cursos');
+    if (!selectFiltro) return;
 
+    // Limpiar y agregar la opción por defecto
+    selectFiltro.innerHTML = `<option value="">Todos los cursos</option>`;
 
-window.onload = async function () {
+    // Obtener las clases del docente
+    const clases = await cargarClasesDocente(idDocente);
 
-    try {
-        if (rol == 2 || rol == 3) {
-            await cargarRecursosDetalle();
-        } else {
-            await cargarRecursosDetalleEstudiante();
-        }
-    } catch (error) {
-        console.error("Error fatal:", error);
-    }
+    console.log('Clases cargadas para filtro:', clases);
 
+    // Agregar las clases como opciones
+    clases?.forEach(clase => {
+        const option = document.createElement('option');
+        option.value = clase.clase_id; // Usamos clase_id según tu consola
+        option.textContent = clase.nombre_clase; // Usamos nombre_clase según tu consola
+        selectFiltro.appendChild(option);
+    });
 };
 
 
 
+// ------------------- Filtrar recursos -------------------
+function filtrarRecursos() {
+    const filtroCurso = document.getElementById('cursos')?.value.toLowerCase() || '';
+    const filtroCategoria = document.getElementById('filtroCategoria')?.value.toLowerCase() || '';
+    const busqueda = document.getElementById('busquedaRecursos')?.value.toLowerCase() || '';
 
+    const recursos = document.querySelectorAll('#gridRecursos .recurso-card');
+    let resultadosEncontrados = false;
 
-//login
-/*
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('loginForm');
-    const btnLogin = form.querySelector('.btn-login');
-    const spinner = form.querySelector('.spinner-border');
-    const btnText = form.querySelector('.btn-text');
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password');
+    recursos.forEach(recurso => {
+        const cursos = recurso.getAttribute('data-cursos')?.toLowerCase() || '';
+        const categoria = recurso.getAttribute('data-categoria')?.toLowerCase() || '';
+        const textoBusqueda = recurso.getAttribute('data-busqueda')?.toLowerCase() || '';
 
-    // Mostrar u ocultar contraseña
-    togglePassword.addEventListener('click', () => {
-        const type = passwordInput.type === 'password' ? 'text' : 'password';
-        passwordInput.type = type;
-        togglePassword.innerHTML = type === 'password'
-            ? '<i class="bi bi-eye-fill"></i>'
-            : '<i class="bi bi-eye-slash-fill"></i>';
-    });
+        const coincideCurso = filtroCurso === '' || cursos.split(',').map(c => c.trim()).includes(filtroCurso);
+        const coincideCategoria = filtroCategoria === '' || categoria === filtroCategoria;
+        const coincideBusqueda = busqueda === '' || textoBusqueda.includes(busqueda);
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        // Validación del formulario Bootstrap
-        if (!form.checkValidity()) {
-            form.classList.add('was-validated');
-            return;
-        }
-
-        // Activar spinner
-        btnLogin.disabled = true;
-        spinner.classList.remove('d-none');
-        btnText.textContent = 'Validando...';
-
-        const cuenta = document.getElementById('email').value.trim();
-        const contrasena = document.getElementById('password').value;
-
-        const resultado = await validarCredenciales(cuenta, contrasena);
-
-        // Quitar spinner
-        btnLogin.disabled = false;
-        spinner.classList.add('d-none');
-        btnText.textContent = 'Ingresar';
-
-        if (resultado.success) {
-            btnLogin.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Bienvenido';
-            btnLogin.classList.add('btn-success');
-
-            setTimeout(() => {
-                alert("Acceso exitoso. Redirigiendo...");
-                window.location.href = "../../../biblioteca/biblioteca.php";
-            }, 1000);
+        if (coincideCurso && coincideCategoria && coincideBusqueda) {
+            recurso.closest('#colRecurso').style.display = '';
+            resultadosEncontrados = true;
         } else {
-            btnText.textContent = "Ingresar";
-            spinner.classList.add('d-none');
-            btnLogin.disabled = false;
-            alert("Credenciales incorrectas. Intente de nuevo.");
+            recurso.closest('#colRecurso').style.display = 'none';
+        }
+    });
+
+    const noResultados = document.getElementById('noResultados');
+    if (noResultados) {
+        if (resultadosEncontrados) {
+            noResultados.classList.add('d-none');
+        } else {
+            noResultados.classList.remove('d-none');
+        }
+    }
+}
+
+// ------------------- Inicialización -------------------
+window.onload = async function () {
+    try {
+        if (rol == 2 || rol == 3) {
+            await cargarRecursosDetalle();
+            await cargarFiltroCursos(idDocente); 
+        } else {
+            await cargarRecursosDetalleEstudiante();
         }
 
-    });
-});*/
+        // Listeners de filtro
+        document.getElementById('filtroCurso')?.addEventListener('input', filtrarRecursos);
+        document.getElementById('filtroCategoria')?.addEventListener('input', filtrarRecursos);
+        document.getElementById('busquedaRecursos')?.addEventListener('input', filtrarRecursos);
+    } catch (error) {
+        console.error("Error fatal:", error);
+    }
+};

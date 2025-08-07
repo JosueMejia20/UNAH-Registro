@@ -1,17 +1,11 @@
 import {
-    cargarTipoRecurso,
-    subirRecurso,
-    cargarClasesDocente,
-    cargarRecursos,
-    recursoDetalle,
-    recursoPortadaArchivo,
-    editarRecurso,
-    eliminarRecurso,
     validarCredenciales
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
+import { UnahModal } from '../../components/modal.mjs';
+customElements.define("unah-modal", UnahModal);
 
-//login
+// ==================== LOGIN ====================
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     const btnLogin = form.querySelector('.btn-login');
@@ -19,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnText = form.querySelector('.btn-text');
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
+    const overlayCarga = document.getElementById('overlayCarga');
+
+    // Obtener referencia al modal componentizado
+    const modal = document.querySelector('unah-modal');
 
     // Mostrar u ocultar contraseña
     togglePassword.addEventListener('click', () => {
@@ -38,40 +36,52 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Activar spinner
+        // ====== MOSTRAR OVERLAY Y BLOQUEAR BOTÓN ======
+        overlayCarga.style.display = 'flex';
         btnLogin.disabled = true;
+        btnLogin.style.pointerEvents = 'none';
         spinner.classList.remove('d-none');
         btnText.textContent = 'Validando...';
 
         const cuenta = document.getElementById('email').value.trim();
         const contrasena = document.getElementById('password').value;
 
-        const resultado = await validarCredenciales(cuenta, contrasena);
+        try {
+            const resultado = await validarCredenciales(cuenta, contrasena);
 
-        // Quitar spinner
-        btnLogin.disabled = false;
-        spinner.classList.add('d-none');
-        btnText.textContent = 'Ingresar';
-
-        /*  if (!resultado.success) {
-              alert(resultado.message || 'Credenciales inválidas');
-              return;
-          }
-   */
-        if (resultado.success) {
-            btnLogin.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Bienvenido';
-            btnLogin.classList.add('btn-success');
-
-            setTimeout(() => {
-                alert("Acceso exitoso. Redirigiendo...");
-                window.location.href = "../../../biblioteca/biblioteca.php";
-            }, 1000);
-        } else {
-            btnText.textContent = "Ingresar";
-            spinner.classList.add('d-none');
+            // Botón vuelve a su estado normal
             btnLogin.disabled = false;
-            alert("Credenciales incorrectas. Intente de nuevo.");
-        }
+            btnLogin.style.pointerEvents = 'auto';
+            spinner.classList.add('d-none');
+            btnText.textContent = 'Ingresar';
 
+            if (resultado.success) {
+                btnLogin.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Bienvenido';
+                btnLogin.classList.add('btn-success');
+
+                // Mantener overlay visible hasta mostrar modal
+                setTimeout(() => {
+                    overlayCarga.style.display = 'none'; // Ocultamos overlay justo al mostrar modal
+                    modal.show("Acceso exitoso. Redirigiendo...", () => {
+                        window.location.href = "../../../biblioteca/biblioteca.php";
+                    });
+                }, 500); // Pequeño delay para dar sensación fluida
+
+            } else {
+                // Ocultar overlay y mostrar modal de error
+                overlayCarga.style.display = 'none';
+                modal.show("Credenciales incorrectas. Intente de nuevo.");
+            }
+
+        } catch (error) {
+            overlayCarga.style.display = 'none';
+            btnLogin.disabled = false;
+            btnLogin.style.pointerEvents = 'auto';
+            spinner.classList.add('d-none');
+            btnText.textContent = 'Ingresar';
+
+            modal.show("Error al conectar con el servidor. Intente más tarde.");
+        }
     });
+
 });

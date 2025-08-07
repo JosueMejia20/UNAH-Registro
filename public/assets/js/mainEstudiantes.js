@@ -14,6 +14,11 @@ customElements.define("unah-footer", UnahFooter);
 import { UnahSidebar } from "/../../components/sidebar.mjs";
 customElements.define("unah-sidebar", UnahSidebar);
 
+// -------- MODAL REUTILIZABLE --------
+import { UnahModal } from "../../components/modal.mjs";
+customElements.define("unah-modal", UnahModal);
+const modal = document.querySelector("unah-modal");
+
 // -------- Controlador del PERFIL --------
 import {
   obtenerPerfilEstudiante,
@@ -51,12 +56,10 @@ const asignarImagenBase64 = (imgTag, base64String, mime = 'image/jpeg') => {
 document.addEventListener('DOMContentLoaded', async () => {
   const ruta = window.location.pathname;
 
-  //Se le puede agregar lo mismo que matricula. Un metodo aparte y que lo mande a llamar para iniciarlizar la vista
   if (ruta.includes('perfil.php')) {
     const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
     const perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
     const fotoPerfil = await obtenerFotoPerfilEstudiante(matriculaEstudiante) || null;
-    console.log(fotoPerfil);
     const imgTagFotoPerfil = document.getElementById("fotoDePerfil");
 
     if (perfilGlobal) {
@@ -67,7 +70,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         imgTagFotoPerfil.src = '';
       }
       const materias = await obtenerMateriasActuales(matriculaEstudiante);
-      // console.log(fotoPerfil[0]["foto_perfil"]);
       mostrarMateriasEnTabla(materias);
     }
 
@@ -75,8 +77,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const form = document.getElementById('formEditarPerfil');
     btnEditar?.addEventListener('click', () => {
       cargarFormularioEdicion(perfilGlobal);
-      const modal = new bootstrap.Modal(document.getElementById('modalEditarPerfil'));
-      modal.show();
+      const modalBootstrap = new bootstrap.Modal(document.getElementById('modalEditarPerfil'));
+      modalBootstrap.show();
     });
 
     const toBase64 = file => new Promise((resolve, reject) => {
@@ -86,35 +88,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       reader.onerror = reject;
     });
 
-
-
-
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
       const datosJSON = {};
 
-      //Comentado porque ya se inserta la foto cuando se hace newFormData. Descongelar cuando sea necesario
-      //const archivo = document.getElementById('foto_perfil')?.files[0];
-      //if (archivo) formData.append('foto_perfil', archivo);
-
       formData.append('matricula', matriculaEstudiante);
-
       const fotoEstudiante = await obtenerFotoPerfilEstudiante(matriculaEstudiante);
-
       const foto = formData.get('foto_perfil');
 
       if (foto.size === 0) {
-        if (fotoEstudiante == null) {
-          formData.set('foto_perfil', null);
-        } else {
-          formData.set('foto_perfil', fotoEstudiante[0].foto_perfil);
-        }
-
+        formData.set('foto_perfil', fotoEstudiante == null ? null : fotoEstudiante[0].foto_perfil);
       }
-
-      console.log(formData);
-
 
       for (const [key, value] of formData.entries()) {
         if (value instanceof File && value.name) {
@@ -124,55 +109,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
 
-      console.log(datosJSON);
-
       try {
         const response = await actualizarPerfil(datosJSON);
-        //const resultado = await response.json();
 
         if (response.success) {
-          alert('Perfil actualizado correctamente');
-          const nuevoPerfil = await obtenerPerfilEstudiante(matriculaEstudiante);
-          mostrarPerfilEnVista(nuevoPerfil);
           bootstrap.Modal.getInstance(document.getElementById('modalEditarPerfil'))?.hide();
-          location.reload();
+          modal.show('Perfil actualizado correctamente', () => {
+            const nuevoPerfil = obtenerPerfilEstudiante(matriculaEstudiante).then(mostrarPerfilEnVista);
+            location.reload();
+          });
         } else {
-          alert('Error al actualizar perfil');
+          modal.show('Error al actualizar perfil');
         }
       } catch (error) {
-        alert('Error de conexión al actualizar perfil.');
+        modal.show('Error de conexión al actualizar perfil.');
       }
     });
   }
 
   if (ruta.includes('matricula.php')) {
-    inicializarVistaMatricula(); // Declarada abajo
+    inicializarVistaMatricula();
   }
 
   if (ruta.includes('certificado.php')) {
     inicializarVistaCertificado();
   }
-
-  // De acuerdo se agreguen mas metodos para las demas vistas. Se deben agregar mas if en esta parte de aca
 });
-
 
 // ==========================
 // FUNCIÓN - VISTA MATRÍCULA
 // ==========================
 const inicializarVistaMatricula = async () => {
-
   const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
 
   const selectClasificacion = document.querySelector('#departamentosClases');
-  console.log(selectClasificacion);
-
   const selectAsignatura = document.querySelector("#clasesDepartamentos");
-  console.log(selectAsignatura);
-
   const selectHorario = document.querySelector("#horarios");
-  console.log(selectHorario);
-
   const btnMatricular = document.querySelector("#matricula button.btn-unah");
   const tablaHorario = document.querySelector("#tableBodyHorarioGenerado");
   const tablaCancelacion = document.querySelector("#tablaCancelacion");
@@ -217,66 +189,46 @@ const inicializarVistaMatricula = async () => {
   }
 
   const materiasActuales = await obtenerMateriasActuales(matriculaEstudiante);
-  //console.log(materiasActuales);
   const datosHorario = [];
 
   materiasActuales.forEach((materia) => {
     const diasSeparados = separarDias(materia.dias);
-
-
     diasSeparados.forEach((dia) => {
       datosHorario.push({
         dia: dia,
         hora: materia.horario,
         materia: materia.nombre_clase,
         aula: `${materia.edificio}-${materia.aula}`
-      })
+      });
     });
   });
 
-  console.log(datosHorario);
-
   const diasOrden = ["Lu", "Ma", "Mi", "Ju", "Vi"];
   const generarHorarioEjemplo = (datosHorario, tablaHorario) => {
-
     if (!tablaHorario) return;
 
-    //Hacer un array del Set de datosHorario para obtener las horas unicas (propiedad del set)
-    //uso de map para simplificar la iteracion sobre datosHorario (que es un arreglo de json)
-    //datosHorario puede extenderse mucho, ya que guarda por dia y no por materia. Si dos materias
-    //son de lunes a viernes, entonces serian 10 registros (2*5)
     const horasUnicas = [...new Set(datosHorario.map(d => d.hora))].sort();
-
-    //Para almacenar hora > {dia>materia}
     const horarioMap = {};
 
     horasUnicas.forEach(hora => {
-      horarioMap[hora] = {}; //Las filas de la tabla
-
+      horarioMap[hora] = {};
       diasOrden.forEach(dia => {
-
-        horarioMap[hora][dia] = null; //Se inicializa con null cada celda.
-
+        horarioMap[hora][dia] = null;
       });
     });
 
-
     datosHorario.forEach(({ dia, hora, materia, aula }) => {
       if (horarioMap[hora]) {
-        //horarioMap["08:00 - 09:30"]["Lu"] = "Matemáticas<br>A1-103";
-        horarioMap[hora][dia] = `${materia}<br>${aula}`; //Cada celda tiene la forma materia, salto linea, aula
+        horarioMap[hora][dia] = `${materia}<br>${aula}`;
       }
     });
 
-    let stringBuilderHtml = ""
-
+    let stringBuilderHtml = "";
     horasUnicas.forEach(hora => {
       stringBuilderHtml += `<tr>`;
-      stringBuilderHtml += `<td>${hora}</td>`; //Primera columna, la hora
-
+      stringBuilderHtml += `<td>${hora}</td>`;
       diasOrden.forEach(dia => {
         const contenido = horarioMap[hora][dia];
-
         stringBuilderHtml += `<td class="${contenido ? 'bg-light-blue' : ''}">${contenido || ''}</td>`;
       });
       stringBuilderHtml += `</tr>`;
@@ -306,12 +258,10 @@ const inicializarVistaMatricula = async () => {
 
   if (idEstudiante) {
     const departamentos = await obtenerDepartamentosPorClases('20201003849');
-    console.log(departamentos);
     limpiarSelect(selectClasificacion);
     llenarSelect(selectClasificacion, departamentos, "nombre_departamento", "departamento_id");
   }
 
-  // Eventos
   selectClasificacion?.addEventListener("change", async () => {
     limpiarSelect(selectAsignatura);
     limpiarSelect(selectHorario);
@@ -326,13 +276,9 @@ const inicializarVistaMatricula = async () => {
   const clasesCursadasYCursando = await obtenerClasesEstudiante(matriculaEstudiante);
   selectAsignatura?.addEventListener("change", async () => {
     limpiarSelect(selectHorario);
-
-    //console.log(clasesCursadasYCursando);
     const asignatura = parseInt(selectAsignatura.value);
-    //console.log(asignatura);
 
     if (asignatura !== "Selecciona una asignatura") {
-
       const claseEncontrada = clasesCursadasYCursando.find(c => c.clase_id === asignatura);
 
       if (claseEncontrada) {
@@ -344,22 +290,19 @@ const inicializarVistaMatricula = async () => {
         opcionRoja.style.color = "white";
 
         selectHorario.appendChild(opcionRoja);
-        //console.log("Ya cursó o está cursando la clase con id:", claseEncontrada.clase_id);
-        //selectHorario.innerHTML = "Ya llevo esta clase";
       } else {
         const horarios = await obtenerHorariosPorAsignatura(asignatura);
-        // llenarSelect(selectHorario, horarios, "descripcion");
-        llenarSelectHorarios(selectHorario, horarios, "codigo_seccion", "dias", "hora_inicio", "hora_fin", "seccion_id")
+        llenarSelectHorarios(selectHorario, horarios, "codigo_seccion", "dias", "hora_inicio", "hora_fin", "seccion_id");
       }
     }
   });
 
   btnMatricular?.addEventListener("click", async () => {
-    const estudiante = '20201003849'; //SE DEBE HACER LOGICA PARA OBTENERLO DE SESION
+    const estudiante = '20201003849';
     const horario = selectHorario.value;
 
     if (!horario || horario.includes("Selecciona")) {
-      alert("Debe seleccionar una seccion");
+      modal.show("Debe seleccionar una sección");
       return;
     }
 
@@ -367,39 +310,35 @@ const inicializarVistaMatricula = async () => {
     const respuesta = await matricularSeccion(datos);
 
     if (respuesta.success) {
-      alert("¡Matrícula realizada con éxito!");
-      //generarHorarioEjemplo(datosHorario, tablaHorario);
-      // mostrarSeccionesCancelables();
-      location.reload();
+      modal.show("¡Matrícula realizada con éxito!", () => location.reload());
     } else {
-      alert(respuesta.mensaje || "No se pudo realizar la matrícula.");
+      modal.show(respuesta.mensaje || "No se pudo realizar la matrícula.");
     }
   });
 
   btnCancelar?.addEventListener("click", async () => {
-    const estudiante = '20201003849'; //SE DEBE HACER LOGICA PARA OBTENERLO DE SESION
+    const estudiante = '20201003849';
     const checkboxes = tablaCancelacion.querySelectorAll("input[type='checkbox']:checked");
-    console.log(checkboxes);
     const ids = Array.from(checkboxes).map(c => c.value);
-    console.log(ids);
 
     if (ids.length === 0) {
-      alert("Selecciona al menos una asignatura para cancelar.");
+      modal.show("Selecciona al menos una asignatura para cancelar.");
       return;
     }
 
-    const confirmacion = confirm("¿Estás seguro de cancelar las secciones seleccionadas?");
-    if (!confirmacion) return;
+    // Confirmación con callback
+    modal.confirm("¿Estás seguro de cancelar las secciones seleccionadas?", async () => {
+      const respuesta = await cancelarSecciones(ids, estudiante);
 
-    const respuesta = await cancelarSecciones(ids, estudiante); //ids es un array
-
-    if (respuesta.success) {
-      alert("Secciones canceladas correctamente.");
-      mostrarSeccionesCancelables();
-      location.reload();
-    } else {
-      alert(respuesta.mensaje || "No se pudo cancelar.");
-    }
+      if (respuesta.success) {
+        modal.show("Secciones canceladas correctamente.", () => {
+          mostrarSeccionesCancelables();
+          location.reload();
+        });
+      } else {
+        modal.show(respuesta.mensaje || "No se pudo cancelar.");
+      }
+    });
   });
 
   checkboxSelectAll?.addEventListener("change", (e) => {
@@ -423,8 +362,4 @@ const inicializarVistaCertificado = async () => {
       nuevaVentana.print();
     };
   });
-}
-/*
-document.addEventListener('DOMContentLoaded', () => {
-  inicializarVistaMatricula();
-});*/
+};

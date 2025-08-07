@@ -1,5 +1,4 @@
 // Navbar azul 
-import { call } from "../api/Utilities.mjs";
 
 class UnahNavbar extends HTMLElement {
     connectedCallback() {

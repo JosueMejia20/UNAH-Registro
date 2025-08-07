@@ -1,4 +1,4 @@
-<?php
+ <?php
     session_start();
 
     if (!isset($_SESSION['usuario_id'], $_SESSION['rol'])) {
@@ -65,30 +65,16 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="filtroCurso" class="form-label">Filtrar por curso</label>
-                            <select class="form-select" id="filtroCurso">
+                            <select id="cursos" class="form-select">
                                 <option value="">Todos los cursos</option>
-                                <option value="1">Matemáticas Avanzadas</option>
-                                <option value="2">Literatura Contemporánea</option>
-                                <option value="3">Programación Web</option>
-                                <option value="4">Historia Universal</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
-                            <label for="filtroCategoria" class="form-label">Filtrar por categoría</label>
-                            <select class="form-select" id="filtroCategoria">
-                                <option value="">Todas las categorías</option>
-                                <option value="libro">Libros</option>
-                                <option value="articulo">Artículos</option>
-                                <option value="guia">Guías de estudio</option>
-                                <option value="tesis">Tesis</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="busquedaRecursos" class="form-label">Buscar recursos</label>
+                        <div class="col-md-6">
+                              <label for="busquedaRecursos" class="form-label">Buscar recursos</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Título, autor o palabras clave..." id="busquedaRecursos">
+                              <input type="text" class="form-control" placeholder="Título, autor o palabras clave..." id="busquedaRecursos">
                                 <button class="btn btn-outline-secondary" type="button" id="btnBuscar">
                                     <i class="bi bi-search"></i>
                                 </button>
@@ -323,8 +309,18 @@
         </div>
     </div>
 
+    <!-- Overlay de carga -->
+    <div id="overlayCarga">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
+
+
     <!-- Footer -->
     <unah-footer></unah-footer>
+
+    <unah-modal></unah-modal>
 
     <!-- Scripts -->
      <script>

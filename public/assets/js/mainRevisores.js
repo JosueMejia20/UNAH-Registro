@@ -9,7 +9,13 @@ import { Cargando, loadingEvent } from "../../components/loading.mjs";
 customElements.define("pantalla-de-carga", Cargando);
 loadingEvent();
 
-// assets/js/mainRevisores.js
+import { UnahModal } from '../../components/modal.mjs'; 
+customElements.define("unah-modal", UnahModal);
+
+// Instancias modal y overlay
+const modal = document.querySelector('unah-modal');
+const overlayCarga = document.getElementById('overlayCarga');
+
 import {
     obtenerSolicitudesPorRevisor,
     obtenerDetalleSolicitud,
@@ -22,6 +28,9 @@ const idRevisor = localStorage.getItem('idRevisor');
 let solicitudes = [];
 let indexActual = 0;
 
+/**
+ * Renderiza los datos de la solicitud actual
+ */
 const renderizarSolicitud = async () => {
     const contenedor = document.getElementById('card-body');
     if (indexActual >= solicitudes.length) {
@@ -34,15 +43,11 @@ const renderizarSolicitud = async () => {
 
     if (!detalle) return;
 
-    console.log(detalle);
-    console.log(solicitud);
-    // Aquí puedes recorrer todos los campos del HTML y llenar con `detalle`
     document.querySelector('#numeroSolicitud').innerHTML = `<i class="bi bi-file-earmark-text"></i> Solicitud #${detalle[0].numero_solicitud}`;
     document.querySelector('.status-badge').textContent = "Pendiente de revisión";
-
     document.querySelector('#pendingCount').textContent = solicitudes.length - indexActual;
 
-    // Ejemplo de llenado dinámico
+    // Llenado dinámico
     document.querySelector('#nombrePostulante').innerHTML = detalle[0].nombre_postulante;
     document.querySelector('#identidadPostulante').textContent = detalle[0].identidad_postulante;
     document.querySelector('#fechaNacimientoPostulante').textContent = detalle[0].fecha_nacimiento;
@@ -57,15 +62,11 @@ const renderizarSolicitud = async () => {
     document.querySelector('#carreraPrimariaPostulante').textContent = detalle[0].carrera_primaria;
     document.querySelector('#carreraSecundariaPostulante').textContent = detalle[0].carrera_secundaria;
 
-    // Documento (si hay)
+    // Documento
     const documentImg = document.getElementById('documentImage');
     documentImg.src = detalle[0].documento_adjunto
-      ? `data:image/jpeg;base64,${detalle[0].documento_adjunto}`
-      : 'https://via.placeholder.com/300x400?text=Sin+Documento';
-    // ... Y así sucesivamente con el resto
-
-   
-
+        ? `data:image/jpeg;base64,${detalle[0].documento_adjunto}`
+        : 'https://via.placeholder.com/300x400?text=Sin+Documento';
 };
 
 const siguienteSolicitud = () => {
@@ -74,90 +75,121 @@ const siguienteSolicitud = () => {
 };
 
 const manejarAprobacion = async (inscripcion, valor, justificacion, correo) => {
-    const solicitud = solicitudes[indexActual];
     await aprobarSolicitud(inscripcion, valor, justificacion, correo);
     siguienteSolicitud();
 };
 
 const manejarRechazo = async (inscripcion, valor, justificacion, correo) => {
-    const solicitud = solicitudes[indexActual];
-
     await rechazarSolicitud(inscripcion, valor, justificacion, correo);
     siguienteSolicitud();
 };
 
-// Vista revisor 
+// ---------------------------
+// Vista revisor
+// ---------------------------
 document.addEventListener('DOMContentLoaded', async () => {
     solicitudes = await obtenerSolicitudesPorRevisor(idRevisor);
     renderizarSolicitud();
 
-// Manejar los checkboxes de validación (solo uno seleccionable por campo)
-        document.querySelectorAll('.field-validation').forEach(container => {
-            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        // Desmarcar el otro checkbox del mismo grupo
-                        const groupName = this.name;
-                        checkboxes.forEach(cb => {
-                            if (cb !== this && cb.name === groupName) {
-                                cb.checked = false;
-                            }
-                        });
-                    }
-                });
+    // Validación de checkboxes
+    document.querySelectorAll('.field-validation').forEach(container => {
+        const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    const groupName = this.name;
+                    checkboxes.forEach(cb => {
+                        if (cb !== this && cb.name === groupName) {
+                            cb.checked = false;
+                        }
+                    });
+                }
             });
         });
+    });
 
- //   document.getElementById('acceptBtn').addEventListener('click', manejarAprobacion(solicitud.inscripcion_id,1,"",detalle[0].correo_personal));
-    
-    document.getElementById('acceptBtn').addEventListener('click', async()=>{
+    // Botón aprobar
+    document.getElementById('acceptBtn').addEventListener('click', async () => {
         const solicitud = solicitudes[indexActual];
         const detalle = await obtenerDetalleSolicitud(solicitud.inscripcion_id);
-// Validar que al menos todos los campos tengan una selección
+
+        // Validar campos
         const allValidated = Array.from(document.querySelectorAll('.field-validation')).every(container => {
             return container.querySelector('input[type="checkbox"]:checked') !== null;
         });
 
         if (!allValidated) {
-            alert('Por favor, valide todos los campos antes de aprobar la solicitud.');
+            modal.show('Por favor, valide todos los campos antes de aprobar la solicitud.');
             return;
         }
 
-        alert('Solicitud aprobada correctamente.');
-        await manejarAprobacion(solicitud.inscripcion_id,'Aprobada',"",detalle[0].correo_personal);
+        // Mostrar cargando y bloquear botón
+        overlayCarga.style.display = 'flex';
+        document.getElementById('acceptBtn').disabled = true;
+
+        try {
+            await manejarAprobacion(solicitud.inscripcion_id, 'Aprobada', "", detalle[0].correo_personal);
+
+            overlayCarga.style.display = 'none';
+            document.getElementById('acceptBtn').disabled = false;
+
+            modal.show('Solicitud aprobada correctamente.', () => {
+                siguienteSolicitud();
+            });
+
+        } catch (error) {
+            overlayCarga.style.display = 'none';
+            document.getElementById('acceptBtn').disabled = false;
+            modal.show('Error al aprobar la solicitud.');
+        }
     });
-    
-    document.getElementById('rejectBtn').addEventListener('click', async()=>{
+
+    // Botón rechazar
+    document.getElementById('rejectBtn').addEventListener('click', async () => {
         const solicitud = solicitudes[indexActual];
         const detalle = await obtenerDetalleSolicitud(solicitud.inscripcion_id);
 
         const comentariosGenerales = document.getElementById("comentarios-generales").value.trim();
-        console.log(document.getElementById("comentarios-generales").value.trim());
         const comentariosDocumento = document.getElementById("comentarios-documento").value.trim();
-
         const razon = `${comentariosGenerales}\n\n${comentariosDocumento}\n\n`;
 
-        console.log(razon);
-
-        // Validar que al menos un campo esté marcado como incorrecto
         const hasIncorrectFields = Array.from(document.querySelectorAll('.field-validation')).some(container => {
             return container.querySelector('input[value="incorrecto"]:checked') !== null;
         });
-        
+
         if (!hasIncorrectFields) {
-            alert('Por favor, marque al menos un campo como incorrecto para rechazar la solicitud.');
+            modal.show('Por favor, marque al menos un campo como incorrecto para rechazar la solicitud.');
             return;
         }
-        if (!razon) return alert("Debe ingresar una razón.");
+        if (!razon) {
+            modal.show("Debe ingresar una razón.");
+            return;
+        }
 
-        
-        await manejarRechazo(solicitud.inscripcion_id,'Rechazada',razon,detalle[0].correo_personal);
+        overlayCarga.style.display = 'flex';
+        document.getElementById('rejectBtn').disabled = true;
+
+        try {
+            await manejarRechazo(solicitud.inscripcion_id, 'Rechazada', razon, detalle[0].correo_personal);
+
+            overlayCarga.style.display = 'none';
+            document.getElementById('rejectBtn').disabled = false;
+
+            modal.show('Solicitud rechazada correctamente.', () => {
+                siguienteSolicitud();
+            });
+
+        } catch (error) {
+            overlayCarga.style.display = 'none';
+            document.getElementById('rejectBtn').disabled = false;
+            modal.show('Error al rechazar la solicitud.');
+        }
     });
 });
 
-
-// Login 
+// ---------------------------
+// Login revisores
+// ---------------------------
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     const btnLogin = form.querySelector('.btn-login');
@@ -166,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
 
-    // Mostrar u ocultar contraseña
+    // Mostrar/ocultar contraseña
     togglePassword.addEventListener('click', () => {
         const type = passwordInput.type === 'password' ? 'text' : 'password';
         passwordInput.type = type;
@@ -178,49 +210,55 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Validación del formulario Bootstrap
         if (!form.checkValidity()) {
             form.classList.add('was-validated');
             return;
         }
 
-        // Activar spinner
+        // Mostrar overlay
+        overlayCarga.style.display = 'flex';
         btnLogin.disabled = true;
+        btnLogin.style.pointerEvents = 'none';
         spinner.classList.remove('d-none');
         btnText.textContent = 'Validando...';
 
         const cuenta = document.getElementById('email').value.trim();
         const contrasena = document.getElementById('password').value;
 
-        const resultado = await validarCredenciales(cuenta, contrasena);
+        try {
+            const resultado = await validarCredenciales(cuenta, contrasena);
 
-        // Quitar spinner
-        btnLogin.disabled = false;
-        spinner.classList.add('d-none');
-        btnText.textContent = 'Ingresar';
-
-      /*  if (!resultado.success) {
-            alert(resultado.message || 'Credenciales inválidas');
-            return;
-        }
-*/
-        if (resultado.success) {
-            btnLogin.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Bienvenido';
-            btnLogin.classList.add('btn-success');
-
-            setTimeout(() => {
-            alert("Acceso exitoso. Redirigiendo...");
-            window.location.href = "../../../admisiones/revisores.php";
-        }, 1000);
-      } else {
-            btnText.textContent = "Ingresar";
-            spinner.classList.add('d-none');
             btnLogin.disabled = false;
-            alert("Credenciales incorrectas. Intente de nuevo.");
-      }
+            btnLogin.style.pointerEvents = 'auto';
+            spinner.classList.add('d-none');
+            btnText.textContent = 'Ingresar';
 
-        // Guardar datos relevantes en localStorage
-        localStorage.setItem('idRevisor', resultado.idRevisor);
+            if (resultado.success) {
+                btnLogin.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Bienvenido';
+                btnLogin.classList.add('btn-success');
 
+                setTimeout(() => {
+                    overlayCarga.style.display = 'none';
+                    modal.show("Acceso exitoso. Redirigiendo...", () => {
+                        window.location.href = "../../../admisiones/revisores.php";
+                    });
+                }, 500);
+
+                localStorage.setItem('idRevisor', resultado.idRevisor);
+
+            } else {
+                overlayCarga.style.display = 'none';
+                modal.show("Credenciales incorrectas. Intente de nuevo.");
+            }
+
+        } catch (error) {
+            overlayCarga.style.display = 'none';
+            btnLogin.disabled = false;
+            btnLogin.style.pointerEvents = 'auto';
+            spinner.classList.add('d-none');
+            btnText.textContent = 'Ingresar';
+
+            modal.show("Error al conectar con el servidor. Intente más tarde.");
+        }
     });
 });

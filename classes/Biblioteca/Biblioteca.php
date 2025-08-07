@@ -128,6 +128,19 @@ class Biblioteca
         }
     }
 
+    public function obtenerClasesEstudiante($idEstudiante)
+    {
+        try {
+            $db = new DataBase();
+
+            $datos = $db->executeQuery("CALL GetClasesPorEstudiante($idEstudiante)");
+
+            return $datos;
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
+        }
+    }
+
 
     public function insertarRecursoCompleto($titulo, $tags, $descripcion, $categoria, $autores, $anio, $idDocente, $archivoPdf, $portada, $cursos)
     {

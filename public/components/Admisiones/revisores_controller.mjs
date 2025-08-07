@@ -25,27 +25,17 @@ export const obtenerDetalleSolicitud = async (inscripcion_id) => {
     }
 };
 
-/*
+// Referencias al modal y overlay (asegúrate de que existan en el DOM)
+const modal = document.querySelector('unah-modal');
+const overlayCarga = document.getElementById('overlayCarga');
+
 // Aprobar solicitud
-export const aprobarSolicitud = async (inscripcion_id) => {
-    try {
-        const res = await fetch(`${BASE_URL}/put/cambiarEstadoSolicitud/index.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ inscripcion_id })
-        });
-        return await res.json();
-    } catch (error) {
-        console.error('Error al aprobar solicitud:', error);
-    }
-};*/
-
-//Aprobar solicitud
-
 export const aprobarSolicitud = async (idInscripcion, valor, justificacion, correo) => {
   try {
+    // Mostrar overlay
+    overlayCarga.style.display = 'flex';
 
-    const estado = valor === 'Aprobada' ? 1 : 0; // 1 Si esta aprobada, 0 si esta rechazado
+    const estado = valor === 'Aprobada' ? 1 : 0; // 1 aprobada, 0 rechazada
 
     const response = await fetch(`/api/admisiones/put/cambiarEstadoSolicitud/index.php/${idInscripcion}/${estado}`, {
       method: 'PUT',
@@ -60,29 +50,35 @@ export const aprobarSolicitud = async (idInscripcion, valor, justificacion, corr
       })
     });
 
+    // Ocultar overlay
+    overlayCarga.style.display = 'none';
+
     if (!response.ok) throw new Error('Error al actualizar estado');
 
     const resultado = await response.json();
 
     if (resultado.success) {
-      alert(`Solicitud ${valor === 'Aprobada' ? 'aprobada' : 'rechazada'} correctamente`);
-      window.location.href = window.location.href;
+      modal.show(`Solicitud ${valor === 'Aprobada' ? 'aprobada' : 'rechazada'} correctamente`, () => {
+        window.location.href = window.location.href;
+      });
     } else {
       throw new Error(resultado.message || 'Error al actualizar');
     }
 
   } catch (error) {
     console.error('Error al responder solicitud:', error);
-    alert('No se pudo actualizar el estado de la solicitud.');
+    overlayCarga.style.display = 'none';
+    modal.show('No se pudo actualizar el estado de la solicitud.');
   }
 };
 
-
 // Rechazar solicitud
 export const rechazarSolicitud = async (idInscripcion, valor, justificacion, correo) => {
-    try {
+  try {
+    // Mostrar overlay
+    overlayCarga.style.display = 'flex';
 
-    const estado = valor === 'Rechazada' ? 0 : 1; // 1 Si esta aprobada, 0 si esta rechazado
+    const estado = valor === 'Rechazada' ? 0 : 1; // 0 rechazada, 1 aprobada
 
     const response = await fetch(`/api/admisiones/put/cambiarEstadoSolicitud/index.php/${idInscripcion}/${estado}`, {
       method: 'PUT',
@@ -97,20 +93,25 @@ export const rechazarSolicitud = async (idInscripcion, valor, justificacion, cor
       })
     });
 
+    // Ocultar overlay
+    overlayCarga.style.display = 'none';
+
     if (!response.ok) throw new Error('Error al actualizar estado');
 
     const resultado = await response.json();
 
     if (resultado.success) {
-      alert(`Solicitud ${valor === 'Aprobada' ? 'aprobada' : 'rechazada'} correctamente`);
-      window.location.href = window.location.href;
+      modal.show(`Solicitud ${valor === 'Aprobada' ? 'aprobada' : 'rechazada'} correctamente`, () => {
+        window.location.href = window.location.href;
+      });
     } else {
       throw new Error(resultado.message || 'Error al actualizar');
     }
 
   } catch (error) {
     console.error('Error al responder solicitud:', error);
-    alert('No se pudo actualizar el estado de la solicitud.');
+    overlayCarga.style.display = 'none';
+    modal.show('No se pudo actualizar el estado de la solicitud.');
   }
 };
 

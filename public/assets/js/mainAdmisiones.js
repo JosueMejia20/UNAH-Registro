@@ -1,4 +1,5 @@
 const BASE_URL = '/api/admisiones';
+
 import { UnahNavbar } from "/../../components/navbar.mjs";
 customElements.define("unah-navbar", UnahNavbar);
 
@@ -9,6 +10,13 @@ import { Cargando, loadingEvent } from "../../components/loading.mjs";
 customElements.define("pantalla-de-carga", Cargando);
 loadingEvent();
 
+import { UnahModal } from "/../../components/modal.mjs";
+customElements.define("unah-modal", UnahModal);
+
+// Instancia del modal y overlay de carga
+const modal = document.querySelector('unah-modal');
+const overlayCarga = document.getElementById('overlayCarga');
+
 import {
   cargarEstadoCivil,
   cargarDepartamentos,
@@ -18,16 +26,14 @@ import {
   filtrarCarreraSecundaria
 } from "/../../components/Admisiones/formulario_Controller.mjs";
 
-//MEJORAR ESTA PARTE, QUITAR TODO LO DE REVISORES DE ESTE ARCHIVO
-/*
-import {
-  verDetalles,
-  cargarSolicitudesPaginadas,
-  loginRevisor
-} from "../../components/Admisiones/revisores_controller.mjs";*/
-
+// -----------------------------
+// INICIO SCRIPT
+// -----------------------------
 document.addEventListener('DOMContentLoaded', async () => {
-  // Formulario de admisiones
+
+  // -----------------------------
+  // Elementos del formulario
+  // -----------------------------
   const selectCarreraInteres = document.getElementById('carrera-interes');
   const selectCarreraSecundaria = document.getElementById('carrera-secundaria');
   const selectCentroRegional = document.getElementById('centro-regional');
@@ -64,61 +70,71 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Submit del formulario
+  // -----------------------------
+  // Envío del formulario principal
+  // -----------------------------
   const form = document.getElementById('admissionForm');
-  //const preview = document.getElementById('previewDatos');
   const submitBtn = document.getElementById('submitBtn');
 
   if (form && submitBtn) {
-  submitBtn.addEventListener('click', async (e) => {
-    e.preventDefault();
+    submitBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
 
-    const formData = new FormData(form);
-    const datosJSON = {};
+      const formData = new FormData(form);
+      const datosJSON = {};
 
-    const toBase64 = file => new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-    });
-
-    for (const [key, value] of formData.entries()) {
-      if (value instanceof File && value.name) {
-        datosJSON[key] = await toBase64(value);
-      } else {
-        datosJSON[key] = value;
-      }
-    }
-
-    try {
-      const response = await fetch(`${BASE_URL}/post/insertPostulanteInscripcion/index.php`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(datosJSON)
+      const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
       });
 
-      console.log('Código de estado:', response.status);
-
-      const data = await response.json(); // Intenta parsear la respuesta
-
-      if (response.ok && data.success) {
-        alert('Solicitud enviada correctamente.');
-        window.location.href = '../../index.php';
-      } else {
-        alert('Error del servidor: ' + (data.error || 'Respuesta inesperada.'));
+      for (const [key, value] of formData.entries()) {
+        if (value instanceof File && value.name) {
+          datosJSON[key] = await toBase64(value);
+        } else {
+          datosJSON[key] = value;
+        }
       }
 
-    } catch (error) {
-      console.error('Error en el envío:', error);
-      alert('Ocurrió un error inesperado.');
-    }
-  });
-}
+      try {
+        // Mostrar overlay y deshabilitar botón
+        overlayCarga.style.display = 'flex';
+        submitBtn.disabled = true;
 
+        const response = await fetch(`${BASE_URL}/post/insertPostulanteInscripcion/index.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(datosJSON)
+        });
 
+        const data = await response.json();
 
+        // Ocultar overlay y habilitar botón
+        overlayCarga.style.display = 'none';
+        submitBtn.disabled = false;
 
+        if (response.ok && data.success) {
+          modal.show('Solicitud enviada correctamente.', () => {
+            window.location.href = '../../index.php';
+          });
+        } else {
+          modal.show('Error del servidor: ' + (data.error || 'Respuesta inesperada.'));
+        }
+
+      } catch (error) {
+        console.error('Error en el envío:', error);
+        overlayCarga.style.display = 'none';
+        submitBtn.disabled = false;
+        modal.show('Ocurrió un error inesperado.');
+      }
+    });
+  }
+
+  // -----------------------------
+  // Login revisores
+  // -----------------------------
   const loginForm = document.getElementById('loginForm');
   const btnLogin = document.querySelector('.btn-login');
   const btnText = document.querySelector('.btn-text');
@@ -147,27 +163,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
+      // Bloquear botón y mostrar cargando
       btnText.textContent = "Verificando...";
       spinner.classList.remove('d-none');
       btnLogin.disabled = true;
+      overlayCarga.style.display = 'flex';
 
+      const { loginRevisor } = await import("../../components/Admisiones/revisores_controller.mjs");
       const exito = await loginRevisor();
 
-      console.log(exito);
+      // Restaurar estado botón
+      overlayCarga.style.display = 'none';
+      spinner.classList.add('d-none');
 
       if (exito) {
         btnLogin.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Bienvenido';
         btnLogin.classList.add('btn-success');
 
-        setTimeout(() => {
-          alert("Acceso exitoso. Redirigiendo...");
+        modal.show("Acceso exitoso. Redirigiendo...", () => {
           window.location.href = "../../../admisiones/revisores.php";
-        }, 1000);
+        });
       } else {
         btnText.textContent = "Ingresar";
-        spinner.classList.add('d-none');
         btnLogin.disabled = false;
-        alert("Credenciales incorrectas. Intente de nuevo.");
+        modal.show("Credenciales incorrectas. Intente de nuevo.");
       }
     });
 
@@ -184,14 +203,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-
+  // -----------------------------
+  // Solicitudes revisores
+  // -----------------------------
   if (document.getElementById('requestsTableBody')) {
     const idRevisor = localStorage.getItem('idRevisor');
     if (idRevisor) {
+      const { cargarSolicitudesPaginadas } = await import("../../components/Admisiones/revisores_controller.mjs");
       await cargarSolicitudesPaginadas(parseInt(idRevisor));
     } else {
-      alert("Debes iniciar sesión");
-      window.location.href = "../login.php";
+      modal.show("Debes iniciar sesión", () => {
+        window.location.href = "../login.php";
+      });
     }
   }
 
@@ -212,7 +235,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   window.rejectRequest = () => {
     const razon = document.getElementById('reasonText').value.trim();
-    if (!razon) return alert('Debe ingresar una razón para rechazar.');
+    if (!razon) return modal.show('Debe ingresar una razón para rechazar.');
     responderSolicitud('Rechazada', razon);
   };
 
@@ -220,6 +243,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('requestModal').style.display = 'none';
   };
 });
+
 /*
 
 Mover esta logica a otro archivo y atarsela a la vista de Solicitud.

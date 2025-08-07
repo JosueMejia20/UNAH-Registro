@@ -91,7 +91,7 @@
           <div class="card animate__animated animate__fadeInUp animate__delay-1s">
             <div class="card-header d-flex justify-content-between align-items-center">
               <div class="d-flex align-items-center">
-                <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="...">
+                <!-- <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="..."> -->
                 <div>
                   <h5 id="headerMensaje" class="mb-0">Ventana de Chat</h5>
                   <small class="text-success"></small>
@@ -140,6 +140,15 @@
 
     </main>
   </div>
+
+  <!-- Overlay de carga -->
+    <div id="overlayCarga">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
+
+    <unah-modal></unah-modal>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script type="module" src="../../assets/js/mainChat.js"></script>
