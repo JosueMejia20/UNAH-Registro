@@ -9,7 +9,7 @@ $biblioteca = new Biblioteca();
 
 // Responder a la peticion
 
-$idEstudiante = intval(explode("/",$_SERVER["PATH_INFO"])[1]);
+$idEstudiante = explode("/",$_SERVER["PATH_INFO"])[1];
 
 
 header("Content-Type: application/json");

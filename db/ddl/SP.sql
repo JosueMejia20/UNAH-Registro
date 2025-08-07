@@ -65,6 +65,7 @@ DROP PROCEDURE IF EXISTS ObtenerNumeroCuentaEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerNumeroEmpleadoDocente;
 DROP PROCEDURE IF EXISTS GetRecursosDetalladosEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerEstudiantesPorSeccion;
+DROP PROCEDURE IF EXISTS GetClasesPorEstudiante;
 
 
 
@@ -1189,6 +1190,34 @@ BEGIN
     INNER JOIN Clases_Carrera cc ON cc.carrera_id = ca.carrera_id
     INNER JOIN Clase c ON c.clase_id = cc.clase_id
     WHERE d.numero_empleado = p_docente_id;
+END $$
+
+-- Josue
+CREATE PROCEDURE GetClasesPorEstudiante(
+    IN p_estudiante_id VARCHAR(11)
+)
+BEGIN
+    SELECT DISTINCT
+        c.clase_id,
+        c.codigo,
+        c.nombre_clase,
+        c.unidades_valorativas
+    FROM Estudiantes_Secciones es
+    INNER JOIN Seccion s ON es.seccion_id = s.id
+    INNER JOIN Clase c ON s.clase_id = c.clase_id
+    WHERE es.estudiante_id = p_estudiante_id
+
+    UNION
+
+    SELECT DISTINCT
+        c.clase_id,
+        c.codigo,
+        c.nombre_clase,
+        c.unidades_valorativas
+    FROM Estudiantes_Matricula em
+    INNER JOIN Seccion s ON em.seccion_id = s.id
+    INNER JOIN Clase c ON s.clase_id = c.clase_id
+    WHERE em.estudiante_id = p_estudiante_id;
 END $$
 
 

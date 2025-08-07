@@ -133,7 +133,7 @@ class Biblioteca
         try {
             $db = new DataBase();
 
-            $datos = $db->executeQuery("CALL GetClasesPorEstudiante($idEstudiante)");
+            $datos = $db->executeQuery("CALL GetClasesPorEstudiante('$idEstudiante')");
 
             return $datos;
         } catch (PDOException $e) {

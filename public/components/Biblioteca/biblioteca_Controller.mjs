@@ -82,7 +82,7 @@ export const cargarClasesEstudiantes = async (idEstudiante) => {
     const selectEdit = document.getElementById('edit_cursos');
 
     limpiarOpciones(selectEdit);
-    selectEdit.appendChild(new Option('Seleccionar...', ''));
+    selectEdit.appendChild(new Option('Todos los cursos...', ''));
 
     console.log(data);
     data.forEach(item => {

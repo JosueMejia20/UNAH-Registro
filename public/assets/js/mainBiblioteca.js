@@ -12,7 +12,7 @@ import {
     obtenerIdEstudiante,
     obtenerIdDocente,
     cargarRecursosEstudiante,
-    filtroPorClases
+    cargarClasesEstudiantes
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
 import { UnahModal } from '../../components/modal.mjs';
@@ -330,15 +330,20 @@ const cargarDatosEdicion = async (id) => {
 };
 
 // ------------------- Cargar filtro de cursos -------------------
-const cargarFiltroCursos = async (idDocente) => {
+const cargarFiltroCursos = async () => {
     const selectFiltro = document.getElementById('cursos');
     if (!selectFiltro) return;
 
     // Limpiar y agregar la opción por defecto
     selectFiltro.innerHTML = `<option value="">Todos los cursos</option>`;
 
-    // Obtener las clases del docente
-    const clases = await cargarClasesDocente(idDocente);
+    let clases = [];
+
+    if (rol === 1 && idEstudiante) {
+        clases = await cargarClasesEstudiantes(idEstudiante); // Para estudiantes
+    } else if ((rol === 2 || rol === 3) && idDocente) {
+        clases = await cargarClasesDocente(idDocente); // Para docentes o jefes
+    }
 
     console.log('Clases cargadas para filtro:', clases);
 
@@ -355,7 +360,7 @@ const cargarFiltroCursos = async (idDocente) => {
 
 // ------------------- Filtrar recursos -------------------
 function filtrarRecursos() {
-    const filtroCurso = document.getElementById('cursos')?.value.toLowerCase() || '';
+    const filtroCurso = document.getElementById('cursos')?.value || '';
     const filtroCategoria = document.getElementById('filtroCategoria')?.value.toLowerCase() || '';
     const busqueda = document.getElementById('busquedaRecursos')?.value.toLowerCase() || '';
 
@@ -363,11 +368,11 @@ function filtrarRecursos() {
     let resultadosEncontrados = false;
 
     recursos.forEach(recurso => {
-        const cursos = recurso.getAttribute('data-cursos')?.toLowerCase() || '';
+        const cursos = recurso.getAttribute('data-cursos')?.split(',').map(c => c.trim()) || [];
         const categoria = recurso.getAttribute('data-categoria')?.toLowerCase() || '';
         const textoBusqueda = recurso.getAttribute('data-busqueda')?.toLowerCase() || '';
 
-        const coincideCurso = filtroCurso === '' || cursos.split(',').map(c => c.trim()).includes(filtroCurso);
+        const coincideCurso = filtroCurso === '' || cursos.includes(filtroCurso);
         const coincideCategoria = filtroCategoria === '' || categoria === filtroCategoria;
         const coincideBusqueda = busqueda === '' || textoBusqueda.includes(busqueda);
 
@@ -381,26 +386,26 @@ function filtrarRecursos() {
 
     const noResultados = document.getElementById('noResultados');
     if (noResultados) {
-        if (resultadosEncontrados) {
-            noResultados.classList.add('d-none');
-        } else {
-            noResultados.classList.remove('d-none');
-        }
+        noResultados.classList.toggle('d-none', resultadosEncontrados);
     }
 }
+
+
+
 
 // ------------------- Inicialización -------------------
 window.onload = async function () {
     try {
         if (rol == 2 || rol == 3) {
             await cargarRecursosDetalle();
-            await cargarFiltroCursos(idDocente); 
+            await cargarFiltroCursos();
         } else {
             await cargarRecursosDetalleEstudiante();
+            await cargarFiltroCursos(); 
         }
 
         // Listeners de filtro
-        document.getElementById('filtroCurso')?.addEventListener('input', filtrarRecursos);
+        document.getElementById('cursos')?.addEventListener('change', filtrarRecursos);
         document.getElementById('filtroCategoria')?.addEventListener('input', filtrarRecursos);
         document.getElementById('busquedaRecursos')?.addEventListener('input', filtrarRecursos);
     } catch (error) {
