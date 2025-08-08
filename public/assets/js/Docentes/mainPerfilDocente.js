@@ -22,6 +22,11 @@ import {
     validarCredenciales
 } from '../../../../components/Docentes/perfilDocentes_Controller.mjs';
 
+import {
+    obtenerNumeroEmpleado
+} from '../../../../components/Docentes/numeroEmpleado_Controller.mjs';
+
+const idDocente = await obtenerNumeroEmpleado(usuarioId);
 
 const toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -36,7 +41,7 @@ const asignarImagenBase64 = (imgTag, base64String, mime = 'image/jpeg') => {
         : 'https://via.placeholder.com/300x400?text=Sin+Documento';
 };
 
-const idDocente = sessionStorage.getItem('idDocente') || '1002';
+
 
 const cargarDatosDocente = async () => {
     const datos = await obtenerInfoDocente(idDocente);
@@ -63,8 +68,8 @@ const cargarDatosDocente = async () => {
     facultad.innerHTML = `<span class="label">Facultad:</span>${datos[0].nombre_facultad}`;
     departamento.innerHTML = `<span class="label">Nivel Academico:</span>${datos[0].nombre_departamento}`;
 
-    
-    if(foto != null){
+
+    if (foto != null) {
         asignarImagenBase64(fotoPerfil, foto[0].foto_perfil);
     }
 }
@@ -72,8 +77,7 @@ const cargarDatosDocente = async () => {
 const btnSubirFoto = document.getElementById('btn-subir-foto');
 const form = document.getElementById('formSubirFoto');
 
-
-document.addEventListener('DOMContentLoaded', function () {
+window.onload = function(){
     // Cargar los recursos del docente al inicio
     cargarDatosDocente();
 
@@ -117,70 +121,9 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Error de conexión al subir foto.');
         }
     });
-});
+}
 
 
-//login
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('loginForm');
-    const btnLogin = form.querySelector('.btn-login');
-    const spinner = form.querySelector('.spinner-border');
-    const btnText = form.querySelector('.btn-text');
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password');
-
-    // Mostrar u ocultar contraseña
-    togglePassword.addEventListener('click', () => {
-        const type = passwordInput.type === 'password' ? 'text' : 'password';
-        passwordInput.type = type;
-        togglePassword.innerHTML = type === 'password'
-            ? '<i class="bi bi-eye-fill"></i>'
-            : '<i class="bi bi-eye-slash-fill"></i>';
-    });
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        // Validación del formulario Bootstrap
-        if (!form.checkValidity()) {
-            form.classList.add('was-validated');
-            return;
-        }
-
-        // Activar spinner
-        btnLogin.disabled = true;
-        spinner.classList.remove('d-none');
-        btnText.textContent = 'Validando...';
-
-        const cuenta = document.getElementById('email').value.trim();
-        const contrasena = document.getElementById('password').value;
-        
-        const resultado = await validarCredenciales(cuenta, contrasena);
-
-        // Quitar spinner
-        btnLogin.disabled = false;
-        spinner.classList.add('d-none');
-        btnText.textContent = 'Ingresar';
-
-      /*  if (!resultado.success) {
-            alert(resultado.message || 'Credenciales inválidas');
-            return;
-        }
-*/
-        if (resultado.success) {
-            btnLogin.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Bienvenido';
-            btnLogin.classList.add('btn-success');
-
-            setTimeout(() => {
-            alert("Acceso exitoso. Redirigiendo...");
-            window.location.href = "../../../docentes/perfil_docente.php";
-        }, 1000);
-      } else {
-            btnText.textContent = "Ingresar";
-            spinner.classList.add('d-none');
-            btnLogin.disabled = false;
-            alert("Credenciales incorrectas. Intente de nuevo.");
-      }
-
-    });
-});
+//document.addEventListener('DOMContentLoaded', function () {
+    
+//});

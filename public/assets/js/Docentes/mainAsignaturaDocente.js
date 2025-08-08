@@ -19,8 +19,26 @@ import {
     obtenerInfoAsignatura
 } from '../../../../components/Docentes/asignaturaDocente.mjs';
 
-const idDocente = sessionStorage.getItem('idDocente') || '1002';
+import {
+    obtenerInfoDocente,
+    obtenerFotoDocente
+} from '../../../../components/Docentes/perfilDocentes_Controller.mjs';
 
+import {
+    obtenerNumeroEmpleado
+} from '../../../../components/Docentes/numeroEmpleado_Controller.mjs';
+
+const idDocente = await obtenerNumeroEmpleado(usuarioId);
+
+const cargarDatosDocente = async () => {
+    const datos = await obtenerInfoDocente(idDocente);
+    const foto = await obtenerFotoDocente(idDocente);
+
+    
+    const nombreDocente = document.getElementById('nombreDocente');
+
+    nombreDocente.innerHTML = `${datos[0].nombre_completo}`;
+}
 
 const cargarAsignaturaDocente = async () => {
     const datos = await obtenerInfoAsignatura(idDocente);
@@ -51,6 +69,11 @@ const cargarAsignaturaDocente = async () => {
     })
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    cargarAsignaturaDocente()
-})
+window.onload = function(){
+    cargarDatosDocente();
+    cargarAsignaturaDocente();
+}
+
+//document.addEventListener('DOMContentLoaded', () => {
+
+//})

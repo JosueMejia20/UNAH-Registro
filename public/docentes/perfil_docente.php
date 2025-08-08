@@ -96,6 +96,10 @@
   </div>
 
 
+  <script>
+    const usuarioId = <?php echo json_encode($_SESSION['usuario_id']); ?>;
+    console.log("ID del usuario desde sesion PHP:", usuarioId);
+  </script>
   <script type="module" src="../../assets/js/Docentes/mainPerfilDocente.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

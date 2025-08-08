@@ -795,8 +795,7 @@ CREATE TABLE Introduccion_Clase(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     seccion_id INT NOT NULL UNIQUE,
     archivo_pdf MEDIUMBLOB,
-    video LONGBLOB,
-    descripcion VARCHAR(400),
+    video VARCHAR(270),
     fecha_subida DATETIME DEFAULT current_timestamp,
     
     FOREIGN KEY (seccion_id) REFERENCES Seccion(id)
