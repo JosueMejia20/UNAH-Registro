@@ -20,6 +20,11 @@ class DataBase {
         $this->connect();
     }
 
+    public function getConnection() {
+    return $this->pdo;
+}
+
+
     private function loadEnv($filePath) {
         $variables = [];
 

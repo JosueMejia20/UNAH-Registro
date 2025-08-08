@@ -1,7 +1,7 @@
 //  Footer mejorado 
-class UnahFooter extends HTMLElement{
-    connectedCallback(){
-    this.innerHTML = `
+class UnahFooter extends HTMLElement {
+    connectedCallback() {
+        this.innerHTML = `
     <footer class="footer-unah">
         <div class="container">
             <div class="row">
@@ -63,10 +63,10 @@ class UnahFooter extends HTMLElement{
             </div>
         </div>
     </footer>
-    `;        
+    `;
     }
-} 
+}
 
-export{
+export {
     UnahFooter
 }

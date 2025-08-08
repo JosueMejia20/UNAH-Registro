@@ -6,9 +6,10 @@ require_once __DIR__ . '/../Utilities/Utilities.php';
 class Docentes
 {
 
-    public function verificarUsuarioDocente(int $idUsuario):int {
+    public function verificarUsuarioDocente(int $idUsuario): int
+    {
 
-        try{
+        try {
             $db = new DataBase();
             $pdo = $db->connect();
 
@@ -21,8 +22,7 @@ class Docentes
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
             return isset($resultado['resultado']) ? (int)$resultado['resultado'] : 0;
-
-        }catch (PDOException $e){
+        } catch (PDOException $e) {
             error_log("Error en verificarUsuarioDocente: " . $e->getMessage());
             return 0;
         }
@@ -81,7 +81,8 @@ class Docentes
         }
     }
 
-    public function getNumeroDocenteByUsuarioId($usuarioId) {
+    public function getNumeroDocenteByUsuarioId($usuarioId)
+    {
         try {
             $db = new DataBase();
             $pdo = $db->connect();
@@ -94,13 +95,14 @@ class Docentes
             $resultado = $pdo->query("SELECT @numeroEmpleado AS numeroEmpleado")->fetch(PDO::FETCH_ASSOC);
 
             return isset($resultado['numeroEmpleado']) ? (string)$resultado['numeroEmpleado'] : "";
-        }catch(PDOException $e) {
-            echo 'error en base de datos: '.$e->getMessage();
+        } catch (PDOException $e) {
+            echo 'error en base de datos: ' . $e->getMessage();
             return "";
         }
     }
 
-    public function getInfo($idDocente){
+    public function getInfo($idDocente)
+    {
         try {
             $db = new DataBase();
             $pdo = $db->connect();
@@ -127,19 +129,42 @@ class Docentes
 
             $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $resultados;
-
-            } catch (PDOException $e) {
-                return "Error en la base de datos: " . $e->getMessage();
-            }
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
+        }
     }
 
-    public function getEstudiantes($idSeccion){
+    public function getEstudiantes($idSeccion)
+    {
         try {
             $db = new DataBase();
             $datos = $db->executeQuery("CALL ObtenerEstudiantesPorSeccion($idSeccion)");
             return $datos;
         } catch (PDOException $e) {
             return "Error en la base de datos: " . $e->getMessage();
+        }
+    }
+
+    public function insertarRecursosDeSeccion($idSeccion, $linkVideo, $base64PDF)
+    {
+        $binaryPDF = Utilities::obtenerBinario($base64PDF);
+
+        try {
+            $db = new DataBase();
+            $pdo = $db->getConnection();
+
+            $stmt = $pdo->prepare("CALL Insertar_Introduccion_Clase(:seccion_id, :archivo_pdf, :video)");
+
+            $stmt->bindParam(':seccion_id', $idSeccion, PDO::PARAM_INT);
+            $stmt->bindParam(':archivo_pdf', $binaryPDF, PDO::PARAM_LOB);
+            $stmt->bindParam(':video', $linkVideo, PDO::PARAM_STR);
+
+            $stmt->execute();
+
+            return true;
+        } catch (PDOException $e) {
+            echo "error en la base de datos ".$e->getMessage();
+            return false;
         }
     }
 }

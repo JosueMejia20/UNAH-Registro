@@ -114,7 +114,7 @@ class Biblioteca
             return "Error en la base de datos: " . $e->getMessage();
         }
     }
-    
+
 
     public function obtenerTodoTitulo()
     {

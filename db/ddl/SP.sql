@@ -21,6 +21,7 @@ DROP PROCEDURE IF EXISTS ObtenerDepartamentosPorClaseCarrera;
 DROP PROCEDURE IF EXISTS ObtenerClasesPorDepartamentoYEstudiante;
 DROP PROCEDURE IF EXISTS ObtenerSeccionesPorClasePeriodoActual;
 DROP PROCEDURE IF EXISTS InsertarEstudianteMatricula;
+DROP PROCEDURE IF EXISTS Insertar_Introduccion_Clase;
 DROP PROCEDURE IF EXISTS ObtenerSeccionesActualesEstudiante;
 DROP PROCEDURE IF EXISTS UpdateEstudiante;
 DROP PROCEDURE IF EXISTS obtenerFotoPerfilEstudiante;
@@ -212,7 +213,22 @@ BEGIN
     ORDER BY i.fecha_inscripcion ASC;
 END $$
 
-
+CREATE PROCEDURE Insertar_Introduccion_Clase(
+    IN p_seccion_id INT,
+    IN p_archivo_pdf MEDIUMBLOB,
+    IN p_video VARCHAR(270)
+)
+BEGIN
+    INSERT INTO Introduccion_Clase (
+        seccion_id,
+        archivo_pdf,
+        video
+    ) VALUES (
+        p_seccion_id,
+        p_archivo_pdf,
+        p_video
+    );
+END $$
 
 CREATE PROCEDURE AsignarRevisores()
 BEGIN
