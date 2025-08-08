@@ -39,7 +39,7 @@ export const cargarTipoRecurso = async () => {
 
 export const getSugerencias = async (tipo) => {
   try {
-    const response = await fetch(`${BASE_URL}/api/biblioteca/autocompletado/index.php?tipo=${tipo}`);
+    const response = await fetch(`${BASE_URL}/get/autocompletado/index.php?tipo=${tipo}`);
     if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
     return await response.json();
   } catch (error) {

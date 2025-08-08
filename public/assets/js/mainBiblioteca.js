@@ -141,9 +141,9 @@ const cargarRecursosDetalle = async () => {
             // Aquí sí puedes acceder a recurso.clases_asociadas
             const nombresClases = recurso.clases_asociadas
                 ? recurso.clases_asociadas
-                      .split(',')
-                      .map(c => c.trim().replace(/^[A-Z0-9]+\s*-\s*/, ''))
-                      .join(', ')
+                    .split(',')
+                    .map(c => c.trim().replace(/^[A-Z0-9]+\s*-\s*/, ''))
+                    .join(', ')
                 : '';
 
             const tagsArray = separarTags(recurso.tags);
@@ -224,9 +224,9 @@ const cargarRecursosDetalleEstudiante = async () => {
             // Aquí sí puedes acceder a recurso.clases_asociadas
             const nombresClasesES = recurso.clases_asociadas
                 ? recurso.clases_asociadas
-                      .split(',')
-                      .map(c => c.trim().replace(/^[A-Z0-9]+\s*-\s*/, ''))
-                      .join(', ')
+                    .split(',')
+                    .map(c => c.trim().replace(/^[A-Z0-9]+\s*-\s*/, ''))
+                    .join(', ')
                 : '';
 
             const tagsArray = separarTags(recurso.tags);
@@ -351,23 +351,21 @@ const cargarDatosEdicion = async (id) => {
 };
 
 // ------------------- Autocompletado -------------------
-document.addEventListener('DOMContentLoaded', async () => {
-    // Autores
-    const autores = await getSugerencias('autores');
-    llenarDatalist('listaAutores', autores.map(a => a.autor));
-
-    // Títulos
-    const titulos = await getSugerencias('titulos');
-    llenarDatalist('listaTitulos', titulos.map(t => t.titulo));
-});
 
 function llenarDatalist(id, valores) {
     const datalist = document.getElementById(id);
+    console.log(datalist);
     datalist.innerHTML = '';
     valores.forEach(valor => {
-        if (valor && valor.trim() !== '') {
+        if (valor) {
+            console.log(valor);
             const option = document.createElement('option');
-            option.value = valor;
+            if(id === 'listaAutores'){
+                option.value = valor.nombre_completo;
+            } else{
+                option.value = valor.titulo;
+            }
+            
             datalist.appendChild(option);
         }
     });
@@ -451,6 +449,13 @@ window.onload = async function () {
         if (rol == 2 || rol == 3) {
             await cargarRecursosDetalle();
             await cargarFiltroCursos();
+            // Autores
+            const autores = await getSugerencias('autores');
+            llenarDatalist('listaAutores', autores);
+
+            // Títulos
+            const titulos = await getSugerencias('titulos');
+            llenarDatalist('listaTitulos', titulos);
         } else {
             await cargarRecursosDetalleEstudiante();
             await cargarFiltroCursos();

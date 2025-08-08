@@ -9,16 +9,10 @@ $biblioteca = new Biblioteca();
 
 header("Content-Type: application/json");
 
-$todoTitulos = $biblioteca->obtenerTodoTitulo();
 
-echo json_encode($todoTitulos);
-
-
-
-$metodo = $_SERVER['REQUEST_METHOD'];
 $tipo = $_GET['tipo'] ?? '';
 
-if ($metodo === 'GET') {
+
     $biblioteca = new Biblioteca();
 
     switch ($tipo) {
@@ -33,4 +27,4 @@ if ($metodo === 'GET') {
     }
 
     echo json_encode($data);
-}
+
