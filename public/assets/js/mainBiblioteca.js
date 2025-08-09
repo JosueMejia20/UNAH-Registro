@@ -45,7 +45,7 @@ function separarTags(cadena) {
         .filter(tag => tag.length > 0);
 }
 
-// Funcion para el nombre de usuario
+// ------------------ Funcion para el nombre de usuario --------------------
 const cargarNombreUsuario = async(id) => {
     const datos = await obtenerNombreUsuario(id);
 
@@ -117,30 +117,26 @@ formSubirRecurso?.addEventListener('submit', async (e) => {
 
 // ------------------- Confirmar eliminación de recurso -------------------
 const confirmarEliminacion = async (id) => {
-    const modalBootstrap = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
-    modalBootstrap.show();
+    // Mostramos el modal de confirmación usando nuestro Web Component
+    const modalEl = document.querySelector('unah-modal');
 
-    const btnConfirmar = document.getElementById('confirmarEliminarBtn');
+    modalEl.confirm(
+        "¿Estás seguro de que quieres eliminar este recurso?",
+        async () => {
+            overlayCarga.style.display = 'flex';
 
-    // Evitar múltiples listeners
-    btnConfirmar.replaceWith(btnConfirmar.cloneNode(true));
-    const nuevoBtn = document.getElementById('confirmarEliminarBtn');
+            const respuesta = await eliminarRecurso(id);
 
-    nuevoBtn.addEventListener("click", async () => {
-        overlayCarga.style.display = 'flex';
+            overlayCarga.style.display = 'none';
 
-        const respuesta = await eliminarRecurso(id);
-
-        overlayCarga.style.display = 'none';
-        modalBootstrap.hide();
-
-        if (respuesta.success) {
-            modal.show("Recurso eliminado correctamente.", () => location.reload());
-        } else {
-            modal.show(respuesta.mensaje || "No se pudo eliminar.");
+            if (respuesta.success) {
+                modalEl.show("Recurso eliminado correctamente.", () => location.reload());
+            } else {
+                modalEl.show(respuesta.mensaje || "No se pudo eliminar.");
+            }
         }
-    });
-}
+    );
+};
 
 // ------------------- Cargar recursos (Docente/Estudiante) -------------------
 const cargarRecursosDetalle = async () => {
@@ -151,7 +147,7 @@ const cargarRecursosDetalle = async () => {
     if (misRecursos.length > 0) {
         gridMisRecursos.innerHTML = '';
         misRecursos.forEach(recurso => {
-            // Aquí sí puedes acceder a recurso.clases_asociadas
+            
             const nombresClases = recurso.clases_asociadas
                 ? recurso.clases_asociadas
                     .split(',')
@@ -355,10 +351,11 @@ const cargarDatosEdicion = async (id) => {
     document.getElementById('edit_titulo').value = recurso[0].titulo;
     document.getElementById('edit_autores').value = recurso[0].autores;
     document.getElementById('edit_anio').value = recurso[0].anio;
-    document.getElementById('edit_categoria').value = recurso[0].categoria;
+    document.getElementById('edit_categoria').value = recurso[0].tipo_recurso_id;
     document.getElementById('edit_descripcion').value = recurso[0].descripcion;
     document.getElementById('edit_tags').value = recurso[0].tags;
     document.getElementById('recurso_id').value = id;
+    document.getElementById('edit_cursos').value = recurso[0].cursos_relacionados_ids;
 
     editarFormulario(formEditarRecurso, id);
 };
@@ -459,7 +456,7 @@ function filtrarRecursos() {
 // ------------------- Inicialización -------------------
 window.onload = async function () {
     try {
-        await cargarNombreUsuario(usuarioId);
+        cargarNombreUsuario(usuarioId);
         if (rol == 2 || rol == 3) {
             await cargarRecursosDetalle();
             await cargarFiltroCursos();

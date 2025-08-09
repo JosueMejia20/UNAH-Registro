@@ -240,6 +240,7 @@ class Biblioteca
     }
 
     public function obtenerRecursos($idDocente)
+    
     {
         try {
             $db = new DataBase();

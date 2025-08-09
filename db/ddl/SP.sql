@@ -1415,11 +1415,16 @@ END $$
 CREATE PROCEDURE RecursoDetalle(IN p_recurso_id INT)
 BEGIN
     SELECT 
-        r.id,
-        r.titulo,
-        r.archivo,
-        r.anio,
-        r.descripcion,
+        r.id,--
+        r.titulo,--
+        r.archivo,--
+        r.anio,--
+        r.descripcion,--
+        r.tipo_recurso_id,
+        tr.nombre as tipo_recurso,
+        GROUP_CONCAT(DISTINCT c.nombre_clase ORDER BY c.nombre_clase SEPARATOR ', ') AS cursos_relacionados,
+        GROUP_CONCAT(DISTINCT c.clase_id ORDER BY c.clase_id SEPARATOR ',') AS cursos_relacionados_ids,
+        
         -- Autores separados por coma
         (SELECT GROUP_CONCAT(a.nombre_completo SEPARATOR ', ')
          FROM Autores a
@@ -1432,7 +1437,16 @@ BEGIN
          WHERE tr2.recurso_id = r.id) AS tags
          
     FROM Recursos r
-    WHERE r.id = p_recurso_id;
+    LEFT JOIN Tipo_Recurso tr ON r.tipo_recurso_id = tr.id
+    LEFT JOIN Autores_Recursos ar ON r.id = ar.recurso_id
+    LEFT JOIN Autores a ON ar.autor_id = a.id
+    LEFT JOIN Recursos_Tags rt ON r.id = rt.recurso_id
+    LEFT JOIN Tags t ON rt.tags_id = t.id
+    LEFT JOIN Recursos_Clase rc ON r.id = rc.recurso_id
+    LEFT JOIN Clase c ON rc.clase_id = c.clase_id
+    
+    WHERE r.id = p_recurso_id
+    GROUP BY r.id, r.titulo, r.descripcion, r.anio, r.portada, r.archivo, r.tipo_recurso_id, tr.nombre;
 END $$
 
 CREATE PROCEDURE RecursoPortadaArchivo(IN p_recurso_id INT)
