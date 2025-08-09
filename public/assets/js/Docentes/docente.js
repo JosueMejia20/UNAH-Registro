@@ -1,4 +1,5 @@
     // Datos simulados de clases asignadas
+    //ELIMINAR ESTE ARCHIVO
     const clases = [
       { id: 1, nombre: "Programacion 2" },
       { id: 2, nombre: "Bases de Datos" },

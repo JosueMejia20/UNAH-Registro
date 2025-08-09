@@ -70,6 +70,9 @@ DROP PROCEDURE IF EXISTS GetClasesPorEstudiante;
 DROP PROCEDURE IF EXISTS getTitulosRecurso;
 DROP PROCEDURE IF EXISTS getAutoresRecurso;
 DROP PROCEDURE IF EXISTS obtenerIntroduccionesPorDocente;
+DROP PROCEDURE IF EXISTS Insertar_Estudiantes_Secciones;
+DROP PROCEDURE IF EXISTS ObtenerClasePorSeccion;
+DROP PROCEDURE IF EXISTS ObtenerEstudiantesSeccionConNotas;
 
 
 
@@ -1649,6 +1652,76 @@ BEGIN
       AND CURDATE() BETWEEN pa.fecha_inicio AND pa.fecha_fin;
 END $$
 
+CREATE PROCEDURE Insertar_Estudiantes_Secciones(
+    IN p_estudiante_id VARCHAR(11),
+    IN p_seccion_id INT,
+    IN p_nota INT
+)
+BEGIN
+    DECLARE v_estado_clase_id INT;
+    
+    -- Calcular el estado de la clase segun la nota
+    CASE 
+        WHEN p_nota = 0 THEN 
+            SET v_estado_clase_id = 4;  -- Nota igual a 0 NSP
+        WHEN p_nota >= 65 THEN 
+            SET v_estado_clase_id = 1;  -- Aprobado (nota >= 65) APB
+        WHEN p_nota < 65 THEN 
+            SET v_estado_clase_id = 2;  -- Reprobado (nota < 65) reprobado
+    END CASE;
+    
+    -- Insertar el registro con el estado calculado
+    INSERT INTO Estudiantes_Secciones (
+        estudiante_id, 
+        seccion_id, 
+        nota, 
+        estado_clase_id
+    ) VALUES (
+        p_estudiante_id,
+        p_seccion_id,
+        p_nota,
+        v_estado_clase_id
+    )
+    ON DUPLICATE KEY UPDATE
+        nota = p_nota,
+        estado_clase_id = v_estado_clase_id;
+        
+END $$
+
+
+CREATE PROCEDURE ObtenerClasePorSeccion(
+    IN p_seccion_id INT
+)
+BEGIN
+    SELECT 
+        c.nombre_clase,
+        c.codigo
+    FROM Seccion s
+    INNER JOIN Clase c ON s.clase_id = c.clase_id
+    WHERE s.id = p_seccion_id;
+END $$
+
+
+CREATE PROCEDURE ObtenerEstudiantesSeccionConNotas(
+    IN p_seccion_id INT
+)
+BEGIN
+    SELECT 
+        e.numero_cuenta,
+        p.nombre_completo,
+        p.apellido_completo,
+        c.nombre_clase,
+        COALESCE(es.nota, 0) AS nota
+    FROM Estudiantes_Matricula em
+    INNER JOIN Estudiante e ON em.estudiante_id = e.numero_cuenta
+    INNER JOIN Usuario u ON e.usuario_id = u.usuario_id
+    INNER JOIN Persona p ON u.persona_id = p.dni
+    INNER JOIN Seccion s ON em.seccion_id = s.id
+    INNER JOIN Clase c ON s.clase_id = c.clase_id
+    LEFT JOIN Estudiantes_Secciones es ON (em.estudiante_id = es.estudiante_id AND em.seccion_id = es.seccion_id)
+    WHERE em.seccion_id = p_seccion_id
+    ORDER BY p.apellido_completo, p.nombre_completo;
+END $$
 
 
 

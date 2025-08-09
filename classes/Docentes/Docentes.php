@@ -177,6 +177,46 @@ class Docentes
             return "Error en la base de datos: " . $e->getMessage();
         }
     }
+
+    public function getClaseSeccion($idSeccion){
+        try {
+            $db = new DataBase();
+            $datos = $db->executeQuery("CALL ObtenerClasePorSeccion($idSeccion)");
+            return $datos;
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
+        }
+    }
+
+    public function insertarEstudiantesSecciones($idSeccion, $idEstudiante, $nota){
+        try {
+            $db = new DataBase();
+            $pdo = $db->getConnection();
+
+            $stmt = $pdo->prepare("CALL Insertar_Estudiantes_Secciones(:estudiante_id, :seccion_id, :nota)");
+
+            $stmt->bindParam(':seccion_id', $idSeccion, PDO::PARAM_INT);
+            $stmt->bindParam(':estudiante_id', $idEstudiante, PDO::PARAM_STR);
+            $stmt->bindParam(':nota', $nota, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            return true;
+        } catch (PDOException $e) {
+            echo "error en la base de datos ".$e->getMessage();
+            return false;
+        }
+    }
+
+    public function getEstudiantesNotas($idSeccion){
+        try {
+            $db = new DataBase();
+            $datos = $db->executeQuery("CALL ObtenerEstudiantesSeccionConNotas($idSeccion)");
+            return $datos;
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
+        }
+    }
 }
 
 // prueba

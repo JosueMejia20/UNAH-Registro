@@ -51,7 +51,7 @@
                         <th>Nota</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="listaEstudiantes">
                     <tr>
                         <td>111</td>
                         <td>Isac Lainez</td>
@@ -80,6 +80,6 @@
     </div>
 
 
-    <script type="module" src="../../assets/js/mainEstudiantes.js"></script>
+    <script type="module" src="../../assets/js/Docentes/mainVerNotas.js"></script>
 </body>
 </html>

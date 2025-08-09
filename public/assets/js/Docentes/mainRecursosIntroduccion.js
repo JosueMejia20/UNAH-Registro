@@ -69,12 +69,13 @@ const toBase64 = file => new Promise((resolve, reject) => {
 });
 
 function combinarJSONs(introducciones, secciones) {
-    // Crear un Set con los seccion_id que tienen introducción subida
+    // Creacion de set con las introducciones
     const seccionesConIntroduccion = new Set(
         introducciones.map(item => item.seccion_id)
     );
 
-    // Mapear el segundo JSON con solo id y subido
+    // Creacion del JSON, obtener el id de seccion y comparar con .has (para ello se uso el set y el map)
+    //Para iterar cada item con el map y teniendo la seccion. Con el tipo set podemos acceder a metodos como has (tambien los tipo map)
     const resultado = secciones.map(seccion => ({
         id: seccion.id,
         subido: seccionesConIntroduccion.has(seccion.id)

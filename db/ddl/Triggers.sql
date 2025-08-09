@@ -7,7 +7,8 @@ DROP TRIGGER IF EXISTS trg_cancelar_seccion_matriculada;
 DROP TRIGGER IF EXISTS after_update_solicitud_contacto;
 DROP TRIGGER IF EXISTS UsuarioRoles_InsertEstudiante;
 DROP TRIGGER IF EXISTS UsuarioRoles_InsertDocente;
-
+DROP TRIGGER IF EXISTS trg_calcular_indices_estudiante;
+DROP TRIGGER IF EXISTS trg_calcular_indices_estudiante_update;
 
 -- Triggers
 
@@ -123,6 +124,195 @@ BEGIN
 END $$
 */
 
+CREATE TRIGGER trg_calcular_indices_estudiante
+AFTER INSERT ON Estudiantes_Secciones
+FOR EACH ROW
+BEGIN
+    DECLARE v_periodo_acad_id INT;
+    DECLARE v_indice_periodo DECIMAL(5,2);
+    DECLARE v_indice_global DECIMAL(5,2);
+    DECLARE v_suma_notas_uv_periodo DECIMAL(10,2);
+    DECLARE v_suma_uv_periodo DECIMAL(10,2);
+    DECLARE v_suma_notas_uv_global DECIMAL(10,2);
+    DECLARE v_suma_uv_global DECIMAL(10,2);
+    DECLARE v_existe_registro INT DEFAULT 0;
+    
+    -- Obtener periodo de la seccion
+    SELECT periodo_acad_id 
+    INTO v_periodo_acad_id
+    FROM Seccion 
+    WHERE id = NEW.seccion_id;
+    
+    -- Verificar si ya existe un registro para este estudiante y periodo
+    SELECT COUNT(*) 
+    INTO v_existe_registro
+    FROM Indices_Estudiantes 
+    WHERE estudiante_id = NEW.estudiante_id 
+      AND periodo_acad_id = v_periodo_acad_id;
+    
+    -- CALCULAR INDICE DEL PERIODO
+    SELECT 
+        COALESCE(SUM(es.nota * c.unidades_valorativas), 0),
+        COALESCE(SUM(c.unidades_valorativas), 0)
+    INTO 
+        v_suma_notas_uv_periodo,
+        v_suma_uv_periodo
+    FROM Estudiantes_Secciones es
+    INNER JOIN Seccion s ON es.seccion_id = s.id
+    INNER JOIN Clase c ON s.clase_id = c.clase_id
+    WHERE es.estudiante_id = NEW.estudiante_id
+      AND s.periodo_acad_id = v_periodo_acad_id
+      AND es.nota > 0;  -- Excluir notas = 0
+    
+    -- Verificacion
+    IF v_suma_uv_periodo > 0 THEN
+        SET v_indice_periodo = v_suma_notas_uv_periodo / v_suma_uv_periodo;
+    ELSE
+        SET v_indice_periodo = 0.00;
+    END IF;
+    
+    -- CALCULAR INDICE GLOBAL
+    SELECT 
+        COALESCE(SUM(es.nota * c.unidades_valorativas), 0),
+        COALESCE(SUM(c.unidades_valorativas), 0)
+    INTO 
+        v_suma_notas_uv_global,
+        v_suma_uv_global
+    FROM Estudiantes_Secciones es
+    INNER JOIN Seccion s ON es.seccion_id = s.id
+    INNER JOIN Clase c ON s.clase_id = c.clase_id
+    WHERE es.estudiante_id = NEW.estudiante_id
+      AND es.nota > 0;  -- Excluir notas = 0
+    
+    -- Verfificacion
+    IF v_suma_uv_global > 0 THEN
+        SET v_indice_global = v_suma_notas_uv_global / v_suma_uv_global;
+    ELSE
+        SET v_indice_global = 0.00;
+    END IF;
+    
+    -- INSERTAR O ACTUALIZAR segun si existe el registro
+    IF v_existe_registro = 0 THEN
+        -- Insert si no existe un registro con el estudiante y periodo
+        INSERT INTO Indices_Estudiantes (
+            estudiante_id,
+            periodo_acad_id,
+            indice_periodo,
+            indice_global,
+            fecha_calculo
+        ) VALUES (
+            NEW.estudiante_id,
+            v_periodo_acad_id,
+            v_indice_periodo,
+            v_indice_global,
+            NOW()
+        );
+    ELSE
+        -- Update si ya existe un registro con el estudiante y periodo
+        UPDATE Indices_Estudiantes 
+        SET 
+            indice_periodo = v_indice_periodo,
+            indice_global = v_indice_global,
+            fecha_calculo = NOW()
+        WHERE estudiante_id = NEW.estudiante_id 
+          AND periodo_acad_id = v_periodo_acad_id;
+    END IF;
+    
+END$$
+
+
+
+
+-- SE AGREGO EL TRG ON UPDATE POR EL ON DUPLICATE KEY UPDATE DEL SP de Estudiantes_Secciones
+-- Es casi igual que el anterior
+CREATE TRIGGER trg_calcular_indices_estudiante_update
+AFTER UPDATE ON Estudiantes_Secciones
+FOR EACH ROW
+BEGIN
+    DECLARE v_periodo_acad_id INT;
+    DECLARE v_indice_periodo DECIMAL(5,2);
+    DECLARE v_indice_global DECIMAL(5,2);
+    DECLARE v_suma_notas_uv_periodo DECIMAL(10,2);
+    DECLARE v_suma_uv_periodo DECIMAL(10,2);
+    DECLARE v_suma_notas_uv_global DECIMAL(10,2);
+    DECLARE v_suma_uv_global DECIMAL(10,2);
+    DECLARE v_existe_registro INT DEFAULT 0;
+    
+    SELECT periodo_acad_id 
+    INTO v_periodo_acad_id
+    FROM Seccion 
+    WHERE id = NEW.seccion_id;
+    
+    SELECT COUNT(*) 
+    INTO v_existe_registro
+    FROM Indices_Estudiantes 
+    WHERE estudiante_id = NEW.estudiante_id 
+      AND periodo_acad_id = v_periodo_acad_id;
+    
+    -- CALCULAR INDICE DEL PERIODO
+    SELECT 
+        COALESCE(SUM(es.nota * c.unidades_valorativas), 0),
+        COALESCE(SUM(c.unidades_valorativas), 0)
+    INTO 
+        v_suma_notas_uv_periodo,
+        v_suma_uv_periodo
+    FROM Estudiantes_Secciones es
+    INNER JOIN Seccion s ON es.seccion_id = s.id
+    INNER JOIN Clase c ON s.clase_id = c.clase_id
+    WHERE es.estudiante_id = NEW.estudiante_id
+      AND s.periodo_acad_id = v_periodo_acad_id
+      AND es.nota > 0;  -- Excluir notas = 0
+    
+    IF v_suma_uv_periodo > 0 THEN
+        SET v_indice_periodo = v_suma_notas_uv_periodo / v_suma_uv_periodo;
+    ELSE
+        SET v_indice_periodo = 0.00;
+    END IF;
+    
+    -- CALCULAR INDICE GLOBAL
+    SELECT 
+        COALESCE(SUM(es.nota * c.unidades_valorativas), 0),
+        COALESCE(SUM(c.unidades_valorativas), 0)
+    INTO 
+        v_suma_notas_uv_global,
+        v_suma_uv_global
+    FROM Estudiantes_Secciones es
+    INNER JOIN Seccion s ON es.seccion_id = s.id
+    INNER JOIN Clase c ON s.clase_id = c.clase_id
+    WHERE es.estudiante_id = NEW.estudiante_id
+      AND es.nota > 0;  -- Excluir notas = 0
+    
+    IF v_suma_uv_global > 0 THEN
+        SET v_indice_global = v_suma_notas_uv_global / v_suma_uv_global;
+    ELSE
+        SET v_indice_global = 0.00;
+    END IF;
+    
+    IF v_existe_registro = 0 THEN
+        INSERT INTO Indices_Estudiantes (
+            estudiante_id,
+            periodo_acad_id,
+            indice_periodo,
+            indice_global,
+            fecha_calculo
+        ) VALUES (
+            NEW.estudiante_id,
+            v_periodo_acad_id,
+            v_indice_periodo,
+            v_indice_global,
+            NOW()
+        );
+    ELSE
+        UPDATE Indices_Estudiantes 
+        SET 
+            indice_periodo = v_indice_periodo,
+            indice_global = v_indice_global,
+            fecha_calculo = NOW()
+        WHERE estudiante_id = NEW.estudiante_id 
+          AND periodo_acad_id = v_periodo_acad_id;
+    END IF;
+    
+END$$
 
 
 DELIMITER ;
