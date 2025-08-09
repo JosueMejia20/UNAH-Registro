@@ -412,6 +412,18 @@ class Biblioteca
             echo "Error al obtener número de empleado: " . $e->getMessage();
         }
     }
+
+    public function obtenerNombreUsuario($idUsuario){
+        try {
+            $db = new DataBase();
+
+            $datos = $db->executeQuery("CALL ObtenerNombreUsuario($idUsuario)");
+
+            return $datos;
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
+        }
+    }
 }
 
 

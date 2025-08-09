@@ -73,6 +73,7 @@ DROP PROCEDURE IF EXISTS obtenerIntroduccionesPorDocente;
 DROP PROCEDURE IF EXISTS Insertar_Estudiantes_Secciones;
 DROP PROCEDURE IF EXISTS ObtenerClasePorSeccion;
 DROP PROCEDURE IF EXISTS ObtenerEstudiantesSeccionConNotas;
+DROP PROCEDURE IF EXISTS ObtenerNombreUsuario;
 
 
 
@@ -1723,6 +1724,19 @@ BEGIN
     ORDER BY p.apellido_completo, p.nombre_completo;
 END $$
 
+
+
+CREATE PROCEDURE ObtenerNombreUsuario(
+    IN p_usuario_id INT
+)
+BEGIN
+    SELECT 
+        p.nombre_completo,
+        p.apellido_completo
+    FROM Usuario u
+    INNER JOIN Persona p ON u.persona_id = p.dni
+    WHERE u.usuario_id = p_usuario_id;
+END $$
 
 
 

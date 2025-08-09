@@ -14,7 +14,8 @@ import {
     cargarRecursosEstudiante,
     filtroCursoEstudiantes,
     filtroCursoDocente,
-    getSugerencias
+    getSugerencias,
+    obtenerNombreUsuario
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
 import { UnahModal } from '../../components/modal.mjs';
@@ -42,6 +43,18 @@ function separarTags(cadena) {
         .split(',')
         .map(tag => tag.trim())
         .filter(tag => tag.length > 0);
+}
+
+// Funcion para el nombre de usuario
+const cargarNombreUsuario = async(id) => {
+    const datos = await obtenerNombreUsuario(id);
+
+    const nombreUsuario = document.getElementById('nombreUsuario');
+
+    const nombreCompleto = datos[0].nombre_completo + ' ' + datos[0].apellido_completo;
+    
+    nombreUsuario.textContent = nombreCompleto;
+
 }
 
 // ------------------- Subir recurso -------------------
@@ -446,6 +459,7 @@ function filtrarRecursos() {
 // ------------------- Inicialización -------------------
 window.onload = async function () {
     try {
+        await cargarNombreUsuario(usuarioId);
         if (rol == 2 || rol == 3) {
             await cargarRecursosDetalle();
             await cargarFiltroCursos();

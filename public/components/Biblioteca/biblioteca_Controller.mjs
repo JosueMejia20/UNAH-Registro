@@ -48,6 +48,17 @@ export const getSugerencias = async (tipo) => {
   }
 };
 
+export const obtenerNombreUsuario = async (idUsuario) => {
+  try {
+    const response = await fetch(`${BASE_URL}/get/nombreUsuario/index.php/${idUsuario}`);
+    if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error(`Error obteniendo ${tipo}:`, error);
+    return [];
+  }
+};
+
 export const cargarClasesDocente = async (idDocente) => {
   try {
     const response = await fetch(`${BASE_URL}/get/clasesDocente/index.php/${idDocente}`);

@@ -37,8 +37,8 @@
              <div class="collapse navbar-collapse" id="navbarNav">
                  <ul class="navbar-nav ms-auto">
                      <li class="nav-item dropdown">
-                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                             <i id="nombreUsuario" class="bi bi-person-circle me-1"></i>Prof. Carlos Méndez
+                         <a id="nombreUsuario" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                             <i class="bi bi-person-circle me-1"></i>Prof. Carlos Méndez
                          </a>
                          <ul class="dropdown-menu dropdown-menu-end">
                              <li><a class="dropdown-item" href="../../../index.php"><i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión</a></li>
