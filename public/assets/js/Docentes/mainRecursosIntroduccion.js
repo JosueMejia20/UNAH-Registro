@@ -27,53 +27,161 @@ import {
     obtenerInfoAsignatura
 } from '../../../../components/Docentes/asignaturaDocente.mjs';
 
+import {
+    obtenerIntroduccionPorDocente,
+    insertarIntroduccionClase
+} from '../../../../components/Docentes/introduccionClase_Controller.mjs';
+
 const idDocente = await obtenerNumeroEmpleado(usuarioId);
 
 const cargarDatosDocente = async () => {
     const datos = await obtenerInfoDocente(idDocente);
     const foto = await obtenerFotoDocente(idDocente);
 
-    
+
     const nombreDocente = document.getElementById('nombreDocente');
 
     nombreDocente.innerHTML = `${datos[0].nombre_completo}`;
 }
 
+/*
+async function subirArchivos(event, idAsignatura) {
+    event.preventDefault();
 
+    const form = event.target;
+    const URLvideo = form.querySelector('input[name="video"]').value.trim();
+    const pdf = form.querySelector('input[name="pdf"]').files[0];
+
+    if (!URLvideo || !pdf) {
+        alert('Coloca un video y un pdf. pedazo de mamahuevo. Cambiar esto por una modal');
+        return;
+    }
+
+    const formData = new FormData();
+    console.log(formData);
+}*/
+
+const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+});
+
+function combinarJSONs(introducciones, secciones) {
+    // Crear un Set con los seccion_id que tienen introducción subida
+    const seccionesConIntroduccion = new Set(
+        introducciones.map(item => item.seccion_id)
+    );
+
+    // Mapear el segundo JSON con solo id y subido
+    const resultado = secciones.map(seccion => ({
+        id: seccion.id,
+        subido: seccionesConIntroduccion.has(seccion.id)
+    }));
+
+    return resultado;
+}
 
 const cargarAsignaturaDocente = async () => {
     const datos = await obtenerInfoAsignatura(idDocente);
-    console.log(datos)
+    const introducciones = await obtenerIntroduccionPorDocente(idDocente);
+    //console.log(datos);
+    const jsonRecursosSubidos = combinarJSONs(introducciones, datos);
+    console.log(jsonRecursosSubidos);
     const tablaAsignaturas = document.getElementById("tabla-clases")
     tablaAsignaturas.innerHTML = ""
     datos.forEach(asignatura => {
 
-        /*
+
         const fila = document.createElement("tr");
 
-        const botonVer = document.createElement("button");
-        botonVer.textContent = "Ver Lista";
-        botonVer.classList.add("action-btn");
-        botonVer.addEventListener("click", () => {
-            window.location.href = `lista_estudiantes.php?idSeccion=${asignatura.id}`;
-        });
+        const estadoSubida = jsonRecursosSubidos.find(item => item.id === asignatura.id);
+        const yaSubido = estadoSubida ? estadoSubida.subido : false;
+
+        let botonHTML = '';
+
+        console.log(yaSubido);
+
+        if (yaSubido) {
+            //CONSIDERAR CAMBIARLO POR UN BOTON PARA EDITAR
+            botonHTML = `<button class="action-btn" disabled style="background-color: gray; cursor: not-allowed;">Ya Subido</button>`;
+
+        } else {
+            botonHTML = `<button class="action-btn btn-approve subir-btn" data-asignatura="${asignatura.id}" type="button">Subir</button>`;
+        }
+
+
 
         fila.innerHTML = `
-        <td>${asignatura.codigo_clase}</td>
-        <td>${asignatura.nombre_clase}</td>
-        <td>${asignatura.departamento_clase}</td>
-        <td>${asignatura.codigo_seccion}</td>
-        <td></td>
-        <td><button class="action-btn">Descargar</button></td>
-`;
-        fila.children[4].appendChild(botonVer);
+            <td>${asignatura.nombre_clase}</td>
+            <td>${asignatura.codigo_seccion}</td>
+            <td>
+                <input type="url" name="video" placeholder="Enlace de YouTube" data-asignatura="${asignatura.id}" required>
+            </td>
+            <td>
+                <input type="file" name="pdf" accept="application/pdf" data-asignatura="${asignatura.id}" required>
+            </td>
+            <td>
+                ${botonHTML}
+            </td>
+        `;
+
+        if (!yaSubido) {
+            const boton = fila.querySelector('.subir-btn');
+            boton.addEventListener('click', async (event) => {
+                const fila = event.target.closest('tr');
+                const URLvideo = fila.querySelector('input[name="video"]').value.trim();
+                const pdf = fila.querySelector('input[name="pdf"]').files[0];
+
+                if (!URLvideo || !pdf) {
+                    alert('Coloca un video y un pdf. pedazo de mamahuevo. Cambiar esto por una modal');
+                    return;
+                }
+
+                console.log('ID Asignatura:', asignatura.id);
+                console.log('URL Video:', URLvideo);
+                console.log('PDF:', pdf);
+
+                //logica para subir archivos
+
+                const datosJSON = {};
+
+                const base64PDF = await toBase64(pdf);
+
+                datosJSON["idSeccion"] = asignatura.id;
+                datosJSON["linkVideo"] = URLvideo
+                datosJSON["base64PDF"] = base64PDF;
+
+                console.log(datosJSON);
+
+                try {
+                    const response = await insertarIntroduccionClase(datosJSON);
+                    //const resultado = await response.json();
+
+                    if (response.success) {
+                        alert('Recurso subido correctamente. Hacer modal aqui');
+                        location.reload();
+                    } else {
+                        alert('Error al subir recurso');
+                    }
+                } catch (error) {
+                    alert('Error de conexión al subir recurso');
+                }
+
+
+            });
+        }
+
+
         tablaAsignaturas.appendChild(fila);
 
-        */
+
     })
 }
 
-window.onload = function(){
+window.onload = function () {
     cargarDatosDocente();
+    cargarAsignaturaDocente();
 }
 

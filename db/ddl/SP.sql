@@ -69,6 +69,7 @@ DROP PROCEDURE IF EXISTS ObtenerEstudiantesPorSeccion;
 DROP PROCEDURE IF EXISTS GetClasesPorEstudiante;
 DROP PROCEDURE IF EXISTS getTitulosRecurso;
 DROP PROCEDURE IF EXISTS getAutoresRecurso;
+DROP PROCEDURE IF EXISTS obtenerIntroduccionesPorDocente;
 
 
 
@@ -1630,6 +1631,22 @@ END $$
 CREATE PROCEDURE getAutoresRecurso()
 BEGIN
     SELECT DISTINCT nombre_completo FROM Autores ORDER BY nombre_completo;
+END $$
+
+
+CREATE PROCEDURE obtenerIntroduccionesPorDocente(
+    IN p_docente_id INT
+)
+BEGIN
+    SELECT 
+        ic.id,
+        ic.seccion_id,
+        ic.video
+    FROM Introduccion_Clase ic
+    INNER JOIN Seccion s ON ic.seccion_id = s.id
+    INNER JOIN Periodo_Academico pa ON s.periodo_acad_id = pa.id
+    WHERE s.docente_id = p_docente_id
+      AND CURDATE() BETWEEN pa.fecha_inicio AND pa.fecha_fin;
 END $$
 
 

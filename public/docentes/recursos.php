@@ -48,6 +48,7 @@ if (!isset($_SESSION['usuario_id'])) {
       <thead>
         <tr>
           <th>Nombre de Clase</th>
+          <th>Codigo Seccion</th>
           <th>Video de Introduccion</th>
           <th>PDF de Introduccion</th>
           <th>Subir Recursos</th>

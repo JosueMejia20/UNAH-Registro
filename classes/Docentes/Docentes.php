@@ -167,6 +167,16 @@ class Docentes
             return false;
         }
     }
+
+    public function obtenerIntroduccionesPorDocente($idDocente){
+        try {
+            $db = new DataBase();
+            $datos = $db->executeQuery("CALL obtenerIntroduccionesPorDocente($idDocente)");
+            return $datos;
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
+        }
+    }
 }
 
 // prueba
