@@ -256,6 +256,10 @@ const inicializarVistaMatricula = async () => {
     });
   };
 
+  //Aqui insertar la verificacion por fecha de matricula.
+  // if(verificar fecha actual con la que vamos a traer de la base, que tenga valor true){
+  //    if(idestudiante){fdsfds lo mismo}   
+  //} else{ al select ponerle que la fecha de matriucla no esta activa }
   if (idEstudiante) {
     const departamentos = await obtenerDepartamentosPorClases('20201003849');
     limpiarSelect(selectClasificacion);
