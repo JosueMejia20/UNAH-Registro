@@ -37,7 +37,7 @@
           </div>
           <div class="info-perfil">
             <p class="titulo">Lista de Estudiantes</p>
-            <p class="nombre">Ricardo Figueroa</p>
+            <p class="nombre"></p>
           </div>
         </div>
         

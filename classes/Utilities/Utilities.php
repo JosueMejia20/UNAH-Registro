@@ -33,7 +33,8 @@ class Utilities
         return $binario !== false ? $binario : null;
     }
 
-    public static function obtenerBase64(string $binario){
+    public static function obtenerBase64(string $binario)
+    {
         $base64 = base64_encode($binario);
 
         return $base64;
@@ -47,11 +48,11 @@ class Utilities
         try {
             // Configuración del servidor SMTP
             $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';      
+            $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
             $mail->Username   = 'unahcorreos@gmail.com';    // Correo remitente
             $mail->Password   = 'nupu xtow fkav gkoy';            // Contraseña del correo
-            $mail->SMTPSecure = 'tls';                      
+            $mail->SMTPSecure = 'tls';
             $mail->Port       = 587;                        // 587 para TLS
 
             // Datos del mensaje
@@ -78,7 +79,7 @@ class Utilities
                                         <tr>
                                             <td style="padding: 30px; text-align: center;">
                                                 <img src="cid:UNAH-logo" alt="UNAH" width="80" style="margin-bottom: 20px;">
-                                                <h2 style="color: #333333;">'.$mensaje.'</h2>
+                                                <h2 style="color: #333333;">' . $mensaje . '</h2>
                                                 <p style="font-size: 12px; color: #999999; margin-top: 30px;">
                                                     Atentamente: UNAH<br>
                                                 </p>
@@ -99,16 +100,17 @@ class Utilities
             $mail->Body    = $html;
 
             $mail->send();
-         //   echo 'Mensaje enviado correctamente';
+            //   echo 'Mensaje enviado correctamente';
             return true;
         } catch (Exception $e) {
-        //    echo "Error al enviar el mensaje: {$e->getMessage()}";
+            //    echo "Error al enviar el mensaje: {$e->getMessage()}";
             return false;
         }
     }
 
-    public static function login(string $username, string $password){
-        try{
+    public static function login(string $username, string $password)
+    {
+        try {
             $db = new DataBase();
             $pdo = $db->connect();
 
@@ -123,12 +125,12 @@ class Utilities
             $fila = $stmt->fetch(PDO::FETCH_ASSOC);
 
             return $fila['resultado'];
-        } catch(PDOException $e){
-            return "Error en la base de datos: ".$e->getMessage();
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
         }
     }
 
-    public function crearCSV(string $encabezado, array $data, string $ruta):bool
+    public function crearCSV(string $encabezado, array $data, string $ruta): bool
     {
         $archivo = fopen($ruta, 'w');
         if (!$archivo) {
@@ -149,7 +151,8 @@ class Utilities
         return true;
     }
 
-    public function csvGenerarInscripcionesAceptadas() {
+    public function csvGenerarInscripcionesAceptadas()
+    {
         try {
             $db = new DataBase();
             $pdo = $db->connect();
@@ -186,17 +189,18 @@ class Utilities
             $encabezado = "dni,tipoExamen,resultado";
             $rutaArchivo = "../temp/postulantes_resultados.csv";
 
-            if(self::crearCSV($encabezado, $contenido, $rutaArchivo)) {
+            if (self::crearCSV($encabezado, $contenido, $rutaArchivo)) {
                 echo "csv creado exitosamente en: $rutaArchivo";
-            }else {
+            } else {
                 echo "error al crear csv";
             }
-        }catch (PDOException $e) {
-            return "Error en la base de datos: ".$e->getMessage();
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
         }
     }
 
-    public static function insertarResultados() {
+    public static function insertarResultados()
+    {
         $db = new DataBase();
         $pdo = $db->connect();
         $archivoCSV = fopen("../temp/postulantes_resultados.csv", "r");
@@ -233,5 +237,24 @@ class Utilities
         } else {
             echo "No se pudo abrir el archivo CSV.";
         }
+    }
+
+    public static function CSVEstudiantesSeccion(array $datos, array $encabezado)
+    {
+        $f = fopen('php://temp', 'w');
+
+        fputcsv($f, $encabezado);
+
+        foreach ($datos as $fila) {
+            fputcsv($f, $fila);
+        }
+
+        rewind($f);
+
+        $csv = stream_get_contents($f);
+
+        fclose($f);
+
+        return $csv;
     }
 }

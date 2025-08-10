@@ -38,7 +38,7 @@ if (!isset($_SESSION['usuario_id'])) {
       </div>
       <div class="info-perfil">
         <p class="titulo">Asignaturas</p>
-        <p id="nombreDocente" class="nombre">Ricardo Figueroa</p>
+        <p id="nombreDocente" class="nombre"></p>
       </div>
     </div>
 
@@ -54,18 +54,6 @@ if (!isset($_SESSION['usuario_id'])) {
         </tr>
       </thead>
       <tbody id="tablaAsignaturas">
-        <tr>
-          <td>IS111</td>
-          <td>Programacion 2</td>
-          <td>Ingenieria</td>
-          <td>0900</td>
-          <td>
-            <a href="lista_estudiantes.php">
-              <button class="action-btn">Ver Lista</button>
-            </a>
-          </td>
-          <td><button class="action-btn">Descargar</button></td>
-        </tr>
       </tbody>
     </table>
   </div>
