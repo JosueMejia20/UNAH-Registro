@@ -1,20 +1,3 @@
-// -------- Controlador del Chat / Recursos Biblioteca --------
-import {
-    cargarTipoRecurso,
-    subirRecurso,
-    cargarClasesDocente,
-    cargarRecursos,
-    recursoDetalle,
-    recursoPortadaArchivo,
-    editarRecurso,
-    eliminarRecurso,
-    validarCredenciales,
-    obtenerIdEstudiante,
-    obtenerIdDocente,
-    cargarRecursosEstudiante,
-    cargarClasesEstudiantes
-} from '../../../components/Biblioteca/biblioteca_Controller.mjs';
-
 import { UnahModal } from '../../components/modal.mjs';
 customElements.define("unah-modal", UnahModal);
 
@@ -22,312 +5,26 @@ customElements.define("unah-modal", UnahModal);
 const modal = document.querySelector('unah-modal');
 const overlayCarga = document.getElementById('overlayCarga');
 
-let idDocente = null;
-let idEstudiante = null;
+// ------------------- Autocompletado -------------------
 
-// Asignar IDs según rol
-if (rol === 1) {
-    idEstudiante = await obtenerIdEstudiante(usuarioId);
-}
-if (rol === 2 || rol === 3) {
-    idDocente = await obtenerIdDocente(usuarioId);
-}
+function llenarDatalist(id, valores) {
+    const datalist = document.getElementById(id);
+    console.log(datalist);
+    datalist.innerHTML = '';
+    valores.forEach(valor => {
+        if (valor) {
+            console.log(valor);
+            const option = document.createElement('option');
+            if (id === 'listaAutores') {
+                option.value = valor.nombre_completo;
+            } else {
+                option.value = valor.titulo;
+            }
 
-// ------------------- Función para separar tags -------------------
-function separarTags(cadena) {
-    if (!cadena) return [];
-    return cadena
-        .split(',')
-        .map(tag => tag.trim())
-        .filter(tag => tag.length > 0);
-}
-
-// ------------------- Subir recurso -------------------
-const btnSubirRecurso = document.getElementById('subirRecursoModalBtn');
-if (rol == 1 || rol == 2) {
-    btnSubirRecurso.style = "display: none";
-}
-const formSubirRecurso = document.getElementById('formSubirRecurso');
-
-btnSubirRecurso?.addEventListener('click', () => {
-    const modalBootstrap = new bootstrap.Modal(document.getElementById('subirRecursoModal'));
-    modalBootstrap.show();
-    cargarTipoRecurso();
-    cargarClasesDocente(idDocente);
-});
-
-const toBase64 = file => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-});
-
-formSubirRecurso?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    overlayCarga.style.display = 'flex';
-
-    const formData = new FormData(formSubirRecurso);
-    const datosJSON = {};
-    formData.append('idDocente', idDocente);
-
-    for (const [key, value] of formData.entries()) {
-        if (value instanceof File && value.name) {
-            datosJSON[key] = await toBase64(value);
-        } else {
-            datosJSON[key] = (key === 'autores' || key === 'tags') ? separarTags(value) : value;
-        }
-    }
-
-    try {
-        const response = await subirRecurso(datosJSON);
-        overlayCarga.style.display = 'none';
-
-        if (response.success) {
-            // Cerrar modal antes de notificación
-            const subirRecursoModal = bootstrap.Modal.getInstance(document.getElementById('subirRecursoModal'));
-            subirRecursoModal?.hide();
-
-            modal.show('Recurso subido correctamente.', () => {
-                location.reload();
-            });
-        } else {
-            modal.show('Error al subir el recurso.');
-        }
-    } catch (error) {
-        overlayCarga.style.display = 'none';
-        modal.show('Error de conexión al subir el recurso.');
-    }
-});
-
-// ------------------- Confirmar eliminación de recurso -------------------
-const confirmarEliminacion = async (id) => {
-    const modalBootstrap = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
-    modalBootstrap.show();
-
-    const btnConfirmar = document.getElementById('confirmarEliminarBtn');
-
-    // Evitar múltiples listeners
-    btnConfirmar.replaceWith(btnConfirmar.cloneNode(true));
-    const nuevoBtn = document.getElementById('confirmarEliminarBtn');
-
-    nuevoBtn.addEventListener("click", async () => {
-        overlayCarga.style.display = 'flex';
-
-        const respuesta = await eliminarRecurso(id);
-
-        overlayCarga.style.display = 'none';
-        modalBootstrap.hide();
-
-        if (respuesta.success) {
-            modal.show("Recurso eliminado correctamente.", () => location.reload());
-        } else {
-            modal.show(respuesta.mensaje || "No se pudo eliminar.");
+            datalist.appendChild(option);
         }
     });
 }
-
-// ------------------- Cargar recursos (Docente/Estudiante) -------------------
-const cargarRecursosDetalle = async () => {
-    const misRecursos = await cargarRecursos(idDocente);
-    const gridMisRecursos = document.getElementById('gridRecursos');
-
-    if (!misRecursos) return;
-    if (misRecursos.length > 0) {
-        gridMisRecursos.innerHTML = '';
-        misRecursos.forEach(recurso => {
-            const tagsArray = separarTags(recurso.tags);
-            const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
-
-            let botonesEliminarModificar = '';
-            if (rol == 3) {
-                botonesEliminarModificar = `
-                 <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
-                     <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
-                         <i class="bi bi-pencil"></i>
-                     </button>
-                     <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center eliminar-btn" style="width: 30px; height: 30px;" data-id-eliminar="${recurso.id}">
-                         <i class="bi bi-trash"></i>
-                     </button>
-                 </div>`;
-            }
-
-            const html = `
-                <div id="colRecurso" class="col">
-                    <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
-                        <div class="portada-container">
-                            <img src="data:image/jpeg;base64,${recurso.portada}">
-                            ${botonesEliminarModificar}
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${recurso.titulo}</h5>
-                            <p class="card-text small text-muted">${recurso.autores}</p>
-                            <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
-                            <p class="card-text small text-truncate">${recurso.descripcion}</p>
-                            <div class="border-top pt-2 mt-2">
-                                <div class="mb-2">${tagsHTML}</div>
-                                <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
-                                    <i class="bi bi-eye me-1"></i> Ver documento
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-            gridMisRecursos.innerHTML += html;
-        });
-
-        document.querySelectorAll('.ver-recurso').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const id = this.getAttribute('data-id');
-                verRecurso(id);
-            });
-        });
-        document.querySelectorAll('.eliminar-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const id = this.getAttribute('data-id-eliminar');
-                confirmarEliminacion(id);
-            });
-        });
-        document.querySelectorAll('.editar-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const id = this.getAttribute('data-id-editar');
-                cargarDatosEdicion(id);
-            });
-        });
-
-    } else {
-        gridMisRecursos.innerHTML = '';
-    }
-};
-
-const cargarRecursosDetalleEstudiante = async () => {
-    const misRecursos = await cargarRecursosEstudiante(idEstudiante);
-    const gridMisRecursos = document.getElementById('gridRecursos');
-
-    if (!misRecursos) return;
-    if (misRecursos.length > 0) {
-        gridMisRecursos.innerHTML = '';
-        misRecursos.forEach(recurso => {
-            const tagsArray = separarTags(recurso.tags);
-            const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
-
-            const html = `
-                <div id="colRecurso" class="col">
-                    <div class="card h-100 shadow-sm recurso-card" data-cursos="1, 3" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
-                        <div class="portada-container">
-                            <img src="data:image/jpeg;base64,${recurso.portada}">
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${recurso.titulo}</h5>
-                            <p class="card-text small text-muted">${recurso.autores}</p>
-                            <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
-                            <p class="card-text small text-truncate">${recurso.descripcion}</p>
-                            <div class="border-top pt-2 mt-2">
-                                <div class="mb-2">${tagsHTML}</div>
-                                <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
-                                    <i class="bi bi-eye me-1"></i> Ver documento
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-            gridMisRecursos.innerHTML += html;
-        });
-
-        document.querySelectorAll('.ver-recurso').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const id = this.getAttribute('data-id');
-                verRecurso(id);
-            });
-        });
-    } else {
-        gridMisRecursos.innerHTML = '';
-    }
-};
-
-// ------------------- Ver recurso -------------------
-const verRecurso = async (id) => {
-    const recurso = await recursoDetalle(id);
-    document.getElementById('visorPdfModalTitle').textContent = recurso[0].titulo;
-    document.getElementById('pdfMetadata').textContent = `Autores: ${recurso[0].autores}`;
-    document.getElementById('pdfViewer').src = `data:application/pdf;base64,${recurso[0].archivo}#toolbar=0&navpanes=0`;
-    document.getElementById('pdfViewer').setAttribute('sandbox', 'allow-scripts allow-same-origin');
-    document.getElementById('pdfViewer').setAttribute('disable-download', "");
-
-    const modalBootstrap = new bootstrap.Modal(document.getElementById('visorPdfModal'));
-    modalBootstrap.show();
-};
-
-// ------------------- Editar recurso -------------------
-const editarFormulario = async (form, id) => {
-    form?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        overlayCarga.style.display = 'flex';
-
-        const formData = new FormData(form);
-        const datosJSON = {};
-        formData.append('idDocente', idDocente);
-
-        const portadaArchivo = await recursoPortadaArchivo(id);
-        const portada = formData.get('edit_portada');
-        const archivo = formData.get('edit_archivo');
-
-        if (portada.size === 0) {
-            formData.set('edit_portada', portadaArchivo[0].portada);
-        }
-        if (archivo.size === 0) {
-            formData.set('edit_archivo', portadaArchivo[0].archivo);
-        }
-
-        for (const [key, value] of formData.entries()) {
-            if (value instanceof File && value.name) {
-                datosJSON[key] = await toBase64(value);
-            } else {
-                datosJSON[key] = (key == 'edit_autores' || key == 'edit_tags') ? separarTags(value) : value;
-            }
-        }
-
-        try {
-            const response = await editarRecurso(datosJSON);
-            overlayCarga.style.display = 'none';
-
-            if (response.success) {
-                // Cerrar modal antes de notificación
-                const editarRecursoModal = bootstrap.Modal.getInstance(document.getElementById('editarRecursoModal'));
-                editarRecursoModal?.hide();
-
-                modal.show('Recurso actualizado correctamente.', () => {
-                    location.reload();
-                });
-            } else {
-                modal.show('Error al actualizar recurso.');
-            }
-        } catch (error) {
-            overlayCarga.style.display = 'none';
-            modal.show('Error de conexión al actualizar recurso.');
-        }
-    });
-};
-
-const cargarDatosEdicion = async (id) => {
-    const formEditarRecurso = document.getElementById('formEditarRecurso');
-    const modalBootstrap = new bootstrap.Modal(document.getElementById('editarRecursoModal'));
-    modalBootstrap.show();
-    cargarTipoRecurso();
-    cargarClasesDocente(idDocente);
-
-    const recurso = await recursoDetalle(id);
-
-    document.getElementById('edit_titulo').value = recurso[0].titulo;
-    document.getElementById('edit_autores').value = recurso[0].autores;
-    document.getElementById('edit_anio').value = recurso[0].anio;
-    document.getElementById('edit_categoria').value = recurso[0].categoria;
-    document.getElementById('edit_descripcion').value = recurso[0].descripcion;
-    document.getElementById('edit_tags').value = recurso[0].tags;
-    document.getElementById('recurso_id').value = id;
-
-    editarFormulario(formEditarRecurso, id);
-};
 
 // ------------------- Cargar filtro de cursos -------------------
 const cargarFiltroCursos = async () => {
@@ -340,27 +37,26 @@ const cargarFiltroCursos = async () => {
     let clases = [];
 
     if (rol === 1 && idEstudiante) {
-        clases = await cargarClasesEstudiantes(idEstudiante); // Para estudiantes
+        clases = await filtroCursoEstudiantes(idEstudiante); // Devuelve nombre_clase
     } else if ((rol === 2 || rol === 3) && idDocente) {
-        clases = await cargarClasesDocente(idDocente); // Para docentes o jefes
+        clases = await filtroCursoDocente(idDocente); // Devuelve nombre_clase
     }
 
     console.log('Clases cargadas para filtro:', clases);
 
-    // Agregar las clases como opciones
+    // Agregar las clases como opciones (usamos nombre_clase como value)
     clases?.forEach(clase => {
         const option = document.createElement('option');
-        option.value = clase.clase_id; // Usamos clase_id según tu consola
-        option.textContent = clase.nombre_clase; // Usamos nombre_clase según tu consola
+        option.value = clase.nombre_clase; // Usamos nombre de la clase como valor
+        option.textContent = clase.nombre_clase;
         selectFiltro.appendChild(option);
     });
 };
 
 
-
 // ------------------- Filtrar recursos -------------------
 function filtrarRecursos() {
-    const filtroCurso = document.getElementById('cursos')?.value || '';
+    const filtroCurso = document.getElementById('filtroCurso')?.value.trim() || '';
     const filtroCategoria = document.getElementById('filtroCategoria')?.value.toLowerCase() || '';
     const busqueda = document.getElementById('busquedaRecursos')?.value.toLowerCase() || '';
 
@@ -368,11 +64,16 @@ function filtrarRecursos() {
     let resultadosEncontrados = false;
 
     recursos.forEach(recurso => {
-        const cursos = recurso.getAttribute('data-cursos')?.split(',').map(c => c.trim()) || [];
+        const cursosData = recurso.getAttribute('data-cursos') || '';
+        // separar los nombres de las clases y limpiar espacios
+        const cursos = cursosData.split(',').map(c => c.trim());
+
         const categoria = recurso.getAttribute('data-categoria')?.toLowerCase() || '';
         const textoBusqueda = recurso.getAttribute('data-busqueda')?.toLowerCase() || '';
 
+        // Si filtroCurso está vacío (""), mostramos todo; si no, chequeamos si incluye la clase filtrada
         const coincideCurso = filtroCurso === '' || cursos.includes(filtroCurso);
+
         const coincideCategoria = filtroCategoria === '' || categoria === filtroCategoria;
         const coincideBusqueda = busqueda === '' || textoBusqueda.includes(busqueda);
 
@@ -390,22 +91,38 @@ function filtrarRecursos() {
     }
 }
 
-
-
-
 // ------------------- Inicialización -------------------
 window.onload = async function () {
     try {
+        cargarNombreUsuario(usuarioId);
         if (rol == 2 || rol == 3) {
             await cargarRecursosDetalle();
             await cargarFiltroCursos();
+            // Autores
+            const autores = await getSugerencias('autores');
+            llenarDatalist('listaAutores', autores);
+
+            // Títulos
+            const titulos = await getSugerencias('titulos');
+            llenarDatalist('listaTitulos', titulos);
         } else {
             await cargarRecursosDetalleEstudiante();
-            await cargarFiltroCursos(); 
+            await cargarFiltroCursos();
         }
 
+        //PDF
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function (e) {
+            // Ctrl+P (imprimir), Ctrl+S (guardar), Ctrl+U (ver código fuente)
+            if ((e.ctrlKey || e.metaKey) && ['p', 's', 'u'].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+                modal.show('Esta acción está deshabilitada.');
+            }
+        });
+
+
         // Listeners de filtro
-        document.getElementById('cursos')?.addEventListener('change', filtrarRecursos);
+        document.getElementById('filtroCurso')?.addEventListener('change', filtrarRecursos);
         document.getElementById('filtroCategoria')?.addEventListener('input', filtrarRecursos);
         document.getElementById('busquedaRecursos')?.addEventListener('input', filtrarRecursos);
     } catch (error) {
