@@ -36,7 +36,9 @@
         <div class="contenedor_info">
           <div class="izquierda">
             <div class="perfil-info">
-              <h3>Información Personal</h3>
+              <div class="izquierda-header">
+                <h4>Información Personal</h4>
+              </div>
               <p><span class="label">ID de docente:</span> 10234</p>
               <p><span class="label">Correo:</span> roberto.fig@unah.hn</p>
               <p><span class="label">Cargo:</span> Coordinador</p>
@@ -47,7 +49,9 @@
 
           <div class="derecha">
             <div class="perfil-info">
-              <h3>Información Academica</h3>
+              <div class="derecha-header">
+                <h4>Información Academica</h4>
+              </div>
               <p><span class="label">Facultad:</span> Ingenieria</p>
               <p><span class="label">Nivel Academico:</span> Ingeniero en Sistemas</p>
               <p><span class="label">Años de experiencia:</span> 5 Años</p>

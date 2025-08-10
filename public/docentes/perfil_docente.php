@@ -52,7 +52,9 @@
     <div class="contenedor_info">
       <div class="izquierda">
         <div class="perfil-info">
-          <h3>Información Personal</h3>
+          <div class="izquierda-header">
+              <h4>Información Personal</h4>
+          </div>
           <p id="numero-empleado"></p>
           <p id="correo-institucional"></p>
           <p id="cargos"></p>
@@ -63,7 +65,9 @@
 
       <div class="derecha">
         <div class="perfil-info">
-          <h3>Información Academica</h3>
+          <div class="derecha-header">
+              <h4>Información Academica</h4>
+          </div>
           <p id="facultad"></p>
           <p id="departamento"></p>
         </div>
