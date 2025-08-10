@@ -76,6 +76,9 @@ DROP PROCEDURE IF EXISTS ObtenerEstudiantesSeccionConNotas;
 DROP PROCEDURE IF EXISTS ObtenerNombreUsuario;
 DROP PROCEDURE IF EXISTS VerificarUsuarioMusicaArte;
 DROP PROCEDURE IF EXISTS VerificarDiasMatriculaEstudiante;
+DROP PROCEDURE IF EXISTS VerificarConflictoHorarios;
+DROP PROCEDURE IF EXISTS VerificarEvaluacionExistente;
+DROP PROCEDURE IF EXISTS ObtenerNotaEstudianteSimple;
 
 
 
@@ -1554,11 +1557,12 @@ BEGIN
         c.codigo,
         c.unidades_valorativas
     FROM (
-        -- Clases ya cursadas
+        -- Clases ya cursadas aprobadas
         SELECT s.clase_id
         FROM Estudiantes_Secciones es
         INNER JOIN Seccion s ON es.seccion_id = s.id
         WHERE es.estudiante_id = p_numero_cuenta
+		AND es.estado_clase_id = 1
 
         UNION
 
@@ -1764,11 +1768,11 @@ BEGIN
     DECLARE v_departamento_id INT DEFAULT NULL;
     
     IF p_tipo_usuario = 0 THEN
-        -- Revisor: no puede loguearse
+        -- Revisor: no puede logearse
         SET v_resultado = FALSE;
         
     ELSEIF p_tipo_usuario = 1 THEN
-        -- Estudiante: verificar si pertenece a carrera de música (ID 24)
+        -- Estudiante: verifica si pertenece a carrera de musica (ID 24)
         SELECT e.carrera_id INTO v_carrera_id
         FROM Usuario u
         INNER JOIN Estudiante e ON u.usuario_id = e.usuario_id
@@ -1779,7 +1783,7 @@ BEGIN
         END IF;
         
     ELSEIF p_tipo_usuario IN (2, 3) THEN
-        -- Docente/Coordinador: verificar si pertenece a departamento de arte (ID 21)
+        -- Docente/Coordinador: verifica si pertenece a departamento de arte (ID 21)
         SELECT d.departamento_id INTO v_departamento_id
         FROM Usuario u
         INNER JOIN Docente d ON u.usuario_id = d.usuario_id
@@ -1791,7 +1795,7 @@ BEGIN
         
     END IF;
     
-    -- Retornar solo el resultado
+    -- Retorna solo el resultado
     SELECT v_resultado AS puede_acceder;
     
 END $$
@@ -1803,24 +1807,23 @@ BEGIN
     DECLARE v_indice_global DECIMAL(5,2) DEFAULT 0.00;
     DECLARE v_periodo_matricula_id INT DEFAULT NULL;
     
-    -- Obtener el período de matrícula actual basado en la fecha actual
+    -- Obtener el periodo de matrícula actual basado en la fecha actual
     SELECT pm.id INTO v_periodo_matricula_id
     FROM Periodo_Matricula pm
     WHERE CURDATE() BETWEEN pm.fecha_inicio AND pm.fecha_fin
     LIMIT 1;
-    
-    -- Verificar si existe un período de matrícula activo
+
     IF v_periodo_matricula_id IS NULL THEN
         SELECT 'No hay período de matrícula activo' AS mensaje;
     ELSE
-        -- Obtener el índice global más reciente del estudiante
+        -- Obtiene el indice global mas reciente del estudiante
         SELECT COALESCE(ie.indice_global, 0.00) INTO v_indice_global
         FROM Indices_Estudiantes ie
         WHERE ie.estudiante_id = p_estudiante_id
         ORDER BY ie.periodo_acad_id DESC
         LIMIT 1;
         
-        -- Retornar los días de matrícula con la verificación
+        -- Retorna los dias de matricula con la verificacion
         SELECT 
             mi.dia,
             mi.indice_minimo,
@@ -1837,6 +1840,102 @@ BEGIN
         WHERE pm.id = v_periodo_matricula_id
         ORDER BY mi.dia;
     END IF;
+END $$
+
+
+
+CREATE PROCEDURE VerificarConflictoHorarios(
+    IN p_estudiante_id VARCHAR(11),
+    IN p_seccion_id INT,
+    OUT p_hay_conflicto BOOLEAN
+)
+BEGIN
+    DECLARE v_periodo_acad_id INT;
+    DECLARE v_hora_inicio_nueva TIME;
+    DECLARE v_hora_fin_nueva TIME;
+    DECLARE v_dias_nueva INT;
+    DECLARE v_conflictos INT DEFAULT 0;
+    
+    -- Obtiene informacion de la seccion que se quiere verificar
+    SELECT s.periodo_acad_id, s.hora_inicio, s.hora_fin, s.dias_id
+    INTO v_periodo_acad_id, v_hora_inicio_nueva, v_hora_fin_nueva, v_dias_nueva
+    FROM Seccion s
+    WHERE s.id = p_seccion_id;
+    
+    -- Verifica si se encontro la seccion
+    IF v_periodo_acad_id IS NULL THEN
+        SET p_hay_conflicto = NULL;
+    ELSE
+        -- Cuenta conflictos de horario con las secciones ya matriculadas del mismo periodo
+        SELECT COUNT(*) INTO v_conflictos
+        FROM Estudiantes_Matricula em
+        INNER JOIN Seccion s ON em.seccion_id = s.id
+        INNER JOIN Dias d1 ON s.dias_id = d1.id  -- seccion matriculada
+        INNER JOIN Dias d2 ON v_dias_nueva = d2.id  -- seccion nueva
+        WHERE em.estudiante_id = p_estudiante_id
+          AND em.periodo_acad_id = v_periodo_acad_id
+          AND (
+              -- Verifica si hay traslape de dias
+              (d1.nombre REGEXP 'Lu' AND d2.nombre REGEXP 'Lu') OR
+              (d1.nombre REGEXP 'Ma' AND d2.nombre REGEXP 'Ma') OR
+              (d1.nombre REGEXP 'Mi' AND d2.nombre REGEXP 'Mi') OR
+              (d1.nombre REGEXP 'Ju' AND d2.nombre REGEXP 'Ju') OR
+              (d1.nombre REGEXP 'Vi' AND d2.nombre REGEXP 'Vi')
+          )
+          AND (
+              -- Verifica traslape de horarios
+              (v_hora_inicio_nueva < s.hora_fin AND v_hora_fin_nueva > s.hora_inicio)
+          );
+        
+        -- Establece el resultado
+        IF v_conflictos > 0 THEN
+            SET p_hay_conflicto = TRUE;
+        ELSE
+            SET p_hay_conflicto = FALSE;
+        END IF;
+    END IF;
+    
+END $$
+
+
+
+CREATE PROCEDURE VerificarEvaluacionExistente(
+    IN p_estudiante_id VARCHAR(11),
+    IN p_seccion_id INT,
+    OUT p_existe_evaluacion BOOLEAN
+)
+BEGIN
+    DECLARE v_count INT DEFAULT 0;
+    
+    -- Cuenta registros existentes
+    SELECT COUNT(*) INTO v_count
+    FROM Evaluacion_Docente
+    WHERE estudiante_id = p_estudiante_id
+      AND seccion_id = p_seccion_id;
+    
+    -- Establece el resultado
+    IF v_count > 0 THEN
+        SET p_existe_evaluacion = TRUE;
+    ELSE
+        SET p_existe_evaluacion = FALSE;
+    END IF;
+    
+END $$
+
+
+CREATE PROCEDURE ObtenerNotaEstudianteSimple(
+    IN p_estudiante_id VARCHAR(11),
+    IN p_seccion_id INT,
+    OUT p_nota INT
+)
+BEGIN
+    -- Obtener la nota (sera NULL si no existe)
+    SELECT nota
+    INTO p_nota
+    FROM Estudiantes_Secciones
+    WHERE estudiante_id = p_estudiante_id
+      AND seccion_id = p_seccion_id;
+    
 END $$
 
 

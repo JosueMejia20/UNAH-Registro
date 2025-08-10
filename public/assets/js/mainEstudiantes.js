@@ -39,7 +39,8 @@ import {
   obtenerSeccionesActuales,
   cancelarSecciones,
   obtenerClasesEstudiante,
-  obtenerDiasMatriculaEstudiante
+  obtenerDiasMatriculaEstudiante,
+  verificarConflictoHorario
 } from '../../components/Estudiantes/matricula_Controller.mjs';
 
 let perfilGlobal = null;
@@ -349,6 +350,14 @@ const inicializarVistaMatricula = async () => {
   btnMatricular?.addEventListener("click", async () => {
     const estudiante = '20201003849';
     const horario = selectHorario.value;
+    const hayConflictoHorario = await verificarConflictoHorario(idEstudiante, horario);
+
+    console.log(hayConflictoHorario);
+
+    if(hayConflictoHorario === 1){
+      modal.show("Ya tiene una clase matriculada en ese horario");
+      return;
+    }
 
     if (!horario || horario.includes("Selecciona")) {
       modal.show("Debe seleccionar una sección");

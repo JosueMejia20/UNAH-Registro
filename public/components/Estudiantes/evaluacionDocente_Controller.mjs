@@ -13,3 +13,27 @@ export const subirEvaluacion = async (datosJson) => {
         return { success: false, mensaje: 'Error en la solicitud' };
     }
 };
+
+export const verificarEvaluacionExistente = async (idEstudiante, idSeccion) => {
+  try {
+    const response = await fetch(`${BASE_URL}/get/verificarEvaluacionExistente/index.php?idEstudiante=${idEstudiante}&idSeccion=${idSeccion}`);
+    if (!response.ok) throw new Error('Error al obtener materias');
+    return await response.json();
+  } catch (error) {
+    console.error('Error al cargar materias:', error);
+    return [];
+  }
+};
+
+export const obtenerNotaEstudiante = async (idEstudiante, idSeccion) => {
+  try {
+    const response = await fetch(`${BASE_URL}/get/obtenerNotaEstudianteSeccion/index.php?idEstudiante=${idEstudiante}&idSeccion=${idSeccion}`);
+    if (!response.ok) throw new Error('Error al obtener materias');
+    return await response.json();
+  } catch (error) {
+    console.error('Error al cargar materias:', error);
+    return [];
+  }
+};
+
+

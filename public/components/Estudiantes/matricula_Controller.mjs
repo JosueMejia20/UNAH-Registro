@@ -75,6 +75,19 @@ export const obtenerSeccionesActuales = async (matricula) => {
   }
 };
 
+export const verificarConflictoHorario = async (idEstudiante, idSeccion) => {
+    try {
+        const response = await fetch(`${API_BASE}/get/verificarConflictoHorario/index.php?idEstudiante=${idEstudiante}&idSeccion=${idSeccion}`);
+        if (!response.ok) throw new Error('Error al obtener materias');
+        return await response.json();
+  } catch (error) {
+        console.error('Error al cargar materias:', error);
+        return [];
+  }
+};
+
+
+
 // Cancelar secciones seleccionadas
 export const cancelarSecciones = async (idsSecciones, estudiante) => {
     try {

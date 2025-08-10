@@ -21,7 +21,9 @@ import {
 
 // -------- Controlador de EVALUACION DOCENTE --------
 import {
-    subirEvaluacion
+    subirEvaluacion,
+    verificarEvaluacionExistente,
+    obtenerNotaEstudiante
 } from '../../../components/Estudiantes/evaluacionDocente_Controller.mjs';
 
 // -------- Controlador de MATRÍCULA --------
@@ -119,19 +121,29 @@ window.abrirModalEvaluacion = async function (asignatura, docente, idSeccion) {
 const mostrarClasesEnDiv = async (idEstudiante) => {
     const materiasActuales = await obtenerMateriasActuales(idEstudiante);
 
-    materiasActuales.forEach(materia => {
+    for (const materia of materiasActuales) {
         const item = document.createElement("div");
         item.className = "list-group-item list-group-action";
 
+        console.log(materia);
 
-        /**
+        const resultadoVerificacion = await verificarEvaluacionExistente(idEstudiante, materia.seccion_id);
+        const notaSeccion = await obtenerNotaEstudiante(idEstudiante, materia.seccion_id) || null;
+
+
+        console.log(resultadoVerificacion);
+
+
+
+        let evaluada = false;
+
+        if (resultadoVerificacion == 1) {
+            evaluada = true;
+        } else {
+            evaluada = false;
+        }
         const estadoTexto = evaluada ? "Completada" : "Pendiente";
         const estadoClase = evaluada ? "text-success" : "text-warning";
-         */
-
-        const evaluada = false;
-        const estadoTexto = "Pendiente";
-        const estadoClase = "text-warning";
 
         // En los data-set poner el id de la seccion y el id del docente. Lo que esta en evaluaciones docente de la base de datos
         item.innerHTML = `
@@ -145,10 +157,17 @@ const mostrarClasesEnDiv = async (idEstudiante) => {
                 ? `<button class="btn btn-sm btn-outline-secondary mt-2">Evaluacion Realizada</button>`
                 : `<button class="btn btn-sm btn-unah mt-2 btn-evaluar"
                     onclick="abrirModalEvaluacion('${materia.nombre_clase}', '${materia.nombre_docente}', ${materia.seccion_id})">Realizar Evaluación</button>`}
-  `;
+  
+                <div class="d-flex align-items-center">
+                    ${evaluada && notaSeccion !== null
+                    ? `<span class="badge bg-primary me-2">Nota: ${notaSeccion}</span>`
+                    : ''
+                }
+  
+                    `;
 
         listaClases.appendChild(item);
-    });
+    }
 
 
 };

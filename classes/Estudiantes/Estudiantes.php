@@ -535,4 +535,69 @@ class Estudiantes
             return "Error en la base de datos: " . $e->getMessage();
         }
     }
+
+    public function verificarConflictoHorario($idEstudiante, $idSeccion){
+        try{
+            $db = new DataBase();
+            $pdo = $db->connect();
+
+            $stmt = $pdo->prepare("CALL VerificarConflictoHorarios(?, ?, @resultado)");
+
+            $stmt->execute([$idEstudiante, $idSeccion]);
+
+            $stmt->closeCursor();
+
+            $result = $pdo->query("SELECT @resultado as hay_conflicto")->fetch(PDO::FETCH_ASSOC);
+
+            //1 si hay conflicto, 0 si no lo hay
+            return (int)$result['hay_conflicto'];
+
+        } catch (PDOException $e) {
+            // Manejo de error
+            echo "Error al actualizar: " . $e->getMessage();
+        }
+    }
+
+    public function verificarEvaluacionExistente($idEstudiante, $idSeccion){
+        try{
+            $db = new DataBase();
+            $pdo = $db->connect();
+
+            $stmt = $pdo->prepare("CALL VerificarEvaluacionExistente(?, ?, @resultado)");
+
+            $stmt->execute([$idEstudiante, $idSeccion]);
+
+            $stmt->closeCursor();
+
+            $result = $pdo->query("SELECT @resultado as existe_evaluacion")->fetch(PDO::FETCH_ASSOC);
+
+            //1 si existe la evaluacion, 0 si no
+            return $result['existe_evaluacion'];
+
+        } catch (PDOException $e) {
+            // Manejo de error
+            echo "Error al actualizar: " . $e->getMessage();
+        }
+    }
+
+    public function obtenerNotaEstudianteSeccion($idEstudiante, $idSeccion){
+        try{
+            $db = new DataBase();
+            $pdo = $db->connect();
+
+            $stmt = $pdo->prepare("CALL ObtenerNotaEstudianteSimple(?, ?, @resultado)");
+
+            $stmt->execute([$idEstudiante, $idSeccion]);
+
+            $stmt->closeCursor();
+
+            $result = $pdo->query("SELECT @resultado as nota")->fetch(PDO::FETCH_ASSOC);
+
+            return $result['nota'];
+
+        } catch (PDOException $e) {
+            // Manejo de error
+            echo "Error al actualizar: " . $e->getMessage();
+        }
+    }
 }
