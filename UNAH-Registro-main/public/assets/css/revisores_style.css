@@ -1,0 +1,204 @@
+:root {
+            --unah-blue: #005F87;
+            --unah-blue-dark: #004a6a;
+            --vibrant-yellow: #FFC107;
+            --emerald-green: #28A745;
+            --coral-red: #FF6B6B;
+            --blue-gray: #E9ECEF;
+            --light-blue: #E3F2FD;
+        }
+
+        .revisor{
+            margin-top: 8%;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--blue-gray);
+        }
+        
+        .navbar {
+            background-color: var(--unah-blue);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            color: white;
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: none;
+        }
+        
+        .card-header {
+            background-color: var(--unah-blue);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: bold;
+        }
+        
+        .solicitud-info {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: var(--unah-blue);
+        }
+        
+        .document-viewer {
+            height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f9f9f9;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-unah {
+            background-color: var(--unah-blue);
+            color: white;
+        }
+        
+        .btn-unah:hover {
+            background-color: var(--unah-blue-dark);
+            color: white;
+        }
+        
+        .btn-accept {
+            background-color: var(--emerald-green);
+            color: white;
+        }
+        
+        .btn-reject {
+            background-color: var(--coral-red);
+            color: white;
+        }
+        
+        .status-badge {
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .status-pendiente {
+            background-color: #FFF3CD;
+            color: #856404;
+        }
+        
+        .status-aprobado {
+            background-color: #D4EDDA;
+            color: #155724;
+        }
+        
+        .status-rechazado {
+            background-color: #F8D7DA;
+            color: #721C24;
+        }
+        
+        .solicitud-counter {
+            background-color: var(--unah-blue);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .validation-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 5px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+        
+        .field-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .field-content {
+            flex-grow: 1;
+        }
+        
+        .field-validation {
+            display: flex;
+            gap: 10px;
+            margin-left: 20px;
+            min-width: 180px;
+        }
+        
+        .comentarios-box {
+            margin-top: 20px;
+        }
+        
+        .comentario-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+        
+        .actions-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .document-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .document-title {
+            font-weight: bold;
+            color: var(--unah-blue);
+        }
+        
+        .document-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .section-title {
+            color: var(--unah-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--blue-gray);
+        }
+        
+        .document-section {
+            margin-top: 40px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
