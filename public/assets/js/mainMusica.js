@@ -18,6 +18,10 @@ import {
     obtenerNombreUsuario
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
+import {
+    subirRecursoMUSICA
+}from '../../../components/Musica/musica_Controller.mjs'
+
 import { UnahModal } from '../../components/modal.mjs';
 customElements.define("unah-modal", UnahModal);
 
@@ -177,6 +181,7 @@ const cargarRecursosDetalle = async () => {
                 <div class="resource-card card h-100 shadow-sm animate-fadeInUp data-cursos="${nombresClases}" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
                     <div class="thumbnail-pdf card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
                         <i class="bi bi-file-earmark-pdf fs-1"></i>
+                        ${botonesEliminarModificar}
                     </div>
                     <div class="card-body">
                         <h5 class="card-title text-unah-blue">${recurso.titulo}</h5>
@@ -259,6 +264,7 @@ const cargarRecursosDetalleEstudiante = async () => {
                 <div class="resource-card card h-100 shadow-sm animate-fadeInUp data-cursos="${nombresClases}" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
                     <div class="thumbnail-pdf card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
                         <i class="bi bi-file-earmark-pdf fs-1"></i>
+                        ${botonesEliminarModificar}
                     </div>
                     <div class="card-body">
                         <h5 class="card-title text-unah-blue">${recurso.titulo}</h5>
@@ -540,6 +546,31 @@ window.onload = async function () {
                 modal.show('Esta acción está deshabilitada.');
             }
         });
+
+        // Cambiar formatos de archivo según tipo de recurso
+        document.getElementById('categoria').addEventListener('change', function () {
+            const fileInput = document.getElementById('archivo_recurso');
+            const formatosInfo = document.getElementById('formatosAceptados');
+
+            switch (this.value) {
+                case 'pdf':
+                    fileInput.accept = '.pdf';
+                    formatosInfo.textContent = 'Formatos aceptados: PDF';
+                    break;
+                case 'audio':
+                    fileInput.accept = '.mp3';
+                    formatosInfo.textContent = 'Formatos aceptados: MP3';
+                    break;
+                case 'partitura':
+                    fileInput.accept = '.pdf,.mus,.mxl,.musicxml,.sib';
+                    formatosInfo.textContent = 'Formatos aceptados: PDF, .mus, .mxl, .musicxml, .sib';
+                    break;
+                default:
+                    fileInput.accept = '';
+                    formatosInfo.textContent = 'Seleccione un tipo de recurso para ver formatos aceptados';
+            }
+        });
+
 
 
         // Listeners de filtro

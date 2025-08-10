@@ -148,10 +148,9 @@
                                      <label for="categoria" class="form-label">Tipo de recurso*</label>
                                      <select class="form-select" id="categoria" name="categoria" required>
                                          <option value="">Seleccione un tipo</option>
-                                         <option value="libro">Libro</option>
-                                         <option value="articulo">Artículo</option>
-                                         <option value="guia">Guía de estudio</option>
-                                         <option value="tesis">Tesis</option>
+                                         <option value="pdf">Documento PDF</option>
+                                         <option value="audio">Audio (MP3)</option>
+                                         <option value="partitura">Partitura</option>
                                      </select>
                                  </div>
                              </div>
@@ -162,7 +161,7 @@
                                  </div>
                                  <div class="mb-3">
                                      <label for="tags" class="form-label">Palabras clave</label>
-                                     <input type="text" class="form-control" id="tags" name="tags" placeholder="Ej: programación, algoritmos, web">
+                                     <input type="text" class="form-control" id="tags" name="tags" placeholder="Ej: piano, clásica, concierto">
                                      <small class="text-muted">Separar con comas</small>
                                  </div>
                              </div>
@@ -173,10 +172,10 @@
                                  <div class="mb-3">
                                      <label for="cursos" class="form-label">Cursos relacionados</label>
                                      <select class="form-select" id="cursos" name="cursos" multiple>
-                                         <option value="1">Matemáticas Avanzadas</option>
-                                         <option value="2">Literatura Contemporánea</option>
-                                         <option value="3">Programación Web</option>
-                                         <option value="4">Historia Universal</option>
+                                         <option value="1">Armonía</option>
+                                         <option value="2">Historia de la Música</option>
+                                         <option value="3">Interpretación Instrumental</option>
+                                         <option value="4">Composición</option>
                                      </select>
                                  </div>
                              </div>
@@ -189,9 +188,9 @@
                          </div>
 
                          <div class="mb-3">
-                             <label for="archivo_pdf" class="form-label">Archivo del recurso*</label>
-                             <input type="file" class="form-control" id="archivo_pdf" name="archivo_pdf" accept=".pdf,.doc,.docx,.ppt,.pptx" required>
-                             <small class="text-muted">Formatos aceptados: PDF, Word, PowerPoint</small>
+                             <label for="archivo_recurso" class="form-label">Archivo del recurso*</label>
+                             <input type="file" class="form-control" id="archivo_recurso" name="archivo_recurso" required>
+                             <small id="formatosAceptados" class="text-muted">Seleccione un tipo de recurso para ver formatos aceptados</small>
                          </div>
                      </div>
                      <div class="modal-footer bg-blue-gray">

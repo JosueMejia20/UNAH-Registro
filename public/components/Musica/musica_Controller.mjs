@@ -37,3 +37,26 @@ export const obtenerNombreUsuario = async (idUsuario) => {
     return [];
   }
 };
+
+
+export const subirRecursoMUSICA = async (datosJson) => {
+  try {
+    const formData = new FormData();
+
+    // Agregar todos los campos del JSON al FormData
+    for (const key in datosJson) {
+      formData.append(key, datosJson[key]);
+    }
+
+    const response = await fetch(`${BASE_URL}/post/subirRecurso/index.php`, {
+      method: 'POST',
+      body: formData, // No poner headers manualmente, fetch lo hace solo
+    });
+
+    if (!response.ok) throw new Error('No se registró su recurso');
+    return await response.json();
+  } catch (error) {
+    console.error('Error al insertar recurso:', error);
+    return null;
+  }
+};
