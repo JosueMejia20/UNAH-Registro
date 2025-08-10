@@ -172,26 +172,27 @@ const cargarRecursosDetalle = async () => {
             }
 
             const html = `
-                <div id="colRecurso" class="col">
-                    <div class="card h-100 shadow-sm recurso-card" data-cursos="${nombresClases}" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
-                        <div class="portada-container">
-                            <img src="data:image/jpeg;base64,${recurso.portada}">
-                            ${botonesEliminarModificar}
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${recurso.titulo}</h5>
-                            <p class="card-text small text-muted">${recurso.autores}</p>
-                            <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
-                            <p class="card-text small text-truncate">${recurso.descripcion}</p>
-                            <div class="border-top pt-2 mt-2">
-                                <div class="mb-2">${tagsHTML}</div>
-                                <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
-                                    <i class="bi bi-eye me-1"></i> Ver documento
-                                </button>
-                            </div>
+                <!-- PDF Resource -->
+            <div class="col-md-6 col-lg-4">
+                <div class="resource-card card h-100 shadow-sm animate-fadeInUp data-cursos="${nombresClases}" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
+                    <div class="thumbnail-pdf card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
+                        <i class="bi bi-file-earmark-pdf fs-1"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-unah-blue">${recurso.titulo}</h5>
+                        <p class="card-text text-muted small">${recurso.autores}</p>
+                        <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
+                        <p class="card-text small text-truncate">${recurso.descripcion}</p>
+                        <div class="border-top pt-2 mt-2">
+                            <div class="mb-2">${tagsHTML}</div>
+                            <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
+                                <i class="bi bi-eye me-1"></i> Ver documento
+                            </button>
                         </div>
                     </div>
-                </div>`;
+                </div>
+            </div>
+`;
             gridMisRecursos.innerHTML += html;
         });
 
@@ -240,27 +241,85 @@ const cargarRecursosDetalleEstudiante = async () => {
 
             const tagsArray = separarTags(recurso.tags);
             const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
-
+            let botonesEliminarModificar = '';
+            if (rol == 3) {
+                botonesEliminarModificar = `
+                 <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
+                     <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
+                         <i class="bi bi-pencil"></i>
+                     </button>
+                     <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center eliminar-btn" style="width: 30px; height: 30px;" data-id-eliminar="${recurso.id}">
+                         <i class="bi bi-trash"></i>
+                     </button>
+                 </div>`;
+            }
             const html = `
-                <div id="colRecurso" class="col">
-                    <div class="card h-100 shadow-sm recurso-card" data-cursos="${nombresClasesES}" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
-                        <div class="portada-container">
-                            <img src="data:image/jpeg;base64,${recurso.portada}">
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${recurso.titulo}</h5>
-                            <p class="card-text small text-muted">${recurso.autores}</p>
-                            <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
-                            <p class="card-text small text-truncate">${recurso.descripcion}</p>
-                            <div class="border-top pt-2 mt-2">
-                                <div class="mb-2">${tagsHTML}</div>
-                                <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
-                                    <i class="bi bi-eye me-1"></i> Ver documento
-                                </button>
-                            </div>
+                <!-- PDF Resource -->
+            <div class="col-md-6 col-lg-4">
+                <div class="resource-card card h-100 shadow-sm animate-fadeInUp data-cursos="${nombresClases}" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
+                    <div class="thumbnail-pdf card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
+                        <i class="bi bi-file-earmark-pdf fs-1"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-unah-blue">${recurso.titulo}</h5>
+                        <p class="card-text text-muted small">${recurso.autores}</p>
+                        <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
+                        <p class="card-text small text-truncate">${recurso.descripcion}</p>
+                        <div class="border-top pt-2 mt-2">
+                            <div class="mb-2">${tagsHTML}</div>
+                            <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
+                                <i class="bi bi-eye me-1"></i> Ver documento
+                            </button>
                         </div>
                     </div>
-                </div>`;
+                </div>
+            </div>
+
+            <!-- Audio Resource -->
+            <div class="col-md-6 col-lg-4">
+                <div class="resource-card card h-100 shadow-sm animate-fadeInUp">
+                    <div class="thumbnail-audio card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
+                        <i class="bi bi-music-note-beamed fs-1"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-unah-blue">Concierto para violín No. 1</h5>
+                        <p class="card-text text-muted small">Ludwig van Beethoven</p>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-secondary">clásica</span>
+                            <span class="badge bg-secondary">violín</span>
+                            <span class="badge bg-secondary">orquesta</span>
+                        </div>
+                        <div class="d-flex justify-content-between pt-2 border-top">
+                            <button class="btn btn-sm btn-outline-primary view-audio">
+                                <i class="bi bi-play"></i> Escuchar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score Resource -->
+            <div class="col-md-6 col-lg-4">
+                <div class="resource-card card h-100 shadow-sm animate-fadeInUp">
+                    <div class="thumbnail-score card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
+                        <i class="bi bi-file-earmark-music fs-1"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-unah-blue">Sonata Claro de Luna</h5>
+                        <p class="card-text text-muted small">Ludwig van Beethoven</p>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="badge bg-secondary">piano</span>
+                            <span class="badge bg-secondary">clásica</span>
+                            <span class="badge bg-secondary">partitura</span>
+                        </div>
+                        <div class="d-flex justify-content-between pt-2 border-top">
+                            <button class="btn btn-sm btn-outline-success download">
+                                <i class="bi bi-download"></i> Descargar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
             gridMisRecursos.innerHTML += html;
         });
 
@@ -284,7 +343,7 @@ const verRecurso = async (id) => {
     document.getElementById('pdfViewer').setAttribute('sandbox', 'allow-scripts allow-same-origin');
     document.getElementById('pdfViewer').setAttribute('disable-download', "");
 
-    const modalBootstrap = new bootstrap.Modal(document.getElementById('visorPdfModal'));
+    const modalBootstrap = new bootstrap.Modal(document.getElementById('pdfViewerModal'));
     modalBootstrap.show();
 };
 
