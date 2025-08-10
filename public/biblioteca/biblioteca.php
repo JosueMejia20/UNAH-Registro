@@ -15,6 +15,7 @@
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Biblioteca Virtual UNAH - Docentes</title>
+     <link rel="icon" href="https://biologia.unah.edu.hn/dmsdocument/1433-unah-logo-texto">
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
      <link rel="stylesheet" href="/assets/css/principal_components.css">
@@ -109,6 +110,7 @@
                  <div class="modal-body">
                      <div class="ratio ratio-16x9">
                          <iframe id="pdfViewer" src="" style="border: none;" allowfullscreen></iframe>
+                         <div id="evito_descargar" style="position: absolute; top:0; left:0; width: 100%; height: 100%;"></div>
                      </div>
                  </div>
                  <div class="modal-footer bg-blue-gray">

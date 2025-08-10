@@ -46,13 +46,13 @@ function separarTags(cadena) {
 }
 
 // ------------------ Funcion para el nombre de usuario --------------------
-const cargarNombreUsuario = async(id) => {
+const cargarNombreUsuario = async (id) => {
     const datos = await obtenerNombreUsuario(id);
 
     const nombreUsuario = document.getElementById('nombreUsuario');
 
     const nombreCompleto = datos[0].nombre_completo + ' ' + datos[0].apellido_completo;
-    
+
     nombreUsuario.textContent = nombreCompleto;
 
 }
@@ -147,7 +147,7 @@ const cargarRecursosDetalle = async () => {
     if (misRecursos.length > 0) {
         gridMisRecursos.innerHTML = '';
         misRecursos.forEach(recurso => {
-            
+
             const nombresClases = recurso.clases_asociadas
                 ? recurso.clases_asociadas
                     .split(',')
@@ -370,12 +370,12 @@ function llenarDatalist(id, valores) {
         if (valor) {
             console.log(valor);
             const option = document.createElement('option');
-            if(id === 'listaAutores'){
+            if (id === 'listaAutores') {
                 option.value = valor.nombre_completo;
-            } else{
+            } else {
                 option.value = valor.titulo;
             }
-            
+
             datalist.appendChild(option);
         }
     });
@@ -471,6 +471,17 @@ window.onload = async function () {
             await cargarRecursosDetalleEstudiante();
             await cargarFiltroCursos();
         }
+
+        //PDF
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function (e) {
+            // Ctrl+P (imprimir), Ctrl+S (guardar), Ctrl+U (ver código fuente)
+            if ((e.ctrlKey || e.metaKey) && ['p', 's', 'u'].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+                modal.show('Esta acción está deshabilitada.');
+            }
+        });
+
 
         // Listeners de filtro
         document.getElementById('filtroCurso')?.addEventListener('change', filtrarRecursos);
