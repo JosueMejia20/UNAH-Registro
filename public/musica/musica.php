@@ -92,21 +92,26 @@
                  <div class="modal-footer">
                      <small class="text-muted">Este documento no está disponible para descarga.</small>
                  </div>
+                 <div class="modal-footer bg-blue-gray">
+                     <small class="text-muted me-auto" id="pdfMetadata">Autores: </small>
+                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                 </div>
              </div>
          </div>
      </div>
 
      <!-- Audio Viewer Modal -->
+    
      <div class="modal fade viewer-modal" id="audioViewerModal" tabindex="-1" aria-hidden="true">
          <div class="modal-dialog">
              <div class="modal-content viewer-content">
                  <div class="modal-header">
-                     <h5 class="modal-title">Reproductor de audio</h5>
+                     <h5 id="visorAudioModalTitle" class="modal-title">Reproductor de audio</h5>
                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                  </div>
                  <div class="modal-body">
-                     <audio controls class="w-100">
-                         <source src="about:blank" type="audio/mpeg">
+                     <audio id="elementAudio" controls class="w-100">
+                         <source id="audioViewer" src="" type="audio/mpeg">
                          Tu navegador no soporta el elemento de audio.
                      </audio>
                  </div>
@@ -116,6 +121,8 @@
              </div>
          </div>
      </div>
+
+    
 
      <!-- Modal para subir recurso -->
      <div class="modal fade" id="subirRecursoModal" tabindex="-1">
@@ -189,7 +196,7 @@
 
                          <div class="mb-3">
                              <label for="archivo_recurso" class="form-label">Archivo del recurso*</label>
-                             <input type="file" class="form-control" id="archivo_recurso" name="archivo_recurso" required>
+                             <input type="file" class="form-control" id="archivo_pdf" name="archivo_pdf" required>
                              <small id="formatosAceptados" class="text-muted">Seleccione un tipo de recurso para ver formatos aceptados</small>
                          </div>
                      </div>

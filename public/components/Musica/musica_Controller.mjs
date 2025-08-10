@@ -1,4 +1,5 @@
 const BASE_URL = '/api/musica';
+const URL_BIBLIOTECA = '/api/biblioteca';
 
 const limpiarOpciones = (select) => {
   while (select.firstChild) {
@@ -39,21 +40,17 @@ export const obtenerNombreUsuario = async (idUsuario) => {
 };
 
 
-export const subirRecursoMUSICA = async (datosJson) => {
+export const subirRecursoMusica = async (datosJson, datosJsonArchivo) => {
   try {
-    const formData = new FormData();
 
-    // Agregar todos los campos del JSON al FormData
-    for (const key in datosJson) {
-      formData.append(key, datosJson[key]);
-    }
+    const jsonUnido = Object.assign({},datosJson, datosJsonArchivo);
 
-    const response = await fetch(`${BASE_URL}/post/subirRecurso/index.php`, {
+    const response = await fetch(`${URL_BIBLIOTECA}/post/subirRecurso/index.php`, {
       method: 'POST',
-      body: formData, // No poner headers manualmente, fetch lo hace solo
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(jsonUnido),
     });
-
-    if (!response.ok) throw new Error('No se registró su recurso');
+    if (!response.ok) throw new Error('No se registrar su recurso');
     return await response.json();
   } catch (error) {
     console.error('Error al insertar recurso:', error);

@@ -178,7 +178,11 @@ class Biblioteca
 
             // Convertir base64 a binario
             $archivo_binario = Utilities::obtenerBinario($archivoPdf);
-            $portada_binaria = Utilities::obtenerBinario($portada);
+            if (!($portada == null)) {
+                $portada_binaria = Utilities::obtenerBinario($portada);
+            } else {
+                $portada_binaria = null;
+            }
 
             // Insertar recurso
             $stmt = $pdo->prepare("CALL InsertarRecurso(:titulo, :archivo, :anio, :portada, :docente_id, :tipo_recurso_id, :descripcion,@recurso_id)");
@@ -240,7 +244,7 @@ class Biblioteca
     }
 
     public function obtenerRecursos($idDocente)
-    
+
     {
         try {
             $db = new DataBase();
@@ -414,7 +418,8 @@ class Biblioteca
         }
     }
 
-    public function obtenerNombreUsuario($idUsuario){
+    public function obtenerNombreUsuario($idUsuario)
+    {
         try {
             $db = new DataBase();
 

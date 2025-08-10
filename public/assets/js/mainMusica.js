@@ -19,8 +19,8 @@ import {
 } from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
 import {
-    subirRecursoMUSICA
-}from '../../../components/Musica/musica_Controller.mjs'
+    subirRecursoMusica
+} from '../../../components/Musica/musica_Controller.mjs'
 
 import { UnahModal } from '../../components/modal.mjs';
 customElements.define("unah-modal", UnahModal);
@@ -88,18 +88,24 @@ formSubirRecurso?.addEventListener('submit', async (e) => {
 
     const formData = new FormData(formSubirRecurso);
     const datosJSON = {};
+    const datosJSONArchivo = {};
     formData.append('idDocente', idDocente);
+
+    // console.log(formData);
 
     for (const [key, value] of formData.entries()) {
         if (value instanceof File && value.name) {
-            datosJSON[key] = await toBase64(value);
+            datosJSONArchivo[key] = await toBase64(value);
         } else {
             datosJSON[key] = (key === 'autores' || key === 'tags') ? separarTags(value) : value;
         }
     }
 
+    console.log(datosJSON);
+    console.log(datosJSONArchivo);
+
     try {
-        const response = await subirRecurso(datosJSON);
+        const response = await subirRecursoMusica(datosJSON, datosJSONArchivo);
         overlayCarga.style.display = 'none';
 
         if (response.success) {
@@ -343,13 +349,53 @@ const cargarRecursosDetalleEstudiante = async () => {
 // ------------------- Ver recurso -------------------
 const verRecurso = async (id) => {
     const recurso = await recursoDetalle(id);
+    console.log(recurso);
+    if (recurso[0].tipo_recurso == 'Audio') {
+        document.getElementById('visorAudioModalTitle').textContent = recurso[0].titulo;
+        const audioSource = document.getElementById('audioViewer');
+        const audioElement = document.getElementById('elementAudio'); // <audio>
+        // Validar que el base64 no este vacio
+        if (!recurso[0].archivo || recurso[0].archivo.trim() === '') {
+            console.error('NO hay archivo de audio');
+            return;
+        }
+        audioSource.src = `data:audio/mp3;base64,${recurso[0].archivo}`;
+        audioElement.load();
+    } else if (recurso[0].tipo_recurso == 'Pdf') {
+        document.getElementById('visorPdfModalTitle').textContent = recurso[0].titulo;
+        document.getElementById('pdfMetadata').textContent = `Autores: ${recurso[0].autores}`;
+        document.getElementById('pdfViewer').src = `data:application/pdf;base64,${recurso[0].archivo}#toolbar=0&navpanes=0`;
+        document.getElementById('pdfViewer').setAttribute('sandbox', 'allow-scripts allow-same-origin');
+        document.getElementById('pdfViewer').setAttribute('disable-download', "");
+    } else if (recurso[0].tipo_recurso == 'Partitura') {
+
+    } else {
+        return;
+    }
+    /*
     document.getElementById('visorPdfModalTitle').textContent = recurso[0].titulo;
     document.getElementById('pdfMetadata').textContent = `Autores: ${recurso[0].autores}`;
     document.getElementById('pdfViewer').src = `data:application/pdf;base64,${recurso[0].archivo}#toolbar=0&navpanes=0`;
     document.getElementById('pdfViewer').setAttribute('sandbox', 'allow-scripts allow-same-origin');
     document.getElementById('pdfViewer').setAttribute('disable-download', "");
+*/
 
-    const modalBootstrap = new bootstrap.Modal(document.getElementById('pdfViewerModal'));
+    let modalRecurso;
+
+
+
+    switch (recurso[0].tipo_recurso) {
+        case 'Audio':
+            modalRecurso = document.getElementById('audioViewerModal');
+            break;
+        case 'Pdf':
+            modalRecurso = document.getElementById('pdfViewerModal');
+            break;
+        //case 'Partitura':
+
+    }
+
+    const modalBootstrap = new bootstrap.Modal(modalRecurso);
     modalBootstrap.show();
 };
 
