@@ -347,6 +347,65 @@ const cargarRecursosDetalleEstudiante = async () => {
 };
 
 // ------------------- Ver recurso -------------------
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.worker.min.js';
+
+let pdfDoc = null;
+let currentPage = 1;
+const scale = 1.5;
+const canvas = document.getElementById('pdfCanvas');
+const ctx = canvas.getContext('2d');
+
+async function renderPage(num) {
+  const page = await pdfDoc.getPage(num);
+  const viewport = page.getViewport({ scale });
+  canvas.height = viewport.height;
+  canvas.width = viewport.width;
+
+  const renderContext = {
+    canvasContext: ctx,
+    viewport: viewport,
+  };
+
+  await page.render(renderContext).promise;
+
+  // Actualizar número de página en UI
+  document.getElementById('pageNum').textContent = num;
+}
+
+async function loadPDF(base64PDF) {
+  // Convertir base64 a Uint8Array
+  const raw = atob(base64PDF);
+  const uint8Array = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) {
+    uint8Array[i] = raw.charCodeAt(i);
+  }
+
+  pdfDoc = await pdfjsLib.getDocument({ data: uint8Array }).promise;
+  currentPage = 1;
+  document.getElementById('pageCount').textContent = pdfDoc.numPages;
+
+  await renderPage(currentPage);
+  // Subir al principio al cargar el PDF
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('btnPrev').addEventListener('click', async () => {
+  if (currentPage <= 1) return;
+  currentPage--;
+  await renderPage(currentPage);
+  // Subir al principio al cambiar de página
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+document.getElementById('btnNext').addEventListener('click', async () => {
+  if (currentPage >= pdfDoc.numPages) return;
+  currentPage++;
+  await renderPage(currentPage);
+  // Subir al principio al cambiar de página
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+
 const verRecurso = async (id) => {
     const recurso = await recursoDetalle(id);
     console.log(recurso);
@@ -362,11 +421,14 @@ const verRecurso = async (id) => {
         audioSource.src = `data:audio/mp3;base64,${recurso[0].archivo}`;
         audioElement.load();
     } else if (recurso[0].tipo_recurso == 'Pdf') {
+        const recursopdf = await recursoDetalle(id);
         document.getElementById('visorPdfModalTitle').textContent = recurso[0].titulo;
         document.getElementById('pdfMetadata').textContent = `Autores: ${recurso[0].autores}`;
-        document.getElementById('pdfViewer').src = `data:application/pdf;base64,${recurso[0].archivo}#toolbar=0&navpanes=0`;
-        document.getElementById('pdfViewer').setAttribute('sandbox', 'allow-scripts allow-same-origin');
-        document.getElementById('pdfViewer').setAttribute('disable-download', "");
+
+        await loadPDF(recurso[0].archivo);
+
+        const modalBootstrap = new bootstrap.Modal(document.getElementById('visorPdfModal'));
+        modalBootstrap.show();
     } else if (recurso[0].tipo_recurso == 'Partitura') {
 
     } else {
@@ -503,17 +565,15 @@ const cargarFiltroCursos = async () => {
     let clases = [];
 
     if (rol === 1 && idEstudiante) {
-        clases = await filtroCursoEstudiantes(idEstudiante); // Devuelve nombre_clase
+        clases = await filtroCursoEstudiantes(idEstudiante); 
     } else if ((rol === 2 || rol === 3) && idDocente) {
-        clases = await filtroCursoDocente(idDocente); // Devuelve nombre_clase
-    }
+        clases = await filtroCursoDocente(idDocente); 
 
     console.log('Clases cargadas para filtro:', clases);
 
-    // Agregar las clases como opciones (usamos nombre_clase como value)
     clases?.forEach(clase => {
         const option = document.createElement('option');
-        option.value = clase.nombre_clase; // Usamos nombre de la clase como valor
+        option.value = clase.nombre_clase; 
         option.textContent = clase.nombre_clase;
         selectFiltro.appendChild(option);
     });

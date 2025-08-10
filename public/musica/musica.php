@@ -56,14 +56,16 @@
 
      <!-- Main content -->
      <main class="container mb-5">
-         <!-- Search bar -->
          <div class="bg-white rounded shadow-sm p-4 mb-4 animate-fadeIn">
-             <form class="d-flex gap-2 mb-3">
-                 <input type="search" class="form-control" placeholder="Buscar por título, autor o tema...">
-                 <button type="submit" class="btn btn-unah-primary">
-                     <i class="bi bi-search"></i> Buscar
-                 </button>
-             </form>
+             <div class="col-md-6">
+                 <label for="busquedaRecursos" class="form-label">Buscar recursos</label>
+                 <div class="input-group">
+                     <input type="text" class="form-control" placeholder="Título, autor o palabras clave..." id="busquedaRecursos">
+                     <button class="btn btn-outline-secondary" type="button" id="btnBuscar">
+                         <i class="bi bi-search"></i>
+                     </button>
+                 </div>
+             </div>
              <div class="d-flex flex-wrap gap-2">
                  <span class="filter-tag badge bg-light text-dark active">Todos</span>
                  <span class="filter-tag badge bg-light text-dark">Partituras</span>
@@ -79,19 +81,23 @@
      </main>
 
      <!-- PDF Viewer Modal -->
-     <div class="modal fade viewer-modal" id="pdfViewerModal" tabindex="-1" aria-hidden="true">
+     <div class="modal fade" id="visorPdfModal" tabindex="-1" aria-hidden="true">
          <div class="modal-dialog modal-xl">
-             <div class="modal-content viewer-content">
-                 <div class="modal-header">
-                     <h5 class="modal-title" id="visorPdfModalTitle">Visualizador de PDF</h5>
-                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+             <div class="modal-content">
+                 <div class="modal-header bg-unah-blue text-white">
+                     <h5 class="modal-title" id="visorPdfModalTitle">Título del Recurso</h5>
+                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                  </div>
-                 <div class="modal-body p-0" style="height: 70vh;">
-                     <iframe id="pdfViewer" src="about:blank" class="w-100 h-100 border-0"></iframe>
+
+                 <div class="modal-body d-flex flex-column align-items-center" style="overflow-y: auto; max-height: 80vh;">
+                     <canvas id="pdfCanvas" style="border: none; max-width: 100%;"></canvas>
+                     <div class="mt-3">
+                         <button id="btnPrev" class="btn btn-primary me-2" type="button">Anterior</button>
+                         <button id="btnNext" class="btn btn-primary" type="button">Siguiente</button>
+                         <span class="ms-3">Página: <span id="pageNum"></span> / <span id="pageCount"></span></span>
+                     </div>
                  </div>
-                 <div class="modal-footer">
-                     <small class="text-muted">Este documento no está disponible para descarga.</small>
-                 </div>
+
                  <div class="modal-footer bg-blue-gray">
                      <small class="text-muted me-auto" id="pdfMetadata">Autores: </small>
                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -99,9 +105,8 @@
              </div>
          </div>
      </div>
-
      <!-- Audio Viewer Modal -->
-    
+
      <div class="modal fade viewer-modal" id="audioViewerModal" tabindex="-1" aria-hidden="true">
          <div class="modal-dialog">
              <div class="modal-content viewer-content">
@@ -122,7 +127,7 @@
          </div>
      </div>
 
-    
+
 
      <!-- Modal para subir recurso -->
      <div class="modal fade" id="subirRecursoModal" tabindex="-1">
@@ -317,6 +322,7 @@
          console.log("ID del usuario desde sesion PHP:", usuarioId);
          console.log("ID del rol desde sesion PHP:", rol);
      </script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.min.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
      <script type="module" src="/assets/js/mainMusica.js"></script>
      <script type="module" src="/assets/js/main.js"></script>

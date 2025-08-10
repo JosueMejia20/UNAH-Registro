@@ -276,17 +276,83 @@ const cargarRecursosDetalleEstudiante = async () => {
 };
 
 // ------------------- Ver recurso -------------------
-const verRecurso = async (id) => {
-    const recurso = await recursoDetalle(id);
-    document.getElementById('visorPdfModalTitle').textContent = recurso[0].titulo;
-    document.getElementById('pdfMetadata').textContent = `Autores: ${recurso[0].autores}`;
-    document.getElementById('pdfViewer').src = `data:application/pdf;base64,${recurso[0].archivo}#toolbar=0&navpanes=0`;
-    document.getElementById('pdfViewer').setAttribute('sandbox', 'allow-scripts allow-same-origin');
-    document.getElementById('pdfViewer').setAttribute('disable-download', "");
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.8.162/pdf.worker.min.js';
 
-    const modalBootstrap = new bootstrap.Modal(document.getElementById('visorPdfModal'));
-    modalBootstrap.show();
+let pdfDoc = null;
+let currentPage = 1;
+const scale = 1.5;
+const canvas = document.getElementById('pdfCanvas');
+const ctx = canvas.getContext('2d');
+
+async function renderPage(num) {
+  const page = await pdfDoc.getPage(num);
+  const viewport = page.getViewport({ scale });
+  canvas.height = viewport.height;
+  canvas.width = viewport.width;
+
+  const renderContext = {
+    canvasContext: ctx,
+    viewport: viewport,
+  };
+
+  await page.render(renderContext).promise;
+
+  // Actualizar número de página en UI
+  document.getElementById('pageNum').textContent = num;
+}
+
+async function loadPDF(base64PDF) {
+  // Convertir base64 a Uint8Array
+  const raw = atob(base64PDF);
+  const uint8Array = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) {
+    uint8Array[i] = raw.charCodeAt(i);
+  }
+
+  pdfDoc = await pdfjsLib.getDocument({ data: uint8Array }).promise;
+  currentPage = 1;
+  document.getElementById('pageCount').textContent = pdfDoc.numPages;
+
+  await renderPage(currentPage);
+  // Subir al principio al cargar el PDF
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('btnPrev').addEventListener('click', async () => {
+  if (currentPage <= 1) return;
+  currentPage--;
+  await renderPage(currentPage);
+  // Subir al principio al cambiar de página
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+document.getElementById('btnNext').addEventListener('click', async () => {
+  if (currentPage >= pdfDoc.numPages) return;
+  currentPage++;
+  await renderPage(currentPage);
+  // Subir al principio al cambiar de página
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+
+// Función verRecurso
+const verRecurso = async (id) => {
+  const recurso = await recursoDetalle(id);
+  document.getElementById('visorPdfModalTitle').textContent = recurso[0].titulo;
+  document.getElementById('pdfMetadata').textContent = `Autores: ${recurso[0].autores}`;
+
+  await loadPDF(recurso[0].archivo);
+
+  const modalBootstrap = new bootstrap.Modal(document.getElementById('visorPdfModal'));
+  modalBootstrap.show();
 };
+
+
+
+
+
+
+
 
 // ------------------- Editar recurso -------------------
 const editarFormulario = async (form, id) => {
@@ -456,6 +522,7 @@ function filtrarRecursos() {
 // ------------------- Inicialización -------------------
 window.onload = async function () {
     try {
+
         cargarNombreUsuario(usuarioId);
         if (rol == 2 || rol == 3) {
             await cargarRecursosDetalle();
@@ -473,14 +540,16 @@ window.onload = async function () {
         }
 
         //PDF
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', function (e) {
-            // Ctrl+P (imprimir), Ctrl+S (guardar), Ctrl+U (ver código fuente)
+        const visorModalElem = document.getElementById('visorPdfModal');
+
+        visorModalElem.addEventListener('contextmenu', e => e.preventDefault());
+        visorModalElem.addEventListener('keydown', e => {
             if ((e.ctrlKey || e.metaKey) && ['p', 's', 'u'].includes(e.key.toLowerCase())) {
                 e.preventDefault();
-                modal.show('Esta acción está deshabilitada.');
+                alert('Esta acción está deshabilitada.');
             }
         });
+
 
 
         // Listeners de filtro
