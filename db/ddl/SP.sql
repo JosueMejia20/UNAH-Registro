@@ -1210,9 +1210,7 @@ BEGIN
         c.unidades_valorativas
     FROM Docente d
     INNER JOIN Departamento_Uni dep ON d.departamento_id = dep.departamento_id
-    INNER JOIN Carrera ca ON ca.departamento_id = dep.departamento_id
-    INNER JOIN Clases_Carrera cc ON cc.carrera_id = ca.carrera_id
-    INNER JOIN Clase c ON c.clase_id = cc.clase_id
+    INNER JOIN Clase c ON c.departamento_id = dep.departamento_id
     WHERE d.numero_empleado = p_docente_id;
 END $$
 
