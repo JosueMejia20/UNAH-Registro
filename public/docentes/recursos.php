@@ -37,7 +37,7 @@ if (!isset($_SESSION['usuario_id'])) {
 
     <div class="perfil-card">
       <div class="imagen-perfil">
-        <img src="ruta-de-la-imagen.jpg" alt="Foto de perfil">
+        <img id="foto-perfil-docente" src="ruta-de-la-imagen.jpg" alt="Foto de perfil">
       </div>
       <div class="info-perfil">
         <p class="titulo">Recursos</p>

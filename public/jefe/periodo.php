@@ -40,7 +40,9 @@
 
 
             <div class="izquierdar">
-                    <h1 class="main-title">Crear Seccion</h1>
+                    <div class="izquierdar-header">
+                      <h2>Crear Seccion</h2>
+                    </div>
 
                         <div class="form-box">
                             <label>Clase:</label>
@@ -73,7 +75,9 @@
             </div>
 
             <div class="derechar">
-                        <h1 class="main-title">Aumento de Cupos</h1>
+                        <div class="derechar-header">
+                          <h2>Aumento de Cupos</h2>
+                        </div>
 
                             <div class="form-box">
                                 <label>Clase:</label>
@@ -92,7 +96,9 @@
 
 
             <div class="izquierdar">
-                        <h1 class="main-title">Registros de Infraestructura</h1>
+                        <div class="izquierdar-header">
+                          <h2>Registros de Infraestructura</h2>
+                        </div>
 
                             <div class="form-box">
                                 <label>Nombre del Edificio:</label>
@@ -107,7 +113,9 @@
 
 
             <div class="derechar">
-                    <h1 class="main-title">Cancelacion de Seccion</h1>
+                    <div class="derechar-header">
+                      <h2>Cancelacion de Seccion</h2>
+                    </div>
 
                             <div class="form-box">
                                 <label>Clase:</label>
@@ -124,7 +132,10 @@
             </div>
 
             <div class="izquierdar">
-                    <h1 class="main-title">Verificar Lista de Espera</h1>
+                    <div class="izquierdar-header">
+                      <h2>Verificar Lista de Esperan</h2>
+                    </div>
+                  
 
                         <div class="form-box">
                             <label>Clase:</label>

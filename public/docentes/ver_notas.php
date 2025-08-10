@@ -35,7 +35,7 @@
 
         <div class="perfil-card">
           <div class="imagen-perfil">
-            <img src="ruta-de-la-imagen.jpg" alt="Foto de perfil">
+            <img id="foto-perfil-docente" src="ruta-de-la-imagen.jpg" alt="Foto de perfil">
           </div>
           <div class="info-perfil">
             <p class="titulo">Notas de Asignatura</p>
@@ -81,7 +81,10 @@
 
     </div>
 
-
+  <script>
+    const usuarioId = <?php echo json_encode($_SESSION['usuario_id']); ?>;
+    console.log("ID del usuario desde sesion PHP:", usuarioId);
+  </script>
     <script type="module" src="../../assets/js/Docentes/mainVerNotas.js"></script>
 </body>
 </html>

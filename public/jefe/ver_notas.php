@@ -68,7 +68,7 @@
                 </tbody>
             </table>
 
-            <a href="notas.php">
+            <a href="secciones_notas.php">
                 <button class="action-btn" style="margin-top: 10px;">Retroceder</button> 
             </a>  
 

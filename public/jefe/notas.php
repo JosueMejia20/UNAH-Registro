@@ -41,55 +41,39 @@
                     <tr>
                         <th>Codigo de Clase</th>
                         <th>Nombre de Clase</th>
-                        <th>Seccion</th>
-                        <th>Subir Notas</th>
-                        <th>Visualizar Notas</th>
+                        <th>Carrera</th>
+                        <th>Secciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>IS111</td>
                         <td>Programacion 2</td>
-                        <td>0900</td>
-                        <td>   
-                            <a href="subir_notas.php">
-                                <button class="action-btn">Subir Notas</button> 
-                            </a>                
-                        </td>
+                        <td>Ingenieria en Sistemas</td>
                         <td>
-                            <a href="ver_notas.php">
-                                <button class="action-btn">Ver Notas</button> 
-                            </a> 
+                            <a href="secciones_notas.php">
+                                <button class="action-btn">Lista Secciones</button> 
+                            </a>
                         </td>
                     </tr>
                     <tr>
                         <td>IS222</td>
                         <td>Bases de Datos</td>
-                        <td>1000</td>
+                        <td>Ingenieria en Sistemas</td>
                         <td>
-                            <a href="subir_notas.php">
-                                <button class="action-btn">Subir Notas</button> 
-                            </a>   
-                        </td>
-                        <td>
-                            <a href="ver_notas.php">
-                                <button class="action-btn">Ver Notas</button> 
+                            <a href="secciones_notas.php">
+                                <button class="action-btn">Lista Secciones</button> 
                             </a>
                         </td>
                     </tr>
                     <tr>
                         <td>IS333</td>
                         <td>Lenguajes de Programacion</td>
-                        <td>1100</td>
+                        <td>Ingenieria en Sistemas</td>
                         <td>
-                            <a href="subir_notas.php">
-                                <button class="action-btn">Subir Notas</button> 
-                            </a>    
-                        </td>
-                        <td>
-                            <a href="ver_notas.php">
-                                <button class="action-btn">Ver Notas</button> 
-                            </a> 
+                            <a href="secciones_notas.php">
+                                <button class="action-btn">Lista Secciones</button> 
+                            </a>                       
                         </td>
                     </tr>
                 </tbody>

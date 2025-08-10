@@ -26,7 +26,7 @@
 
     <div class="container_principal">
 
-            <div class="perfil-card">
+        <div class="perfil-card">
           <div class="imagen-perfil">
             <img src="ruta-de-la-imagen.jpg" alt="Foto de perfil">
           </div>
@@ -37,56 +37,48 @@
         </div>
 
 
-        <button class="action-btn">Agregar Asignatura</button>                    
+        <!-- <button class="action-btn">Agregar Asignatura</button>                    
         <button class="action-btn">Eliminar Asignatura</button>                        
         <button class="action-btn">Modificar Asignatura</button>                        
-        <br>
+        <br> -->
 
             <table class="requests-table">
                 <thead>
                     <tr>
                         <th>Codigo de Clase</th>
                         <th>Nombre de Clase</th>
-                        <th>Docente</th>
                         <th>Carrera</th>
-                        <th>Seccion</th>
-                        <th>Lista de Estudiantes</th>
+                        <th>Secciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>IS111</td>
                         <td>Programacion 2</td>
-                        <td>Mirna Raudales</td>
                         <td>Ingenieria en Sistemas</td>
-                        <td>0900</td>
                         <td>
-                            <a href="lista_estudiantes.php">
-                                <button class="action-btn">Ver Lista</button> 
+                            <a href="seccion_asignaturas.php">
+                                <button class="action-btn">Lista Secciones</button> 
                             </a>
                         </td>
                     </tr>
                     <tr>
                         <td>IS222</td>
                         <td>Bases de Datos</td>
-                        <td>Fernando Quijano</td>
                         <td>Ingenieria en Sistemas</td>
-                        <td>1000</td>
                         <td>
-                            <a href="lista_estudiantes.php">
-                                <button class="action-btn">Ver Lista</button> 
+                            <a href="seccion_asignaturas.php">
+                                <button class="action-btn">Lista Secciones</button> 
                             </a>
                         </td>
                     </tr>
                     <tr>
                         <td>IS333</td>
                         <td>Lenguajes de Programacion</td>
-                        <td>Ramon Ortiz</td>
                         <td>Ingenieria en Sistemas</td>
-                        <td>1100</td>
                         <td>
-                            <a href="lista_estudiantes.php">
-                                <button class="action-btn">Ver Lista</button> 
+                            <a href="seccion_asignaturas.php">
+                                <button class="action-btn">Lista Secciones</button> 
                             </a>                       
                         </td>
                     </tr>
