@@ -30,31 +30,48 @@ class Musica
             $JEFE_DEPT = 5;
             $ADMIN = 6;
 
+            $tipoUsuario = 0;
+
             // Si solo es revisor
             if (in_array($REVISOR, $roles) && count($roles) === 1) {
-                return 0;
+                $tipoUsuario = 0;
             }
             // Si es coordinador o jefe, y a la vez tiene que ser docente
             if ((in_array($COORDINADOR, $roles) || in_array($JEFE_DEPT, $roles)) && in_array($DOCENTE, $roles)) {
-                return 3;
+                $tipoUsuario = 3;
             }
 
             // Si solo es docente
             if (in_array($DOCENTE, $roles)) {
-                return 2;
+                $tipoUsuario = 2;
             }
 
             // Si solo es estudiante
             if (in_array($ESTUDIANTE, $roles)) {
-                return 1;
+                $tipoUsuario = 1;
             }
 
 
+            $queryVerificarCarreraDept = "CALL VerificarUsuarioMusicaArte(?, ?)";
+            $stmtSP = $pdo->prepare($queryVerificarCarreraDept);
+            $stmtSP->execute([$idUsuario, $tipoUsuario]);
+            $resultadoSP = $stmtSP->fetch(PDO::FETCH_ASSOC);
+
+            if($tipoUsuario == 1 && $resultadoSP['puede_acceder'] == 1){
+                return 1;
+            } else if($tipoUsuario == 2 && $resultadoSP['puede_acceder'] == 1){
+                return 2;
+            } else if($tipoUsuario == 3 && $resultadoSP['puede_acceder'] == 1){
+                return 3;
+            }
+
             return 0;
-    
         } catch (PDOException $e) {
             return "Error en la base de datos: " . $e->getMessage();
         }
     }
-
 }
+
+//prueba
+// $ob = new Musica();
+// echo 'esto es lo que retorna: '.$ob->verificarUsuarioBiblioteca(5);

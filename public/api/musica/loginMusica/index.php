@@ -2,11 +2,11 @@
 
 $pathToRoot = '/../../../../';
 
-require_once __DIR__ . $pathToRoot.'classes/Biblioteca/Biblioteca.php';
+require_once __DIR__ . $pathToRoot.'classes/Musica/Musica.php';
 require_once __DIR__ . $pathToRoot.'classes/db/DataBase.php';
 require_once __DIR__ . $pathToRoot.'classes/Utilities/Utilities.php';
 
-$biblioteca = new Biblioteca();
+$musica = new Musica();
 
 // Responder a la peticion
 
@@ -26,9 +26,9 @@ try{
     if($resultadoLogin){
         
         
-        if($biblioteca->verificarUsuarioBiblioteca($resultadoLogin)==1){
+        if($musica->verificarUsuarioBiblioteca($resultadoLogin)==1){
             $_SESSION['usuario_id'] = $resultadoLogin;
-            $_SESSION['rol'] = $biblioteca->verificarUsuarioBiblioteca($resultadoLogin);
+            $_SESSION['rol'] = $musica->verificarUsuarioBiblioteca($resultadoLogin);
 
             echo json_encode([
             'success'=> true,
@@ -36,9 +36,9 @@ try{
             'idEstudiante'=> $resultadoLogin,
             'tipoUsuario'=> 1
         ]);
-        } elseif($biblioteca->verificarUsuarioBiblioteca($resultadoLogin)==2){
+        } elseif($musica->verificarUsuarioBiblioteca($resultadoLogin)==2){
             $_SESSION['usuario_id'] = $resultadoLogin;
-            $_SESSION['rol'] = $biblioteca->verificarUsuarioBiblioteca($resultadoLogin);
+            $_SESSION['rol'] = $musica->verificarUsuarioBiblioteca($resultadoLogin);
             
             echo json_encode([
             'success'=> true,
@@ -47,9 +47,9 @@ try{
             'tipoUsuario'=> 2
         ]);
         }
-         elseif($biblioteca->verificarUsuarioBiblioteca($resultadoLogin)==3){
+         elseif($musica->verificarUsuarioBiblioteca($resultadoLogin)==3){
             $_SESSION['usuario_id'] = $resultadoLogin;
-            $_SESSION['rol'] = $biblioteca->verificarUsuarioBiblioteca($resultadoLogin);
+            $_SESSION['rol'] = $musica->verificarUsuarioBiblioteca($resultadoLogin);
             
             echo json_encode([
             'success'=> true,

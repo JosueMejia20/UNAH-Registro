@@ -74,6 +74,7 @@ DROP PROCEDURE IF EXISTS Insertar_Estudiantes_Secciones;
 DROP PROCEDURE IF EXISTS ObtenerClasePorSeccion;
 DROP PROCEDURE IF EXISTS ObtenerEstudiantesSeccionConNotas;
 DROP PROCEDURE IF EXISTS ObtenerNombreUsuario;
+DROP PROCEDURE IF EXISTS VerificarUsuarioMusicaArte;
 
 
 
@@ -1753,6 +1754,48 @@ BEGIN
 END $$
 
 
+
+CREATE PROCEDURE VerificarUsuarioMusicaArte(
+    IN p_usuario_id INT,
+    IN p_tipo_usuario INT -- 0=revisor, 1=estudiante, 2=docente, 3=coordinador
+)
+BEGIN
+    DECLARE v_resultado BOOLEAN DEFAULT FALSE;
+    DECLARE v_carrera_id INT DEFAULT NULL;
+    DECLARE v_departamento_id INT DEFAULT NULL;
+    
+    IF p_tipo_usuario = 0 THEN
+        -- Revisor: no puede loguearse
+        SET v_resultado = FALSE;
+        
+    ELSEIF p_tipo_usuario = 1 THEN
+        -- Estudiante: verificar si pertenece a carrera de música (ID 24)
+        SELECT e.carrera_id INTO v_carrera_id
+        FROM Usuario u
+        INNER JOIN Estudiante e ON u.usuario_id = e.usuario_id
+        WHERE u.usuario_id = p_usuario_id;
+        
+        IF v_carrera_id = 24 THEN
+            SET v_resultado = TRUE;
+        END IF;
+        
+    ELSEIF p_tipo_usuario IN (2, 3) THEN
+        -- Docente/Coordinador: verificar si pertenece a departamento de arte (ID 21)
+        SELECT d.departamento_id INTO v_departamento_id
+        FROM Usuario u
+        INNER JOIN Docente d ON u.usuario_id = d.usuario_id
+        WHERE u.usuario_id = p_usuario_id;
+        
+        IF v_departamento_id = 21 THEN
+            SET v_resultado = TRUE;
+        END IF;
+        
+    END IF;
+    
+    -- Retornar solo el resultado
+    SELECT v_resultado AS puede_acceder;
+    
+END $$
 
 
 DELIMITER ;

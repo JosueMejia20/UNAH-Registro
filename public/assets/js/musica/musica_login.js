@@ -1,6 +1,6 @@
 import {
     validarCredenciales
-} from '../../../../components/Biblioteca/biblioteca_Controller.mjs';
+} from '../../../../components/Musica/musica_Controller.mjs';
 
 import { UnahModal } from '../../../components/modal.mjs';
 customElements.define("unah-modal", UnahModal);
