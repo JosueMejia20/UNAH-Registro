@@ -75,6 +75,7 @@ DROP PROCEDURE IF EXISTS ObtenerClasePorSeccion;
 DROP PROCEDURE IF EXISTS ObtenerEstudiantesSeccionConNotas;
 DROP PROCEDURE IF EXISTS ObtenerNombreUsuario;
 DROP PROCEDURE IF EXISTS VerificarUsuarioMusicaArte;
+DROP PROCEDURE IF EXISTS VerificarDiasMatriculaEstudiante;
 
 
 
@@ -1793,6 +1794,49 @@ BEGIN
     -- Retornar solo el resultado
     SELECT v_resultado AS puede_acceder;
     
+END $$
+
+CREATE PROCEDURE VerificarDiasMatriculaEstudiante(
+    IN p_estudiante_id VARCHAR(11)
+)
+BEGIN
+    DECLARE v_indice_global DECIMAL(5,2) DEFAULT 0.00;
+    DECLARE v_periodo_matricula_id INT DEFAULT NULL;
+    
+    -- Obtener el período de matrícula actual basado en la fecha actual
+    SELECT pm.id INTO v_periodo_matricula_id
+    FROM Periodo_Matricula pm
+    WHERE CURDATE() BETWEEN pm.fecha_inicio AND pm.fecha_fin
+    LIMIT 1;
+    
+    -- Verificar si existe un período de matrícula activo
+    IF v_periodo_matricula_id IS NULL THEN
+        SELECT 'No hay período de matrícula activo' AS mensaje;
+    ELSE
+        -- Obtener el índice global más reciente del estudiante
+        SELECT COALESCE(ie.indice_global, 0.00) INTO v_indice_global
+        FROM Indices_Estudiantes ie
+        WHERE ie.estudiante_id = p_estudiante_id
+        ORDER BY ie.periodo_acad_id DESC
+        LIMIT 1;
+        
+        -- Retornar los días de matrícula con la verificación
+        SELECT 
+            mi.dia,
+            mi.indice_minimo,
+            mi.indice_maximo,
+            v_indice_global AS indice_global_estudiante,
+            CASE 
+                WHEN v_indice_global BETWEEN mi.indice_minimo AND mi.indice_maximo THEN TRUE
+                ELSE FALSE
+            END AS puede_matricular,
+            pm.fecha_inicio AS periodo_inicio,
+            pm.fecha_fin AS periodo_fin
+        FROM Matricula_Indice mi
+        INNER JOIN Periodo_Matricula pm ON mi.periodo_matricula_id = pm.id
+        WHERE pm.id = v_periodo_matricula_id
+        ORDER BY mi.dia;
+    END IF;
 END $$
 
 

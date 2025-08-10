@@ -476,7 +476,7 @@ CREATE TABLE Clases_Carrera(
 CREATE TABLE Matricula_Indice(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     periodo_matricula_id INT NOT NULL,
-    dia DATETIME NOT NULL,
+    dia DATE NOT NULL,
     indice_minimo DECIMAL(5,2) NOT NULL,
     indice_maximo DECIMAL(5,2) NOT NULL,
     

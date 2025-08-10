@@ -12,6 +12,19 @@ export const obtenerDepartamentosPorClases = async (estudiante) => {
     }
 };
 
+export const obtenerDiasMatriculaEstudiante = async (idEstudiante) => {
+    try {
+        const response = await fetch(`${API_BASE}/get/diasMatricula/index.php?idEstudiante=${idEstudiante}`);
+        if (!response.ok) throw new Error('Error al obtener asignaturas');
+        return await response.json();
+    } catch (error) {
+        console.error('Error:', error);
+        return [];
+    }
+};
+
+
+
 export const obtenerAsignaturasPorDepartamento = async (estudiante,departamento) => {
     try {
         const response = await fetch(`${API_BASE}/get/getClasePorDeptEstudiante/index.php?estudiante=${estudiante}&departamento=${departamento}`);

@@ -38,7 +38,8 @@ import {
   matricularSeccion,
   obtenerSeccionesActuales,
   cancelarSecciones,
-  obtenerClasesEstudiante
+  obtenerClasesEstudiante,
+  obtenerDiasMatriculaEstudiante
 } from '../../components/Estudiantes/matricula_Controller.mjs';
 
 let perfilGlobal = null;
@@ -256,14 +257,58 @@ const inicializarVistaMatricula = async () => {
     });
   };
 
+  function puedeMatricularHoy(datos) {
+    // fecha actual en formato YYYY-MM-DD
+    const fechaHoy = new Date().toISOString().split('T')[0];
+
+    // Buscar registro donde la fecha sea hoy Y puede_matricular sea 1
+    const registroHoy = datos.find(registro =>
+      registro.dia === fechaHoy && registro.puede_matricular === 1
+    );
+
+    return registroHoy ? true : false;
+  }
+
+  function obtenerProximoDiaMatricula(datos) {
+    // Buscar el dia donde puede_matricular == 1
+    const diaAsignado = datos.find(registro =>
+      registro.puede_matricular === 1
+    );
+
+    return diaAsignado || null;
+  }
+
   //Aqui insertar la verificacion por fecha de matricula.
   // if(verificar fecha actual con la que vamos a traer de la base, que tenga valor true){
   //    if(idestudiante){fdsfds lo mismo}   
   //} else{ al select ponerle que la fecha de matriucla no esta activa }
+
+  const diasDeMatricula = await obtenerDiasMatriculaEstudiante(idEstudiante);
+  console.log(diasDeMatricula);
+
   if (idEstudiante) {
-    const departamentos = await obtenerDepartamentosPorClases('20201003849');
-    limpiarSelect(selectClasificacion);
-    llenarSelect(selectClasificacion, departamentos, "nombre_departamento", "departamento_id");
+    if (puedeMatricularHoy(diasDeMatricula)) {
+      const departamentos = await obtenerDepartamentosPorClases('20201003849');
+      limpiarSelect(selectClasificacion);
+      llenarSelect(selectClasificacion, departamentos, "nombre_departamento", "departamento_id");
+    } else {
+      const proximoDia = obtenerProximoDiaMatricula(diasDeMatricula);
+      limpiarSelect(selectClasificacion);
+      const optionNoPuede = document.createElement("option");
+      const optionProximoDia = document.createElement("option");
+      optionNoPuede.textContent = `No puede matricular`;
+      optionProximoDia.textContent = `Tu dia de matricula es: ${proximoDia.dia}`;
+      optionNoPuede.disabled = true;
+      optionProximoDia.disabled = true;
+      optionNoPuede.style.backgroundColor = "red";
+      optionProximoDia.style.backgroundColor = "red";
+      optionNoPuede.style.color = "white";
+      optionProximoDia.style.color = "white";
+      selectClasificacion.appendChild(optionNoPuede);
+      selectClasificacion.appendChild(optionProximoDia);
+
+      console.log(proximoDia);
+    }
   }
 
   selectClasificacion?.addEventListener("change", async () => {

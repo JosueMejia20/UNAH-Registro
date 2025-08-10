@@ -523,4 +523,16 @@ class Estudiantes
             echo "Error al actualizar: " . $e->getMessage();
         }
     }
+
+    public function obtenerDiasMatriculaEstudiante($idEstudiante){
+        try {
+            $db = new DataBase();
+
+            $datos = $db->executeQuery("CALL VerificarDiasMatriculaEstudiante('" . $idEstudiante . "')");
+
+            return $datos;
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
+        }
+    }
 }
