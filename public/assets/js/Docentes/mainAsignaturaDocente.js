@@ -62,7 +62,7 @@ const cargarAsignaturaDocente = async () => {
         <td>${asignatura.departamento_clase}</td>
         <td>${asignatura.codigo_seccion}</td>
         <td></td>
-        <td><a href="http://localhost:8000/api/docentes/get/CSVEstudiantesEnSeccion/index.php?idSeccion=${asignatura.id}" class="action-btn" download>Descargar</a></td>
+        <td><a href="../../../api/docentes/get/CSVEstudiantesEnSeccion/index.php?idSeccion=${asignatura.id}" class="action-btn" download>Descargar</a></td>
 `;
         fila.children[4].appendChild(botonVer);
         tablaAsignaturas.appendChild(fila);
