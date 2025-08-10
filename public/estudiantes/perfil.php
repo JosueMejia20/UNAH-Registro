@@ -24,7 +24,8 @@
       {"label": "Perfil de Docentes", "href": "perfil_docentes.php"},
       {"label": "Certificado Académico", "href": "certificado.php"},
       {"label": "Evaluacion Docente", "href": "evaluaciones.php"}
-    ]'></unah-sidebar>
+    ]'
+    ></unah-sidebar>
 
         <!-- Contenido principal -->
         <main class="main-content p-4">

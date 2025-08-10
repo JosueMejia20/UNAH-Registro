@@ -22,7 +22,7 @@
 <body>
     <!-- Admin bar (visible solo para jefes/coordinadores) -->
     <div class="admin-bar bg-unah-blue-dark text-white py-2 px-4 d-flex justify-content-end gap-3">
-        <button class="btn btn-sm btn-outline-light">
+        <button class="btn btn-sm btn-outline-light" id="modalSubir">
             <i class="bi bi-plus-circle"></i> Añadir recurso
         </button>
     </div>
@@ -36,13 +36,10 @@
                     <h1 class="mb-0 fs-3 fw-bold">Biblioteca Musical UNAH</h1>
                 </div>
                 <div class="d-flex gap-3 align-items-center">
-                    <button class="btn btn-outline-light btn-sm">
-                        <i class="bi bi-bell"></i>
-                    </button>
                     <div class="user-dropdown">
                         <button class="user-btn btn-sm" id="userMenuButton">
                             <i class="bi bi-person-fill"></i>
-                            <span>Carlos Martínez</span>
+                            <span id="nombreUsuario">Carlos Martínez</span>
                             <i class="bi bi-chevron-down"></i>
                         </button>
                         <div class="user-menu" id="userMenu">
@@ -92,9 +89,6 @@
                             <button class="btn btn-sm btn-outline-primary view-pdf">
                                 <i class="bi bi-eye"></i> Ver
                             </button>
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-bookmark"></i> Guardar
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -118,9 +112,6 @@
                             <button class="btn btn-sm btn-outline-primary view-audio">
                                 <i class="bi bi-play"></i> Escuchar
                             </button>
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-bookmark"></i> Guardar
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -143,9 +134,6 @@
                         <div class="d-flex justify-content-between pt-2 border-top">
                             <button class="btn btn-sm btn-outline-success download">
                                 <i class="bi bi-download"></i> Descargar
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-bookmark"></i> Guardar
                             </button>
                         </div>
                     </div>
@@ -193,6 +181,190 @@
         </div>
     </div>
 
+    <!-- Modal para subir recurso -->
+     <div class="modal fade" id="subirRecursoModal" tabindex="-1">
+         <div class="modal-dialog modal-lg">
+             <div class="modal-content">
+                 <div class="modal-header bg-unah-blue text-white">
+                     <h5 class="modal-title">Agregar nuevo recurso</h5>
+                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                 </div>
+                 <form id="formSubirRecurso">
+                     <div class="modal-body">
+                         <div class="row g-3">
+                             <div class="col-md-6">
+                                 <div class="mb-3">
+                                     <label for="titulo" class="form-label">Título*</label>
+                                     <input type="text" class="form-control" id="titulo" name="titulo" list="listaTitulos" required>
+                                     <datalist id="listaTitulos"></datalist>
+                                 </div>
+                                 <div class="mb-3">
+                                     <label for="autores" class="form-label">Autor(es)*</label>
+                                     <input type="text" class="form-control" id="autores" name="autores" list="listaAutores" required>
+                                     <datalist id="listaAutores"></datalist>
+                                     <small class="text-muted">Separar múltiples autores con comas</small>
+                                 </div>
+                                 <div class="mb-3">
+                                     <label for="anio" class="form-label">Año de publicación*</label>
+                                     <input type="number" class="form-control" id="anio" name="anio" min="1900" max="2099" required>
+                                 </div>
+                                 <div class="mb-3">
+                                     <label for="categoria" class="form-label">Tipo de recurso*</label>
+                                     <select class="form-select" id="categoria" name="categoria" required>
+                                         <option value="">Seleccione un tipo</option>
+                                         <option value="libro">Libro</option>
+                                         <option value="articulo">Artículo</option>
+                                         <option value="guia">Guía de estudio</option>
+                                         <option value="tesis">Tesis</option>
+                                     </select>
+                                 </div>
+                             </div>
+                             <div class="col-md-6">
+                                 <div class="mb-3">
+                                     <label for="descripcion" class="form-label">Descripción*</label>
+                                     <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                                 </div>
+                                 <div class="mb-3">
+                                     <label for="tags" class="form-label">Palabras clave</label>
+                                     <input type="text" class="form-control" id="tags" name="tags" placeholder="Ej: programación, algoritmos, web">
+                                     <small class="text-muted">Separar con comas</small>
+                                 </div>
+                             </div>
+                         </div>
+
+                         <div class="row g-3">
+                             <div class="col-md-6">
+                                 <div class="mb-3">
+                                     <label for="cursos" class="form-label">Cursos relacionados</label>
+                                     <select class="form-select" id="cursos" name="cursos" multiple>
+                                         <option value="1">Matemáticas Avanzadas</option>
+                                         <option value="2">Literatura Contemporánea</option>
+                                         <option value="3">Programación Web</option>
+                                         <option value="4">Historia Universal</option>
+                                     </select>
+                                 </div>
+                             </div>
+                             <div class="col-md-6">
+                                 <div class="mb-3">
+                                     <label for="portada" class="form-label">Portada (opcional)</label>
+                                     <input type="file" class="form-control" id="portada" name="portada" accept="image/*">
+                                 </div>
+                             </div>
+                         </div>
+
+                         <div class="mb-3">
+                             <label for="archivo_pdf" class="form-label">Archivo del recurso*</label>
+                             <input type="file" class="form-control" id="archivo_pdf" name="archivo_pdf" accept=".pdf,.doc,.docx,.ppt,.pptx" required>
+                             <small class="text-muted">Formatos aceptados: PDF, Word, PowerPoint</small>
+                         </div>
+                     </div>
+                     <div class="modal-footer bg-blue-gray">
+                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                         <button type="submit" class="btn btn-unah-blue">Subir Recurso</button>
+                     </div>
+                 </form>
+             </div>
+         </div>
+     </div>
+
+     <!-- Modal para editar recurso -->
+     <div class="modal fade" id="editarRecursoModal" tabindex="-1">
+         <div class="modal-dialog modal-lg">
+             <div class="modal-content">
+                 <div class="modal-header bg-unah-blue text-white">
+                     <h5 class="modal-title">Editar recurso</h5>
+                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                 </div>
+                 <form id="formEditarRecurso">
+                     <div class="modal-body">
+                         <div class="row g-3">
+                             <div class="col-md-6">
+                                 <div class="mb-3">
+                                     <label for="edit_titulo" class="form-label">Título*</label>
+                                     <input type="text" class="form-control" id="edit_titulo" name="edit_titulo" required>
+                                 </div>
+                                 <div class="mb-3">
+                                     <label for="edit_autores" class="form-label">Autor(es)*</label>
+                                     <input type="text" class="form-control" id="edit_autores" name="edit_autores" required>
+                                     <small class="text-muted">Separar múltiples autores con comas</small>
+                                 </div>
+                                 <div class="mb-3">
+                                     <label for="edit_anio" class="form-label">Año de publicación*</label>
+                                     <input type="number" class="form-control" id="edit_anio" name="edit_anio" min="1900" max="2099" required>
+                                 </div>
+                                 <div class="mb-3">
+                                     <label for="edit_categoria" class="form-label">Tipo de recurso*</label>
+                                     <select class="form-select" id="edit_categoria" name="edit_categoria" required>
+                                         <option value="libro">Libro</option>
+                                         <option value="articulo">Artículo</option>
+                                         <option value="guia">Guía de estudio</option>
+                                         <option value="tesis">Tesis</option>
+                                         <option value="otros">Otro</option>
+                                     </select>
+                                 </div>
+                             </div>
+                             <div class="col-md-6">
+                                 <div class="mb-3">
+                                     <label for="edit_descripcion" class="form-label">Descripción*</label>
+                                     <textarea class="form-control" id="edit_descripcion" name="edit_descripcion" rows="3" required></textarea>
+                                 </div>
+                                 <div class="mb-3">
+                                     <label for="edit_tags" class="form-label">Palabras clave</label>
+                                     <input type="text" class="form-control" id="edit_tags" name="edit_tags">
+                                     <small class="text-muted">Separar con comas</small>
+                                 </div>
+                             </div>
+                         </div>
+
+                         <div class="row g-3">
+                             <div class="col-md-6">
+                                 <div class="mb-3">
+                                     <label for="edit_cursos" class="form-label">Cursos relacionados</label>
+                                     <select class="form-select" id="edit_cursos" name="edit_cursos" multiple>
+                                         <option value="1">Matemáticas Avanzadas</option>
+                                         <option value="2">Literatura Contemporánea</option>
+                                         <option value="3">Programación Web</option>
+                                         <option value="4">Historia Universal</option>
+                                     </select>
+                                 </div>
+                             </div>
+                             <div class="col-md-6">
+                                 <div class="mb-3">
+                                     <label for="edit_portada" class="form-label">Cambiar portada (opcional)</label>
+                                     <input type="file" class="form-control" id="edit_portada" name="edit_portada" accept="image/*">
+                                 </div>
+                             </div>
+                         </div>
+
+                         <div class="mb-3">
+                             <label for="edit_archivo" class="form-label">Cambiar archivo (opcional)</label>
+                             <input type="file" class="form-control" id="edit_archivo" name="edit_archivo" accept=".pdf,.doc,.docx,.ppt,.pptx">
+                             <small class="text-muted">Dejar en blanco para mantener el archivo actual</small>
+                         </div>
+
+                         <input type="hidden" id="recurso_id" name="recurso_id">
+                     </div>
+                     <div class="modal-footer bg-blue-gray">
+                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                         <button type="submit" class="btn btn-unah-blue">Guardar cambios</button>
+                     </div>
+                 </form>
+             </div>
+         </div>
+     </div>
+
+     <!-- Overlay de carga -->
+     <div id="overlayCarga">
+         <div class="spinner-border" role="status">
+             <span class="visually-hidden">Cargando...</span>
+         </div>
+     </div>
+
+
+     <!-- Footer -->
+     <unah-footer></unah-footer>
+
+     <unah-modal></unah-modal>
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 

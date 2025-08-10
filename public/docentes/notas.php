@@ -29,7 +29,9 @@ if (!isset($_SESSION['usuario_id'])) {
       {"label": "Asignaturas", "href": "asignatura.php"},
       {"label": "Recursos", "href": "recursos.php"},
       {"label": "Notas", "href": "notas.php"}
-    ]'></unah-sidebar>
+    ]'
+    sidebar-title="Portal Docente UNAH"
+    user-name="Docente"></unah-sidebar>
 
     <div class="container_principal">
 
