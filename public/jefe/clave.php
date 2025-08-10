@@ -26,8 +26,17 @@
 
     <div class="container_principal">
 
+        <div class="perfil-card">
+          <div class="imagen-perfil">
+            <img src="ruta-de-la-imagen.jpg" alt="Foto de perfil">
+          </div>
+          <div class="info-perfil">
+            <p class="titulo">Gention de Clave</p>
+            <p class="nombre">Mario Geron</p>
+          </div>
+        </div>
+
             <div class="container_secundario">
-                <h1 class="main-title">Gention de Clave</h1>
 
                     <div class="form-box">
                         <label>Seleccionar Docente:</label>

@@ -25,20 +25,42 @@
     ]'></unah-sidebar>
 
     <div class="container_principal">
-        <h1 class="main-title">Perfil de Jefe</h1>
 
-          <div class="perfil-container">
-            <img src="foto.jpg" alt="Foto de perfil" class="perfil-img">
-            <h2>Ing. Mario Geron</h2>
+        <div class="perfil-card">
+          <div class="imagen-perfil">
+            <img src="ruta-de-la-imagen.jpg" alt="Foto de perfil">
+          </div>
+          <div class="info-perfil">
+            <p class="titulo">Bienvenido Jefe</p>
+            <p class="nombre">Mario Geron</p>
+          </div>
+        </div>
 
+        <div class="contenedor_info">
+        <div class="contenedor_info">
+          <div class="izquierda">
             <div class="perfil-info">
-              <h3>Información del perfil</h3>
-              <p><span class="label">ID de Jefe:</span> 10234</p>
-              <p><span class="label">Correo:</span> mar.ger@unah.hn</p>
-              <p><span class="label">Cargo:</span> Docente - Jefe</p>
+              <h3>Información Personal</h3>
+              <p><span class="label">ID de docente:</span> 10234</p>
+              <p><span class="label">Correo:</span> roberto.fig@unah.hn</p>
+              <p><span class="label">Cargo:</span> Jefe</p>
               <p><span class="label">Centro universitario:</span> Ciudad Universitaria</p>
             </div>
           </div>
+
+
+          <div class="derecha">
+            <div class="perfil-info">
+              <h3>Información Academica</h3>
+              <p><span class="label">Facultad:</span> Ingenieria</p>
+              <p><span class="label">Nivel Academico:</span> Ingeniero en Sistemas</p>
+              <p><span class="label">Años de experiencia:</span> 5 Años</p>
+              <p><span class="label">Fecha de ingreso:</span> 20/05/2023</p>
+            </div>
+          </div>
+        </div>
+
+ 
 
 
     </div>

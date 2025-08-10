@@ -26,7 +26,20 @@
 
     <div class="container_principal">
 
-            <div class="container_secundario">
+        <div class="perfil-card">
+          <div class="imagen-perfil">
+            <img src="ruta-de-la-imagen.jpg" alt="Foto de perfil">
+          </div>
+          <div class="info-perfil">
+            <p class="titulo">Periodo</p>
+            <p class="nombre">Mario Geron</p>
+          </div>
+        </div>
+
+        <div class="contenedor_infor">
+
+
+            <div class="izquierdar">
                     <h1 class="main-title">Crear Seccion</h1>
 
                         <div class="form-box">
@@ -57,42 +70,43 @@
 
                             <button class="action-btn" onclick="alert('Sección creada (simulado). Verificar traslapes en backend.')">Crear Sección</button>
                         </div>
+            </div>
 
-                </div>
+            <div class="derechar">
+                        <h1 class="main-title">Aumento de Cupos</h1>
 
-                <div class="container_secundario">
-                    <h1 class="main-title">Aumento de Cupos</h1>
+                            <div class="form-box">
+                                <label>Clase:</label>
+                                <select>
+                                <option>Matemáticas I</option>
+                                <option>Física General</option>
+                                </select>
 
-                        <div class="form-box">
-                            <label>Clase:</label>
-                            <select>
-                            <option>Matemáticas I</option>
-                            <option>Física General</option>
-                            </select>
+                                <label>Cantidad adicional:</label>
+                                <input type="number" min="1">
 
-                            <label>Cantidad adicional:</label>
-                            <input type="number" min="1">
+                                <button class="action-btn" onclick="alert('Cupos aumentados (simulado)')">Aumentar</button>
+                            </div>
 
-                            <button class="action-btn" onclick="alert('Cupos aumentados (simulado)')">Aumentar</button>
-                        </div>
-                </div>
+            </div>
 
-                <div class="container_secundario">
-                    <h1 class="main-title">Registros de Infraestructura</h1>
 
-                        <div class="form-box">
-                            <label>Nombre del Edificio:</label>
-                            <input type="text" placeholder="Edificio B2">
+            <div class="izquierdar">
+                        <h1 class="main-title">Registros de Infraestructura</h1>
 
-                            <label>Aula:</label>
-                            <input type="text" placeholder="B2-209">
+                            <div class="form-box">
+                                <label>Nombre del Edificio:</label>
+                                <input type="text" placeholder="Edificio B2">
 
-                            <button class="action-btn" onclick="alert('Aula registrada (simulado)')">Registrar</button>
-                        </div>
+                                <label>Aula:</label>
+                                <input type="text" placeholder="B2-209">
 
-                </div>
+                                <button class="action-btn" onclick="alert('Aula registrada (simulado)')">Registrar</button>
+                            </div>
+            </div>
 
-                <div class="container_secundario">
+
+            <div class="derechar">
                     <h1 class="main-title">Cancelacion de Seccion</h1>
 
                             <div class="form-box">
@@ -107,10 +121,9 @@
 
                                 <button class="action-btn" onclick="alert('Sección cancelada (simulado)')">Cancelar Sección</button>
                             </div>
+            </div>
 
-                </div>
-
-                <div class="container_secundario">
+            <div class="izquierdar">
                     <h1 class="main-title">Verificar Lista de Espera</h1>
 
                         <div class="form-box">
@@ -122,9 +135,12 @@
 
                             <button class="action-btn" onclick="alert('Mostrando lista de espera (simulado)')">Ver lista</button>
                         </div>
-                </div>
+            </div>
+
+        </div>
 
     </div>
+
 
 
     <script type="module" src="../../assets/js/mainEstudiantes.js"></script>

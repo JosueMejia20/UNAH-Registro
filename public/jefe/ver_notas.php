@@ -25,7 +25,17 @@
     ]'></unah-sidebar>
 
     <div class="container_principal">
-        <h1 class="main-title">Ver Notas</h1>
+
+        <div class="perfil-card">
+          <div class="imagen-perfil">
+            <img src="ruta-de-la-imagen.jpg" alt="Foto de perfil">
+          </div>
+          <div class="info-perfil">
+            <p class="titulo">Ver Notas</p>
+            <p class="nombre">Mario Geron</p>
+          </div>
+        </div>
+
 
             <table class="requests-table">
                 <thead>

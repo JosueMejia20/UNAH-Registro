@@ -22,11 +22,17 @@
     ]'></unah-sidebar>
 
     <div class="container_principal">
-        <h1 class="main-title">Carga Academica</h1>
 
-        <button class="action-btn">Agregar de Cambios</button>                   
-        <button class="action-btn">Modificar Carga</button>
-        <button class="action-btn">Eliminar Cambio</button>
+        <div class="perfil-card">
+          <div class="imagen-perfil">
+            <img src="ruta-de-la-imagen.jpg" alt="Foto de perfil">
+          </div>
+          <div class="info-perfil">
+            <p class="titulo">Carga Academica</p>
+            <p class="nombre">Rafael Raudales</p>
+          </div>
+        </div>
+
 
             <table class="requests-table">
                 <thead>
