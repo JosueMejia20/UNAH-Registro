@@ -36,14 +36,15 @@ class Musica
             if (in_array($REVISOR, $roles) && count($roles) === 1) {
                 $tipoUsuario = 0;
             }
-            // Si es coordinador o jefe, y a la vez tiene que ser docente
-            if ((in_array($COORDINADOR, $roles) || in_array($JEFE_DEPT, $roles)) && in_array($DOCENTE, $roles)) {
-                $tipoUsuario = 3;
-            }
 
             // Si solo es docente
             if (in_array($DOCENTE, $roles)) {
                 $tipoUsuario = 2;
+            }
+
+            // Si es coordinador o jefe, y a la vez tiene que ser docente
+            if ((in_array($COORDINADOR, $roles) || in_array($JEFE_DEPT, $roles)) && in_array($DOCENTE, $roles)) {
+                $tipoUsuario = 3;
             }
 
             // Si solo es estudiante
@@ -57,12 +58,14 @@ class Musica
             $stmtSP->execute([$idUsuario, $tipoUsuario]);
             $resultadoSP = $stmtSP->fetch(PDO::FETCH_ASSOC);
 
-            if($tipoUsuario == 1 && $resultadoSP['puede_acceder'] == 1){
-                return 1;
+            $stmtSP->closeCursor();
+
+            if($tipoUsuario == 3 && $resultadoSP['puede_acceder'] == 1){
+                return 3;
             } else if($tipoUsuario == 2 && $resultadoSP['puede_acceder'] == 1){
                 return 2;
-            } else if($tipoUsuario == 3 && $resultadoSP['puede_acceder'] == 1){
-                return 3;
+            } else if($tipoUsuario == 1 && $resultadoSP['puede_acceder'] == 1){
+                return 1;
             }
 
             return 0;
