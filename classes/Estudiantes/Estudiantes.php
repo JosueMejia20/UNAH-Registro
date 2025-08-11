@@ -633,4 +633,24 @@ class Estudiantes
             return "Error en la base de datos: " . $e->getMessage();
         }
     }
+
+    public function verificarUsuarioEstudiante($idUsuario){
+        try {
+            $db = new DataBase();
+            $pdo = $db->connect();
+
+            $stmt = $pdo->prepare("SELECT isEstudiante(:idUsuario) AS resultado");
+
+            $stmt->bindParam(':idUsuario', $idUsuario, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return isset($resultado['resultado']) ? (int)$resultado['resultado'] : 0;
+        } catch (PDOException $e) {
+            error_log("Error en verificarUsuarioEstudiante: " . $e->getMessage());
+            return 0;
+        }
+    }
 }

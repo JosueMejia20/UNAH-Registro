@@ -19,7 +19,7 @@
                         <!-- Encabezado -->
                         <div class="text-center mb-4">
                             <div class="logo-container mb-3">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Universidad_Nacional_Aut%C3%B3noma_de_Honduras_logo.svg/1200px-Universidad_Nacional_Aut%C3%B3noma_de_Honduras_logo.svg.png" 
+                                <img src="https://biologia.unah.edu.hn/dmsdocument/1433-unah-logo-texto" 
                                      alt="Logo UNAH" 
                                      class="logo-unah">
                             </div>
@@ -80,6 +80,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../assets/js/Estudiantes/login_estudiante.js"></script>
+    <script type="module" src="../../assets/js/Estudiantes/login_estudiante.js"></script>
 </body>
 </html>
