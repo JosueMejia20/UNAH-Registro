@@ -259,7 +259,7 @@ INSERT INTO Periodo_Academico (nombre, fecha_inicio, fecha_fin, bool_actual) VAL
 -- Periodos 2025
 INSERT INTO Periodo_Academico (nombre, fecha_inicio, fecha_fin, bool_actual) VALUES
 ('I PAC 2025',  '2025-01-15', '2025-04-30', 0),
-('II PAC 2025', '2025-05-10', '2025-08-20', 1),
+('II PAC 2025', '2025-05-10', '2025-08-30', 1),
 ('III PAC 2025','2025-09-01', '2025-12-15', 0);
 
 -- Periodos 2026
@@ -279,8 +279,8 @@ INSERT INTO Periodo_Matricula (periodo_acad_id, fecha_inicio, fecha_fin) VALUES
 -- I PAC 2025: matrícula del 15 al 20 de enero
 (7, '2025-01-15', '2025-01-20'),
 
--- II PAC 2025: matrícula del 10 al 15 de mayo
-(8, '2025-05-10', '2025-05-15'),
+-- II PAC 2025: matrícula del 10 al 30 de agosto (para pruebas)
+(8, '2025-08-10', '2025-08-30'),
 
 -- III PAC 2025: matrícula del 1 al 6 de septiembre
 (9, '2025-09-01', '2025-09-06');
@@ -301,7 +301,39 @@ INSERT INTO Clase (departamento_id, unidades_valorativas, nombre_clase, codigo, 
 (1, 4, 'Ecuaciones Diferenciales', 'MM411', 7),  
 (1, 4, 'Variable Compleja', 'MM502', 7), 
 (1, 4, 'Analisis Numerico', 'MM412', 9),  
-(1, 4, 'Matematica Discreta', 'MM420', 1);  
+(1, 4, 'Matematica Discreta', 'MM420', 1);
+
+-- Departamento de Fisica
+INSERT INTO Clase (departamento_id, unidades_valorativas, nombre_clase, codigo) VALUES
+(2, 5, 'Fisica I', 'FS100'),
+(2, 5, 'Fisica II', 'FS200'),
+(2, 4, 'Mecanica I', 'FS381'),
+(2, 5, 'Elect. y Magnetismo I', 'FS321'),
+(2, 5, 'Mecanica II', 'FS382'),
+(2, 4, 'Met. Fisico-Matematico', 'FS351'),
+(2, 5, 'Fisica Moderna', 'FS371'),
+(2, 5, 'Elect. y Magnetismo II', 'FS415'),
+(2, 4, 'Term. y Mec. Est. I', 'FS481'),
+(2, 4, 'Mecanica Cuantica I', 'FS472'),
+(2, 5, 'Lab Avanzado', 'FS492'),
+(2, 5, 'Mecanica Cuantica II', 'FS473'),
+(2, 4, 'Elem de Fis. Nuclear', 'FS611');
+
+-- Departamento de Arte (Musica)
+INSERT INTO Clase (departamento_id, unidades_valorativas, nombre_clase, codigo) VALUES
+(21, 5, 'Instrumento I', 'ML130'),
+(21, 5, 'Solfeo', 'ML131'),
+(21, 4, 'Armonia I', 'ML132'),
+(21, 5, 'Instrumento II', 'ML230'),
+(21, 5, 'Solfeo II', 'ML231'),
+(21, 4, 'Armonia II', 'ML232'),
+(21, 5, 'Instrumento III', 'ML330'),
+(21, 5, 'Solfeo III', 'ML331'),
+(21, 4, 'Armonia III', 'ML332'),
+(21, 4, 'Historia de Musica I', 'ML142'),
+(21, 5, 'Instrumento IV', 'ML430'),
+(21, 5, 'Solfeo IV', 'ML431'),
+(21, 4, 'Armonia IV', 'ML432');
 
 -- INSERTS PARA EDIFICIOS
 INSERT INTO Edificio (nombre, centro_reg_id) VALUES
@@ -378,6 +410,39 @@ INSERT INTO Clases_Carrera (clase_id, carrera_id) VALUES
 (10, 1),
 (11, 1),
 (12, 1);
+
+-- Carrera de Fisica
+INSERT INTO Clases_Carrera (clase_id, carrera_id) VALUES
+(13, 2), -- Fisica I
+(14, 2), -- Fisica II
+(15, 2), -- Mecanica I
+(16, 2), -- Elect. y Magnetismo I
+(17, 2), -- Mecanica II
+(18, 2), -- Met. Fisico-Matematico
+(19, 2), -- Fisica Moderna
+(20, 2), -- Elect. y Magnetismo II
+(21, 2), -- Term. y Mec. Est. I
+(22, 2), -- Mecanica Cuantica I
+(23, 2), -- Lab Avanzado
+(24, 2), -- Mecanica Cuantica II
+(25, 2); -- Elem de Fis. Nuclear
+
+
+-- Carrera de Musica
+INSERT INTO Clases_Carrera (clase_id, carrera_id) VALUES
+(26, 24), -- Instrumento I
+(27, 24), -- Solfeo
+(28, 24), -- Armonia I
+(29, 24), -- Instrumento II
+(30, 24), -- Solfeo II
+(31, 24), -- Armonia II
+(32, 24), -- Instrumento III
+(33, 24), -- Solfeo III
+(34, 24), -- Armonia III
+(35, 24), -- Historia de Musica I
+(36, 24), -- Instrumento IV
+(37, 24), -- Solfeo IV
+(38, 24); -- Armonia IV
 
 -- AGREGAR A Indice_Matricula y verificar que el dia este dentro de los del PeriodoMatricula
 

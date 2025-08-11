@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // FUNCIÓN - VISTA MATRÍCULA
 // ==========================
 const inicializarVistaMatricula = async () => {
-  const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
+  const matriculaEstudiante = await obtenerIdEstudiante(usuarioId);
 
   const selectClasificacion = document.querySelector('#departamentosClases');
   const selectAsignatura = document.querySelector("#clasesDepartamentos");
@@ -291,7 +291,7 @@ const inicializarVistaMatricula = async () => {
 
   if (idEstudiante) {
     if (puedeMatricularHoy(diasDeMatricula)) {
-      const departamentos = await obtenerDepartamentosPorClases('20201003849');
+      const departamentos = await obtenerDepartamentosPorClases(matriculaEstudiante);
       limpiarSelect(selectClasificacion);
       llenarSelect(selectClasificacion, departamentos, "nombre_departamento", "departamento_id");
     } else {
@@ -320,7 +320,7 @@ const inicializarVistaMatricula = async () => {
     const clasificacion = selectClasificacion.value;
 
     if (clasificacion !== "Selecciona una clasificación") {
-      const asignaturas = await obtenerAsignaturasPorDepartamento('20201003849', clasificacion);
+      const asignaturas = await obtenerAsignaturasPorDepartamento(matriculaEstudiante, clasificacion);
       llenarSelect(selectAsignatura, asignaturas, "nombre_clase", "clase_id");
     }
   });
@@ -350,7 +350,7 @@ const inicializarVistaMatricula = async () => {
   });
 
   btnMatricular?.addEventListener("click", async () => {
-    const estudiante = '20201003849';
+    const estudiante = matriculaEstudiante;
     const horario = selectHorario.value;
     const hayConflictoHorario = await verificarConflictoHorario(idEstudiante, horario);
 
@@ -377,7 +377,7 @@ const inicializarVistaMatricula = async () => {
   });
 
   btnCancelar?.addEventListener("click", async () => {
-    const estudiante = '20201003849';
+    const estudiante = matriculaEstudiante;
     const checkboxes = tablaCancelacion.querySelectorAll("input[type='checkbox']:checked");
     const ids = Array.from(checkboxes).map(c => c.value);
 
@@ -411,7 +411,7 @@ const inicializarVistaMatricula = async () => {
 };
 
 const inicializarVistaCertificado = async () => {
-  const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
+  const matriculaEstudiante = await obtenerIdEstudiante(usuarioId);
   const btnDescargarCertificado = document.getElementById('btnDescargarCertificado');
 
   btnDescargarCertificado.addEventListener("click", () => {
