@@ -19,7 +19,9 @@
       {"label": "Solicitudes Cambio de Carrera", "href": "sol_cam_car.php"},
       {"label": "Solicitudes Cancelaciones Excepcionales", "href": "sol_can_exc.php"},
       {"label": "Solicitudes Cambio de Centro", "href": "sol_cam_cen.php"}
-    ]'></unah-sidebar>
+    ]'
+    sidebar-title="Portal Coordinador UNAH"
+    user-name="Coordinador"></unah-sidebar>
 
     <div class="container_principal">
 
@@ -40,7 +42,7 @@
                 <h4>Información Personal</h4>
               </div>
               <p><span class="label">ID de docente:</span> 10234</p>
-              <p><span class="label">Correo:</span> roberto.fig@unah.hn</p>
+              <p><span class="label">Correo:</span> rafa.rau@unah.hn</p>
               <p><span class="label">Cargo:</span> Coordinador</p>
               <p><span class="label">Centro universitario:</span> Ciudad Universitaria</p>
             </div>

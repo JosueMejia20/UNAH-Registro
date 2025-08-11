@@ -19,7 +19,9 @@
       {"label": "Solicitudes Cambio de Carrera", "href": "sol_cam_car.php"},
       {"label": "Solicitudes Cancelaciones Excepcionales", "href": "sol_can_exc.php"},
       {"label": "Solicitudes Cambio de Centro", "href": "sol_cam_cen.php"}
-    ]'></unah-sidebar>
+    ]'
+    sidebar-title="Portal Coordinador UNAH"
+    user-name="Coordinador"></unah-sidebar>
 
     <div class="container_principal">
 

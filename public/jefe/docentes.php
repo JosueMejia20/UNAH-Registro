@@ -15,14 +15,14 @@
     <unah-sidebar menu-items='[
       {"label": "Perfil", "href": "perfil_jefe.php"},
       {"label": "Asignaturas", "href": "asignaturas.php"},
-      {"label": "Periodo", "href": "periodo.php"},
       {"label": "Docentes", "href": "docentes.php"},
       {"label": "Historial", "href": "historial.php"},
       {"label": "Notas", "href": "notas.php"},
       {"label": "Estadistica", "href": "estadistica.php"},
-      {"label": "Listado", "href": "listado.php"},
-      {"label": "Clave", "href": "clave.php"}
-    ]'></unah-sidebar>
+      {"label": "Listado", "href": "listado.php"}
+    ]'
+    sidebar-title="Portal Jefe UNAH"
+    user-name="Jefe"></unah-sidebar>
 
     <div class="container_principal">
 
@@ -46,6 +46,7 @@
                         <th>Carrera</th>
                         <th>Lista de Asignaturas</th>
                         <th>Evaluacion del Docente</th>
+                        <th>Cambio de contraseña</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,6 +63,11 @@
                         <td>
                             <button class="action-btn">Ver Evaluacion</button>  
                         </td>
+                        <td>
+                            <a href="lista_asignatura.php">
+                                <button class="action-btn">Cambio</button> 
+                            </a>  
+                        </td>
                     </tr>
                     <tr>
                         <td>222</td>
@@ -75,7 +81,12 @@
                         </td>
                         <td>
                             <button class="action-btn">Ver Evaluacion</button> 
-                        </td>                    
+                        </td> 
+                        <td>
+                            <a href="lista_asignatura.php">
+                                <button class="action-btn">Cambio</button> 
+                            </a>  
+                        </td>                   
                     </tr>
                     <tr>
                         <td>333</td>
@@ -89,6 +100,11 @@
                         </td>
                         <td>
                             <button class="action-btn">Ver Evaluacion</button>
+                        </td>
+                        <td>
+                            <a href="lista_asignatura.php">
+                                <button class="action-btn">Cambio</button> 
+                            </a>  
                         </td>
                     </tr>
                 </tbody>

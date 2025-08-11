@@ -31,7 +31,7 @@
       {"label": "Notas", "href": "notas.php"}
     ]'
     sidebar-title="Portal Docente UNAH"
-    user-name="Docente"></unah-sidebar>
+    user-name="Docentes"></unah-sidebar>
 
   <div class="container_principal">
 

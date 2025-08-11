@@ -14,15 +14,15 @@
 
     <unah-sidebar menu-items='[
       {"label": "Perfil", "href": "perfil_jefe.php"},
-      {"label": "Asignaturas", "href": "asignaturas.php"},
-      {"label": "Periodo", "href": "periodo.php"},
+      {"label": "Asignaturas", "href": "asignaturas.php"}
       {"label": "Docentes", "href": "docentes.php"},
       {"label": "Historial", "href": "historial.php"},
       {"label": "Notas", "href": "notas.php"},
       {"label": "Estadistica", "href": "estadistica.php"},
-      {"label": "Listado", "href": "listado.php"},
-      {"label": "Clave", "href": "clave.php"}
-    ]'></unah-sidebar>
+      {"label": "Listado", "href": "listado.php"}
+    ]'
+    sidebar-title="Portal Jefe UNAH"
+    user-name="Jefe"></unah-sidebar>
 
     <div class="container_principal">
 

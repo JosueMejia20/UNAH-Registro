@@ -15,14 +15,14 @@
     <unah-sidebar menu-items='[
       {"label": "Perfil", "href": "perfil_jefe.php"},
       {"label": "Asignaturas", "href": "asignaturas.php"},
-      {"label": "Periodo", "href": "periodo.php"},
       {"label": "Docentes", "href": "docentes.php"},
       {"label": "Historial", "href": "historial.php"},
       {"label": "Notas", "href": "notas.php"},
       {"label": "Estadistica", "href": "estadistica.php"},
-      {"label": "Listado", "href": "listado.php"},
-      {"label": "Clave", "href": "clave.php"}
-    ]'></unah-sidebar>
+      {"label": "Listado", "href": "listado.php"}
+    ]'
+    sidebar-title="Portal Jefe UNAH"
+    user-name="Jefe"></unah-sidebar>
 
     <div class="container_principal">
 
@@ -44,7 +44,7 @@
                 <h4>Información Personal</h4>
               </div>
               <p><span class="label">ID de docente:</span> 10234</p>
-              <p><span class="label">Correo:</span> roberto.fig@unah.hn</p>
+              <p><span class="label">Correo:</span> mar.ger@unah.hn</p>
               <p><span class="label">Cargo:</span> Jefe</p>
               <p><span class="label">Centro universitario:</span> Ciudad Universitaria</p>
             </div>
