@@ -157,7 +157,7 @@ const cargarRecursosDetalle = async () => {
     if (misRecursos.length > 0) {
         gridMisRecursos.innerHTML = '';
         misRecursos.forEach(recurso => {
-
+            console.log(recurso.tipo_recurso);
             const nombresClases = recurso.clases_asociadas
                 ? recurso.clases_asociadas
                     .split(',')
@@ -171,41 +171,76 @@ const cargarRecursosDetalle = async () => {
             let botonesEliminarModificar = '';
             if (rol == 3) {
                 botonesEliminarModificar = `
-                 <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
-                     <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
-                         <i class="bi bi-pencil"></i>
-                     </button>
-                     <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center eliminar-btn" style="width: 30px; height: 30px;" data-id-eliminar="${recurso.id}">
-                         <i class="bi bi-trash"></i>
-                     </button>
-                 </div>`;
+         <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
+             <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
+                 <i class="bi bi-pencil"></i>
+             </button>
+             <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center eliminar-btn" style="width: 30px; height: 30px;" data-id-eliminar="${recurso.id}">
+                 <i class="bi bi-trash"></i>
+             </button>
+         </div>`;
             }
 
-            const html = `
-                <!-- PDF Resource -->
-            <div class="col-md-6 col-lg-4">
-                <div class="resource-card card h-100 shadow-sm animate-fadeInUp data-cursos="${nombresClases}" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
-                    <div class="thumbnail-pdf card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
-                        <i class="bi bi-file-earmark-pdf fs-1"></i>
-                        ${botonesEliminarModificar}
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-unah-blue">${recurso.titulo}</h5>
-                        <p class="card-text text-muted small">${recurso.autores}</p>
-                        <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
-                        <p class="card-text small text-truncate">${recurso.descripcion}</p>
-                        <div class="border-top pt-2 mt-2">
-                            <div class="mb-2">${tagsHTML}</div>
-                            <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
-                                <i class="bi bi-eye me-1"></i> Ver documento
-                            </button>
-                        </div>
+            let html = '';
+
+            if (recurso.tipo_recurso === 'Pdf') {
+                html = `
+        <!-- PDF Resource -->
+        <div class="col-md-6 col-lg-4">
+            <div class="resource-card card h-100 shadow-sm animate-fadeInUp" 
+                 data-cursos="${nombresClases}" 
+                 data-busqueda="${recurso.titulo}, ${recurso.tags}" 
+                 data-categoria="${recurso.tipo_recurso}">
+                <div class="thumbnail-pdf card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
+                    <i class="bi bi-file-earmark-pdf fs-1"></i>
+                    ${botonesEliminarModificar}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-unah-blue">${recurso.titulo}</h5>
+                    <p class="card-text text-muted small">${recurso.autores}</p>
+                    <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
+                    <p class="card-text small text-truncate">${recurso.descripcion}</p>
+                    <div class="border-top pt-2 mt-2">
+                        <div class="mb-2">${tagsHTML}</div>
+                        <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
+                            <i class="bi bi-eye me-1"></i> Ver documento
+                        </button>
                     </div>
                 </div>
             </div>
-`;
+        </div>`;
+            }
+            else if (recurso.tipo_recurso === 'Audio') {
+                html = `
+        <!-- Audio Resource -->
+        <div class="col-md-6 col-lg-4">
+            <div class="resource-card card h-100 shadow-sm animate-fadeInUp" 
+                 data-cursos="${nombresClases}" 
+                 data-busqueda="${recurso.titulo}, ${recurso.tags}" 
+                 data-categoria="${recurso.tipo_recurso}">
+                <div class="thumbnail-audio card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
+                    <i class="bi bi-music-note-beamed fs-1"></i>
+                    ${botonesEliminarModificar}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-unah-blue">${recurso.titulo}</h5>
+                    <p class="card-text text-muted small">${recurso.autores}</p>
+                    <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
+                    <p class="card-text small text-truncate">${recurso.descripcion}</p>
+                    <div class="border-top pt-2 mt-2">
+                        <div class="mb-2">${tagsHTML}</div>
+                        <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
+                            <i class="bi bi-eye me-1"></i> Reproducir audio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+            }
+
             gridMisRecursos.innerHTML += html;
         });
+
 
         // Listeners
         document.querySelectorAll('.ver-recurso').forEach(btn => {
@@ -241,9 +276,8 @@ const cargarRecursosDetalleEstudiante = async () => {
     if (misRecursos.length > 0) {
         gridMisRecursos.innerHTML = '';
         misRecursos.forEach(recurso => {
-
-            // Aquí sí puedes acceder a recurso.clases_asociadas
-            const nombresClasesES = recurso.clases_asociadas
+            console.log(recurso.tipo_recurso);
+            const nombresClases = recurso.clases_asociadas
                 ? recurso.clases_asociadas
                     .split(',')
                     .map(c => c.trim().replace(/^[A-Z0-9]+\s*-\s*/, ''))
@@ -252,88 +286,80 @@ const cargarRecursosDetalleEstudiante = async () => {
 
             const tagsArray = separarTags(recurso.tags);
             const tagsHTML = tagsArray.map(tag => `<span class="badge badge-tag me-1">${tag}</span>`).join('');
+
             let botonesEliminarModificar = '';
             if (rol == 3) {
                 botonesEliminarModificar = `
-                 <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
-                     <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
-                         <i class="bi bi-pencil"></i>
-                     </button>
-                     <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center eliminar-btn" style="width: 30px; height: 30px;" data-id-eliminar="${recurso.id}">
-                         <i class="bi bi-trash"></i>
-                     </button>
-                 </div>`;
+         <div class="position-absolute top-0 end-0 p-2 d-flex gap-1">
+             <button class="btn btn-warning btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center editar-btn" style="width: 30px; height: 30px;" data-id-editar="${recurso.id}">
+                 <i class="bi bi-pencil"></i>
+             </button>
+             <button class="btn btn-danger btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center eliminar-btn" style="width: 30px; height: 30px;" data-id-eliminar="${recurso.id}">
+                 <i class="bi bi-trash"></i>
+             </button>
+         </div>`;
             }
-            const html = `
-                <!-- PDF Resource -->
-            <div class="col-md-6 col-lg-4">
-                <div class="resource-card card h-100 shadow-sm animate-fadeInUp data-cursos="${nombresClases}" data-busqueda="${recurso.titulo}, ${recurso.tags}" data-categoria="${recurso.tipo_recurso}">
-                    <div class="thumbnail-pdf card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
-                        <i class="bi bi-file-earmark-pdf fs-1"></i>
-                        ${botonesEliminarModificar}
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-unah-blue">${recurso.titulo}</h5>
-                        <p class="card-text text-muted small">${recurso.autores}</p>
-                        <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
-                        <p class="card-text small text-truncate">${recurso.descripcion}</p>
-                        <div class="border-top pt-2 mt-2">
-                            <div class="mb-2">${tagsHTML}</div>
-                            <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
-                                <i class="bi bi-eye me-1"></i> Ver documento
-                            </button>
-                        </div>
+
+            let html = ''; // 🔹 Declarar antes de los if
+
+            if (recurso.tipo_recurso === 'Pdf') {
+                html = `
+        <!-- PDF Resource -->
+        <div class="col-md-6 col-lg-4">
+            <div class="resource-card card h-100 shadow-sm animate-fadeInUp" 
+                 data-cursos="${nombresClases}" 
+                 data-busqueda="${recurso.titulo}, ${recurso.tags}" 
+                 data-categoria="${recurso.tipo_recurso}">
+                <div class="thumbnail-pdf card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
+                    <i class="bi bi-file-earmark-pdf fs-1"></i>
+                    ${botonesEliminarModificar}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-unah-blue">${recurso.titulo}</h5>
+                    <p class="card-text text-muted small">${recurso.autores}</p>
+                    <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
+                    <p class="card-text small text-truncate">${recurso.descripcion}</p>
+                    <div class="border-top pt-2 mt-2">
+                        <div class="mb-2">${tagsHTML}</div>
+                        <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
+                            <i class="bi bi-eye me-1"></i> Ver documento
+                        </button>
                     </div>
                 </div>
             </div>
-
-            <!-- Audio Resource -->
-            <div class="col-md-6 col-lg-4">
-                <div class="resource-card card h-100 shadow-sm animate-fadeInUp">
-                    <div class="thumbnail-audio card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
-                        <i class="bi bi-music-note-beamed fs-1"></i>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-unah-blue">Concierto para violín No. 1</h5>
-                        <p class="card-text text-muted small">Ludwig van Beethoven</p>
-                        <div class="d-flex flex-wrap gap-1 mb-3">
-                            <span class="badge bg-secondary">clásica</span>
-                            <span class="badge bg-secondary">violín</span>
-                            <span class="badge bg-secondary">orquesta</span>
-                        </div>
-                        <div class="d-flex justify-content-between pt-2 border-top">
-                            <button class="btn btn-sm btn-outline-primary view-audio">
-                                <i class="bi bi-play"></i> Escuchar
-                            </button>
-                        </div>
+        </div>`;
+            }
+            else if (recurso.tipo_recurso === 'Audio') {
+                html = `
+        <!-- Audio Resource -->
+        <div class="col-md-6 col-lg-4">
+            <div class="resource-card card h-100 shadow-sm animate-fadeInUp" 
+                 data-cursos="${nombresClases}" 
+                 data-busqueda="${recurso.titulo}, ${recurso.tags}" 
+                 data-categoria="${recurso.tipo_recurso}">
+                <div class="thumbnail-audio card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
+                    <i class="bi bi-music-note-beamed fs-1"></i>
+                    ${botonesEliminarModificar}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-unah-blue">${recurso.titulo}</h5>
+                    <p class="card-text text-muted small">${recurso.autores}</p>
+                    <p class="small text-muted"><i class="bi bi-calendar me-1"></i>${recurso.anio}</p>
+                    <p class="card-text small text-truncate">${recurso.descripcion}</p>
+                    <div class="border-top pt-2 mt-2">
+                        <div class="mb-2">${tagsHTML}</div>
+                        <button class="btn btn-outline-unah-blue btn-sm w-100 ver-recurso" data-id="${recurso.id}">
+                            <i class="bi bi-eye me-1"></i> Reproducir audio
+                        </button>
                     </div>
                 </div>
             </div>
+        </div>`;
+            }
 
-            <!-- Score Resource -->
-            <div class="col-md-6 col-lg-4">
-                <div class="resource-card card h-100 shadow-sm animate-fadeInUp">
-                    <div class="thumbnail-score card-img-top d-flex align-items-center justify-content-center" style="height: 160px;">
-                        <i class="bi bi-file-earmark-music fs-1"></i>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title text-unah-blue">Sonata Claro de Luna</h5>
-                        <p class="card-text text-muted small">Ludwig van Beethoven</p>
-                        <div class="d-flex flex-wrap gap-1 mb-3">
-                            <span class="badge bg-secondary">piano</span>
-                            <span class="badge bg-secondary">clásica</span>
-                            <span class="badge bg-secondary">partitura</span>
-                        </div>
-                        <div class="d-flex justify-content-between pt-2 border-top">
-                            <button class="btn btn-sm btn-outline-success download">
-                                <i class="bi bi-download"></i> Descargar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
             gridMisRecursos.innerHTML += html;
         });
+
 
         document.querySelectorAll('.ver-recurso').forEach(btn => {
             btn.addEventListener('click', function () {
@@ -356,53 +382,53 @@ const canvas = document.getElementById('pdfCanvas');
 const ctx = canvas.getContext('2d');
 
 async function renderPage(num) {
-  const page = await pdfDoc.getPage(num);
-  const viewport = page.getViewport({ scale });
-  canvas.height = viewport.height;
-  canvas.width = viewport.width;
+    const page = await pdfDoc.getPage(num);
+    const viewport = page.getViewport({ scale });
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
 
-  const renderContext = {
-    canvasContext: ctx,
-    viewport: viewport,
-  };
+    const renderContext = {
+        canvasContext: ctx,
+        viewport: viewport,
+    };
 
-  await page.render(renderContext).promise;
+    await page.render(renderContext).promise;
 
-  // Actualizar número de página en UI
-  document.getElementById('pageNum').textContent = num;
+    // Actualizar número de página en UI
+    document.getElementById('pageNum').textContent = num;
 }
 
 async function loadPDF(base64PDF) {
-  // Convertir base64 a Uint8Array
-  const raw = atob(base64PDF);
-  const uint8Array = new Uint8Array(raw.length);
-  for (let i = 0; i < raw.length; i++) {
-    uint8Array[i] = raw.charCodeAt(i);
-  }
+    // Convertir base64 a Uint8Array
+    const raw = atob(base64PDF);
+    const uint8Array = new Uint8Array(raw.length);
+    for (let i = 0; i < raw.length; i++) {
+        uint8Array[i] = raw.charCodeAt(i);
+    }
 
-  pdfDoc = await pdfjsLib.getDocument({ data: uint8Array }).promise;
-  currentPage = 1;
-  document.getElementById('pageCount').textContent = pdfDoc.numPages;
+    pdfDoc = await pdfjsLib.getDocument({ data: uint8Array }).promise;
+    currentPage = 1;
+    document.getElementById('pageCount').textContent = pdfDoc.numPages;
 
-  await renderPage(currentPage);
-  // Subir al principio al cargar el PDF
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+    await renderPage(currentPage);
+    // Subir al principio al cargar el PDF
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 document.getElementById('btnPrev').addEventListener('click', async () => {
-  if (currentPage <= 1) return;
-  currentPage--;
-  await renderPage(currentPage);
-  // Subir al principio al cambiar de página
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (currentPage <= 1) return;
+    currentPage--;
+    await renderPage(currentPage);
+    // Subir al principio al cambiar de página
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 document.getElementById('btnNext').addEventListener('click', async () => {
-  if (currentPage >= pdfDoc.numPages) return;
-  currentPage++;
-  await renderPage(currentPage);
-  // Subir al principio al cambiar de página
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (currentPage >= pdfDoc.numPages) return;
+    currentPage++;
+    await renderPage(currentPage);
+    // Subir al principio al cambiar de página
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 
@@ -554,68 +580,74 @@ function llenarDatalist(id, valores) {
     });
 }
 
-// ------------------- Cargar filtro de cursos -------------------
-const cargarFiltroCursos = async () => {
-    const selectFiltro = document.getElementById('cursos');
-    if (!selectFiltro) return;
+// Variables globales
+const inputBusqueda = document.getElementById('busquedaRecursos');
+const btnBuscar = document.getElementById('btnBuscar');
+const filterTags = document.querySelectorAll('.filter-tag');
+let categoriaSeleccionada = 'todos';
 
-    // Limpiar y agregar la opción por defecto
-    selectFiltro.innerHTML = `<option value="">Todos los cursos</option>`;
-
-    let clases = [];
-
-    if (rol === 1 && idEstudiante) {
-        clases = await filtroCursoEstudiantes(idEstudiante); 
-    } else if ((rol === 2 || rol === 3) && idDocente) {
-        clases = await filtroCursoDocente(idDocente); 
-
-    console.log('Clases cargadas para filtro:', clases);
-
-    clases?.forEach(clase => {
-        const option = document.createElement('option');
-        option.value = clase.nombre_clase; 
-        option.textContent = clase.nombre_clase;
-        selectFiltro.appendChild(option);
-    });
-};
-
-
-// ------------------- Filtrar recursos -------------------
+// Función para filtrar recursos según búsqueda, categoría y curso
 function filtrarRecursos() {
-    const filtroCurso = document.getElementById('filtroCurso')?.value.trim() || '';
-    const filtroCategoria = document.getElementById('filtroCategoria')?.value.toLowerCase() || '';
-    const busqueda = document.getElementById('busquedaRecursos')?.value.toLowerCase() || '';
+    const busqueda = inputBusqueda.value.trim().toLowerCase();
+    const filtroCursoSelect = document.getElementById('filtroCurso');
+    const filtroCurso = filtroCursoSelect ? filtroCursoSelect.value.toLowerCase() : 'todos';
 
-    const recursos = document.querySelectorAll('#gridRecursos .recurso-card');
+    const recursos = document.querySelectorAll('#gridRecursos .resource-card');
     let resultadosEncontrados = false;
 
     recursos.forEach(recurso => {
-        const cursosData = recurso.getAttribute('data-cursos') || '';
-        // separar los nombres de las clases y limpiar espacios
-        const cursos = cursosData.split(',').map(c => c.trim());
-
         const categoria = recurso.getAttribute('data-categoria')?.toLowerCase() || '';
         const textoBusqueda = recurso.getAttribute('data-busqueda')?.toLowerCase() || '';
+        const cursos = recurso.getAttribute('data-cursos')?.toLowerCase() || '';
 
-        // Si filtroCurso está vacío (""), mostramos todo; si no, chequeamos si incluye la clase filtrada
-        const coincideCurso = filtroCurso === '' || cursos.includes(filtroCurso);
-
-        const coincideCategoria = filtroCategoria === '' || categoria === filtroCategoria;
+        const coincideCategoria = categoriaSeleccionada === 'todos' || categoria === categoriaSeleccionada;
         const coincideBusqueda = busqueda === '' || textoBusqueda.includes(busqueda);
+        const coincideCurso = filtroCurso === 'todos' || cursos.includes(filtroCurso);
 
-        if (coincideCurso && coincideCategoria && coincideBusqueda) {
-            recurso.closest('#colRecurso').style.display = '';
+        const contenedor = recurso.closest('.colRecurso');
+        if (coincideCategoria && coincideBusqueda && coincideCurso) {
+            contenedor.style.display = '';
             resultadosEncontrados = true;
         } else {
-            recurso.closest('#colRecurso').style.display = 'none';
+            contenedor.style.display = 'none';
         }
     });
 
+    // Mostrar u ocultar mensaje "no resultados"
     const noResultados = document.getElementById('noResultados');
     if (noResultados) {
         noResultados.classList.toggle('d-none', resultadosEncontrados);
     }
 }
+
+// Eventos para filtros
+
+// Botones categoría (badges)
+filterTags.forEach(tag => {
+    tag.addEventListener('click', () => {
+        filterTags.forEach(t => t.classList.remove('active'));
+        tag.classList.add('active');
+        categoriaSeleccionada = tag.textContent.trim().toLowerCase();
+        filtrarRecursos();
+    });
+});
+
+// Búsqueda por botón y Enter
+btnBuscar.addEventListener('click', filtrarRecursos);
+inputBusqueda.addEventListener('keydown', e => {
+    if (e.key === 'Enter') filtrarRecursos();
+});
+
+// Búsqueda mientras se escribe
+inputBusqueda.addEventListener('input', filtrarRecursos);
+
+// Cambio filtro curso
+document.getElementById('filtroCurso')?.addEventListener('change', filtrarRecursos);
+
+// Ejecutar filtro al cargar la página
+window.addEventListener('load', () => {
+    filtrarRecursos();
+});
 
 
 
@@ -644,14 +676,26 @@ window.onload = async function () {
         }
 
         //PDF
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', function (e) {
-            // Ctrl+P (imprimir), Ctrl+S (guardar), Ctrl+U (ver código fuente)
+        const visorModalElem = document.getElementById('visorPdfModal');
+
+        visorModalElem.addEventListener('contextmenu', e => e.preventDefault());
+        visorModalElem.addEventListener('keydown', e => {
             if ((e.ctrlKey || e.metaKey) && ['p', 's', 'u'].includes(e.key.toLowerCase())) {
                 e.preventDefault();
-                modal.show('Esta acción está deshabilitada.');
+                alert('Esta acción está deshabilitada.');
             }
         });
+
+        const audio = document.getElementById('audioElement');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const speedRange = document.getElementById('speedRange');
+
+        playBtn.onclick = () => audio.play();
+        pauseBtn.onclick = () => audio.pause();
+        speedRange.oninput = () => {
+            audio.playbackRate = speedRange.value;
+        };
 
         // Cambiar formatos de archivo según tipo de recurso
         document.getElementById('categoria').addEventListener('change', function () {
@@ -680,9 +724,29 @@ window.onload = async function () {
 
 
         // Listeners de filtro
-        document.getElementById('filtroCurso')?.addEventListener('change', filtrarRecursos);
-        document.getElementById('filtroCategoria')?.addEventListener('input', filtrarRecursos);
+        // Listener para input de búsqueda
         document.getElementById('busquedaRecursos')?.addEventListener('input', filtrarRecursos);
+
+        // Listener para botón Buscar (si tienes)
+        document.getElementById('btnBuscar')?.addEventListener('click', filtrarRecursos);
+
+        // Listeners para badges de filtro por categoría
+        const filterTags = document.querySelectorAll('.filter-tag');
+        filterTags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                // Cambiar clase active
+                filterTags.forEach(t => t.classList.remove('active'));
+                tag.classList.add('active');
+                // Ejecutar filtro
+                filtrarRecursos();
+            });
+        });
+
+        // Si tienes filtroCurso (select) en otro lado, agrega listener
+        document.getElementById('filtroCurso')?.addEventListener('change', filtrarRecursos);
+
+        // Ejecutar filtro al cargar la página (opcional)
+        filtrarRecursos();
     } catch (error) {
         console.error("Error fatal:", error);
     }
