@@ -18,7 +18,6 @@
       {"label": "Docentes", "href": "docentes.php"},
       {"label": "Historial", "href": "historial.php"},
       {"label": "Notas", "href": "notas.php"},
-      {"label": "Estadistica", "href": "estadistica.php"},
       {"label": "Listado", "href": "listado.php"}
     ]'
     sidebar-title="Portal Jefe UNAH"
