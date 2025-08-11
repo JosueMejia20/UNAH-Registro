@@ -2,8 +2,8 @@
 session_start();
 
 if (!isset($_SESSION['usuario_id'])) {
-    header("Location: login_estudiantes.php");
-    exit();
+  header("Location: login_estudiantes.php");
+  exit();
 }
 ?>
 
@@ -390,6 +390,10 @@ if (!isset($_SESSION['usuario_id'])) {
   </div>
 
   <!-- SCRIPTS -->
+  <script>
+    const usuarioId = <?php echo json_encode($_SESSION['usuario_id']); ?>;
+    console.log("ID del usuario desde sesion PHP:", usuarioId);
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script type="module" src="../../assets/js/Estudiantes/mainEvaluaciones.js"></script>
 </body>

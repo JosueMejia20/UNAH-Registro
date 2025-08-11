@@ -44,22 +44,6 @@ const cargarDatosDocente = async () => {
     nombreDocente.innerHTML = `${datos[0].nombre_completo}`;
 }
 
-/*
-async function subirArchivos(event, idAsignatura) {
-    event.preventDefault();
-
-    const form = event.target;
-    const URLvideo = form.querySelector('input[name="video"]').value.trim();
-    const pdf = form.querySelector('input[name="pdf"]').files[0];
-
-    if (!URLvideo || !pdf) {
-        alert('Coloca un video y un pdf. pedazo de mamahuevo. Cambiar esto por una modal');
-        return;
-    }
-
-    const formData = new FormData();
-    console.log(formData);
-}*/
 
 const toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -136,7 +120,7 @@ const cargarAsignaturaDocente = async () => {
                 const pdf = fila.querySelector('input[name="pdf"]').files[0];
 
                 if (!URLvideo || !pdf) {
-                    alert('Coloca un video y un pdf. pedazo de mamahuevo. Cambiar esto por una modal');
+                    alert('Debes colocar la URL de un video y subir un archivo en formato PDF.');
                     return;
                 }
 
@@ -161,7 +145,7 @@ const cargarAsignaturaDocente = async () => {
                     //const resultado = await response.json();
 
                     if (response.success) {
-                        alert('Recurso subido correctamente. Hacer modal aqui');
+                        alert('Recurso subido correctamente.');
                         location.reload();
                     } else {
                         alert('Error al subir recurso');

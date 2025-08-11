@@ -32,11 +32,12 @@ import {
     enviarSolicitudContacto
 } from '../../components/Estudiantes/chat_Controller.mjs';
 
+import {
+    obtenerIdEstudiante
+} from '../../../components/Biblioteca/biblioteca_Controller.mjs';
+
 // INICIALIZACION DE VARIABLES Y FUNCIONES
-function obtenerMatriculaDesdeSesion() {
-  return sessionStorage.getItem('matricula') || '20201003849';
-}
-const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
+const matriculaEstudiante = await obtenerIdEstudiante(usuarioId);
 let contactoSeleccionadoId = null;
 
 // ==========================
@@ -230,6 +231,7 @@ const enviarMensaje = async(idEstudiante) => {
 // ==========================
 // INICIALIZAR VISTA
 // ==========================
+/*
 document.addEventListener('DOMContentLoaded', async () => {
     const listaContactos = document.querySelector("#listaContactos");
     const contenedorChat = document.querySelector("#contenedorChat");
@@ -238,4 +240,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     mostrarContactos(matriculaEstudiante, listaContactos);
     mostrarSolicitudesContacto(matriculaEstudiante, listaSolicitudes);
     enviarMensaje(matriculaEstudiante);
-});
+});*/
+
+window.onload = async function () {
+  try {
+    const listaContactos = document.querySelector("#listaContactos");
+    const contenedorChat = document.querySelector("#contenedorChat");
+    const listaSolicitudes = document.querySelector("#listaSolicitudes");
+
+    mostrarContactos(matriculaEstudiante, listaContactos);
+    mostrarSolicitudesContacto(matriculaEstudiante, listaSolicitudes);
+    enviarMensaje(matriculaEstudiante);
+  } catch(error){
+    console.error("Error fatal:", error);
+  }
+
+}

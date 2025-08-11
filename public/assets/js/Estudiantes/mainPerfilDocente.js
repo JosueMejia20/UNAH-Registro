@@ -16,31 +16,33 @@ customElements.define("unah-sidebar", UnahSidebar);
 
 // -------- Controlador del Chat --------
 import {
-    cargarDocentesSeccionesMatriculadas,
-    cargarInfoDocente,
-    cargarAsignaturasDocente
+  cargarDocentesSeccionesMatriculadas,
+  cargarInfoDocente,
+  cargarAsignaturasDocente
 } from '../../../components/Estudiantes/perfilDocentes_Controller.mjs';
+
+import {
+  obtenerIdEstudiante
+} from '../../../components/Biblioteca/biblioteca_Controller.mjs';
 
 // INICIALIZACION DE VARIABLES Y FUNCIONES
 //let perfilGlobal = null;
 
-function obtenerMatriculaDesdeSesion() {
-  return sessionStorage.getItem('matricula') || '20201003849';
-}
-const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
 
-const mostrarDocentes = async (idEstudiante,listaDocentes) => {
-    const docentes = await cargarDocentesSeccionesMatriculadas(idEstudiante);
-    console.log(docentes);
-    if (!listaDocentes) return;
-    //console.log(contactos);
-    listaDocentes.innerHTML = "";
-    docentes.forEach(docente => {
-        const item = document.createElement("a");
-        item.href = "#";
-        item.className = "list-group-item list-group-item-action";
-      //const fila = document.createElement("tr");
-        item.innerHTML = `
+const matriculaEstudiante = await obtenerIdEstudiante(usuarioId);
+
+const mostrarDocentes = async (idEstudiante, listaDocentes) => {
+  const docentes = await cargarDocentesSeccionesMatriculadas(idEstudiante);
+  console.log(docentes);
+  if (!listaDocentes) return;
+  //console.log(contactos);
+  listaDocentes.innerHTML = "";
+  docentes.forEach(docente => {
+    const item = document.createElement("a");
+    item.href = "#";
+    item.className = "list-group-item list-group-item-action";
+    //const fila = document.createElement("tr");
+    item.innerHTML = `
             <div class="d-flex align-items-center">
                 <img src="https://via.placeholder.com/40" class="rounded-circle me-3" alt="...">
                 <div>
@@ -52,32 +54,32 @@ const mostrarDocentes = async (idEstudiante,listaDocentes) => {
       `;
 
     item.addEventListener("click", () => {
-        mostrarInfoDocente(docente.numero_empleado_docente);
-        //contactoSeleccionadoId = contacto.contacto_id;
-        //console.log(contactoSeleccionadoId);
+      mostrarInfoDocente(docente.numero_empleado_docente);
+      //contactoSeleccionadoId = contacto.contacto_id;
+      //console.log(contactoSeleccionadoId);
     });
 
 
-      listaDocentes.appendChild(item);
-    }); 
+    listaDocentes.appendChild(item);
+  });
 };
 
 const mostrarInfoDocente = async (idDocente) => {
-    //Mostrar informacion personal
-    const tituloNombreDocente = document.querySelector("#tituloNombreDocente");
-    const pDepartamentoDocente = document.querySelector("#pDepartamentoDocente");
-    const pCorreoInstitucionalDocente = document.querySelector("#pCorreoInstitucionalDocente");
+  //Mostrar informacion personal
+  const tituloNombreDocente = document.querySelector("#tituloNombreDocente");
+  const pDepartamentoDocente = document.querySelector("#pDepartamentoDocente");
+  const pCorreoInstitucionalDocente = document.querySelector("#pCorreoInstitucionalDocente");
 
-    const infoDocente = await cargarInfoDocente(idDocente);
+  const infoDocente = await cargarInfoDocente(idDocente);
 
-    tituloNombreDocente.textContent = infoDocente[0].nombre_completo;
-    pDepartamentoDocente.textContent = `Profesor del ${infoDocente[0].nombre_departamento}`;
-    pCorreoInstitucionalDocente.textContent = infoDocente[0].correo_institucional;
+  tituloNombreDocente.textContent = infoDocente[0].nombre_completo;
+  pDepartamentoDocente.textContent = `Profesor del ${infoDocente[0].nombre_departamento}`;
+  pCorreoInstitucionalDocente.textContent = infoDocente[0].correo_institucional;
 
-    //Mostrar la tabla de asignaturas
-    const asignaturas = await cargarAsignaturasDocente(idDocente);
+  //Mostrar la tabla de asignaturas
+  const asignaturas = await cargarAsignaturasDocente(idDocente);
 
-    mostrarAsignaturasEnTabla(asignaturas);
+  mostrarAsignaturasEnTabla(asignaturas);
 };
 
 const mostrarAsignaturasEnTabla = (materias) => {
@@ -95,11 +97,19 @@ const mostrarAsignaturasEnTabla = (materias) => {
 };
 
 
-  /**
-   * Inicializacion de la vista
-   */
+/**
+ * Inicializacion de la vista
+ */
+/*
 document.addEventListener('DOMContentLoaded', async () => {
-    const docenteSeccionMatriculada = document.querySelector("#docenteSeccionMatriculada");
-    
-    mostrarDocentes(matriculaEstudiante, docenteSeccionMatriculada);
-});
+  const docenteSeccionMatriculada = document.querySelector("#docenteSeccionMatriculada");
+
+  mostrarDocentes(matriculaEstudiante, docenteSeccionMatriculada);
+});*/
+
+window.onload = async function () {
+
+  const docenteSeccionMatriculada = document.querySelector("#docenteSeccionMatriculada");
+
+  mostrarDocentes(matriculaEstudiante, docenteSeccionMatriculada);
+}

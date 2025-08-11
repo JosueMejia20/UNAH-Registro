@@ -31,13 +31,15 @@ import {
   obtenerMateriasActuales
 } from '../../components/Estudiantes/perfil_Controller.mjs';
 
+import {
+    obtenerIdEstudiante
+} from '../../../components/Biblioteca/biblioteca_Controller.mjs';
+
 // INICIALIZACION DE VARIABLES Y FUNCIONES
 //let perfilGlobal = null;
 
-function obtenerMatriculaDesdeSesion() {
-  return sessionStorage.getItem('matricula') || '20201003849';
-}
-const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
+
+const matriculaEstudiante = await obtenerIdEstudiante(usuarioId);
 
 const renderizarPaginacion = async (contenedor, idEstudiante, tabla, actual, total) => {
   if (!contenedor) return;
@@ -118,7 +120,7 @@ const toBase64 = file => new Promise((resolve, reject) => {
   reader.onerror = reject;
 });
 
-document.addEventListener('DOMContentLoaded', async () => {
+window.onload = async function () {
 
 
   const tablaBodySolicitudes = document.querySelector("#tablaBodySolicitudes");
@@ -331,4 +333,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-});
+}

@@ -43,11 +43,13 @@ import {
   verificarConflictoHorario
 } from '../../components/Estudiantes/matricula_Controller.mjs';
 
+import {
+    obtenerIdEstudiante
+} from '../../../components/Biblioteca/biblioteca_Controller.mjs';
+
 let perfilGlobal = null;
 
-function obtenerMatriculaDesdeSesion() {
-  return sessionStorage.getItem('matricula') || '20201003849';
-}
+
 
 const asignarImagenBase64 = (imgTag, base64String, mime = 'image/jpeg') => {
   imgTag.src = base64String
@@ -59,7 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const ruta = window.location.pathname;
 
   if (ruta.includes('perfil.php')) {
-    const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
+    const matriculaEstudiante = await obtenerIdEstudiante(usuarioId);
     const perfilGlobal = await obtenerPerfilEstudiante(matriculaEstudiante);
     const fotoPerfil = await obtenerFotoPerfilEstudiante(matriculaEstudiante) || null;
     const imgTagFotoPerfil = document.getElementById("fotoDePerfil");
@@ -153,7 +155,7 @@ const inicializarVistaMatricula = async () => {
   const btnCancelar = document.querySelector("#cancelacion button.btn-danger");
   const checkboxSelectAll = document.querySelector("#selectAllCancel");
 
-  const idEstudiante = localStorage.getItem('matricula') || '20201003849';
+  const idEstudiante = await obtenerIdEstudiante(usuarioId);
 
   const limpiarSelect = (select) => {
     if (!select) return;

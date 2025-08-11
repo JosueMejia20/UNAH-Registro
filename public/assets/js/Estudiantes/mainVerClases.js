@@ -26,6 +26,10 @@ import {
     cargarPdfIntroduccion
 } from '../../../components/Estudiantes/verClases_Controller.mjs';
 
+import {
+    obtenerIdEstudiante
+} from '../../../components/Biblioteca/biblioteca_Controller.mjs';
+
 // INICIALIZACION DE VARIABLES Y FUNCIONES
 //let perfilGlobal = null;
 
@@ -36,10 +40,8 @@ const toBase64 = file => new Promise((resolve, reject) => {
     reader.onerror = reject;
 });
 
-function obtenerMatriculaDesdeSesion() {
-    return sessionStorage.getItem('matricula') || '20201003849';
-}
-const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
+
+const matriculaEstudiante = await obtenerIdEstudiante(usuarioId);
 
 const mostrarClases = async (idEstudiante, listaClases) => {
     const clases = await cargarDocentesSeccionesMatriculadas(idEstudiante);
@@ -131,8 +133,16 @@ const mostrarIntroduccionClase = async (idSeccion) => {
 /**
  * Inicializacion de la vista
  */
+/*
 document.addEventListener('DOMContentLoaded', async () => {
     const docenteSeccionMatriculada = document.querySelector("#docenteSeccionMatriculada");
 
     mostrarClases(matriculaEstudiante, docenteSeccionMatriculada);
-});
+});*/
+
+window.onload = async function () {
+    const docenteSeccionMatriculada = document.querySelector("#docenteSeccionMatriculada");
+
+    mostrarClases(matriculaEstudiante, docenteSeccionMatriculada);
+
+}

@@ -35,8 +35,7 @@ if (!isset($_SESSION['usuario_id'])) {
       {"label": "Certificado Académico", "href": "certificado.php"},
       {"label": "Evaluacion Docente", "href": "evaluaciones.php"},
       {"label": "Ver clases", "href": "ver_clases.php"}
-    ]'
-    ></unah-sidebar>
+    ]'></unah-sidebar>
 
         <!-- Contenido principal -->
         <main class="main-content p-4">
@@ -207,6 +206,10 @@ if (!isset($_SESSION['usuario_id'])) {
 
     <unah-modal></unah-modal>
 
+    <script>
+        const usuarioId = <?php echo json_encode($_SESSION['usuario_id']); ?>;
+        console.log("ID del usuario desde sesion PHP:", usuarioId);
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="../../assets/js/mainEstudiantes.js"></script>
 </body>

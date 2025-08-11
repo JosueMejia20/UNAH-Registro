@@ -26,6 +26,10 @@ import {
     obtenerNotaEstudiante
 } from '../../../components/Estudiantes/evaluacionDocente_Controller.mjs';
 
+import {
+    obtenerIdEstudiante
+} from '../../../components/Biblioteca/biblioteca_Controller.mjs';
+
 // -------- Controlador de MATRÍCULA --------
 import {
     obtenerDepartamentosPorClases,
@@ -39,7 +43,9 @@ import {
 
 
 
-const matriculaEstudiante = sessionStorage.getItem('matricula') || '20201003849';
+const idEstudiante = await obtenerIdEstudiante(usuarioId);
+const matriculaEstudiante = await obtenerIdEstudiante(usuarioId);
+
 const listaClases = document.getElementById('listaClases');
 
 
@@ -160,9 +166,9 @@ const mostrarClasesEnDiv = async (idEstudiante) => {
   
                 <div class="d-flex align-items-center">
                     ${evaluada && notaSeccion !== null
-                    ? `<span class="badge bg-primary me-2">Nota: ${notaSeccion}</span>`
-                    : ''
-                }
+                ? `<span class="badge bg-primary me-2">Nota: ${notaSeccion}</span>`
+                : ''
+            }
   
                     `;
 
@@ -172,11 +178,15 @@ const mostrarClasesEnDiv = async (idEstudiante) => {
 
 };
 
-
+/*
 
 document.addEventListener('DOMContentLoaded', async () => {
 
     mostrarClasesEnDiv(matriculaEstudiante);
 
 
-});
+});*/
+
+window.onload = async function () {
+    mostrarClasesEnDiv(matriculaEstudiante);
+}

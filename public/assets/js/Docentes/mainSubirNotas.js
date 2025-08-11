@@ -54,7 +54,7 @@ const obtenerEstudiantes = async (id) => {
             const nota = fila.querySelector('input[name="nota"]').value;
 
             if (!nota) {
-                alert('Coloca una nota. pedazo de mamahuevo. Cambiar esto por una modal');
+                alert('Debes colocar una nota para el estudiante.');
                 return;
             }
 
@@ -76,7 +76,7 @@ const obtenerEstudiantes = async (id) => {
                 //const resultado = await response.json();
 
                 if (response.success) {
-                    alert('Recurso subido correctamente. Hacer modal aqui');
+                    alert('Recurso subido correctamente');
                     location.reload();
                 } else {
                     alert('Error al subir recurso');
