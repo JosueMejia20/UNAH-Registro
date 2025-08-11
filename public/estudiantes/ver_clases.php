@@ -67,7 +67,7 @@
                                     <!-- Nombre de la clase -->
                                     <h3 id="tituloNombreClase" class="text-primary mb-2"></h3>
 
-                                    <!-- Sección -->
+                                    <!-- Seccion -->
                                     <p class="text-muted mb-1"><strong>Sección:</strong> <span id="seccionClase"></span></p>
 
                                     <!-- Departamento -->
@@ -108,7 +108,7 @@
                                 </div>
                             </div>
 
-                            <!-- Botón para descargar PDF -->
+                            <!-- Boton para descargar PDF -->
                             <div class="row">
                                 <div class="col-md-12 text-center">
                                     <h6 class="mb-3">
