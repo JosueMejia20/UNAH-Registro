@@ -14,6 +14,9 @@ customElements.define("unah-footer", UnahFooter);
 import { UnahSidebar } from "/../../components/sidebar.mjs";
 customElements.define("unah-sidebar", UnahSidebar);
 
+import { UnahModal } from '../../../components/modal.mjs';
+customElements.define("unah-modal", UnahModal);
+
 // -------- Controlador de la Solicitud --------
 import {
   cargarCarreraSinActual,
@@ -38,6 +41,8 @@ import {
 // INICIALIZACION DE VARIABLES Y FUNCIONES
 //let perfilGlobal = null;
 
+// Obtener referencia al modal componentizado
+    const modal = document.querySelector('unah-modal');
 
 const matriculaEstudiante = await obtenerIdEstudiante(usuarioId);
 
@@ -170,14 +175,14 @@ window.onload = async function () {
       const response = await guardarSolicitudCambioCarrera(datosJSON);
 
       if (response.success) {
-        alert('Solicitud registrada correctamente');
+        modal.show('Solicitud registrada correctamente');
         bootstrap.Modal.getInstance(modalCambioDeCarrera)?.hide();
         location.reload();
       } else {
-        alert('Error al enviar solicitud');
+        modal.show('Error al enviar solicitud');
       }
     } catch (error) {
-      alert('Error de conexión al enviar solicitud');
+      modal.show('Error de conexión al enviar solicitud');
     }
   });
 
@@ -216,14 +221,14 @@ window.onload = async function () {
       //const resultado = await response.json();
 
       if (response.success) {
-        alert('Solicitud registrada correctamente');
+        modal.show('Solicitud registrada correctamente');
         bootstrap.Modal.getInstance(modalCambioCentro)?.hide();
         location.reload();
       } else {
-        alert('Error al enviar solicitud');
+        modal.show('Error al enviar solicitud');
       }
     } catch (error) {
-      alert('Error de conexión al enviar solicitud');
+      modal.show('Error de conexión al enviar solicitud');
     }
   });
 
@@ -262,14 +267,14 @@ window.onload = async function () {
       //const resultado = await response.json();
 
       if (response.success) {
-        alert('Solicitud registada correctamente');
+        modal.show('Solicitud registada correctamente');
         bootstrap.Modal.getInstance(modalPagoRepo)?.hide();
         location.reload();
       } else {
-        alert('Error al enviar solicitud');
+        modal.show('Error al enviar solicitud');
       }
     } catch (error) {
-      alert('Error de conexión al enviar solicitud');
+      modal.show('Error de conexión al enviar solicitud');
     }
   });
 
@@ -315,16 +320,16 @@ window.onload = async function () {
       console.log(response);
 
       if (response.success) {
-        alert('Solicitud registrada correctamente');
+        modal.show('Solicitud registrada correctamente');
         //const nuevoPerfil = await obtenerPerfilEstudiante(matriculaEstudiante);
         //mostrarPerfilEnVista(nuevoPerfil);
         bootstrap.Modal.getInstance(modalCancelacionExcep)?.hide();
         location.reload();
       } else {
-        alert('Error al enviar solicitud');
+        modal.show('Error al enviar solicitud');
       }
     } catch (error) {
-      alert('Error de conexión al enviar solicitud');
+      modal.show('Error de conexión al enviar solicitud');
     }
   });
 

@@ -14,6 +14,10 @@ customElements.define("unah-footer", UnahFooter);
 import { UnahSidebar } from "../../../components/sidebar.mjs";
 customElements.define("unah-sidebar", UnahSidebar);
 
+import { UnahModal } from '../../../components/modal.mjs';
+customElements.define("unah-modal", UnahModal);
+
+
 // -------- Controlador del PERFIL --------
 import {
     obtenerMateriasActuales
@@ -47,6 +51,9 @@ const idEstudiante = await obtenerIdEstudiante(usuarioId);
 const matriculaEstudiante = await obtenerIdEstudiante(usuarioId);
 
 const listaClases = document.getElementById('listaClases');
+
+// Obtener referencia al modal componentizado
+const modal = document.querySelector('unah-modal');
 
 
 
@@ -107,17 +114,17 @@ window.abrirModalEvaluacion = async function (asignatura, docente, idSeccion) {
             //const resultado = await response.json();
 
             if (response.success) {
-                alert("¡Gracias por completar la evaluación!");
+                modal.show("¡Gracias por completar la evaluación!");
                 //const nuevoPerfil = await obtenerPerfilEstudiante(matriculaEstudiante);
                 //mostrarPerfilEnVista(nuevoPerfil);
                 bootstrap.Modal.getInstance(document.getElementById('modalEvaluacion'))?.hide();
                 this.reset();
                 location.reload();
             } else {
-                alert('Error al actualizar perfil');
+                modal.show('Error al actualizar perfil');
             }
         } catch (error) {
-            alert('Error de conexión al actualizar perfil.');
+            modal.show('Error de conexión al actualizar perfil.');
         }
 
     });

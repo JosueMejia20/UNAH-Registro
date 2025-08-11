@@ -389,6 +389,15 @@ if (!isset($_SESSION['usuario_id'])) {
     </div>
   </div>
 
+  <!-- Overlay de carga -->
+  <div id="overlayCarga">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <unah-modal></unah-modal>
+
   <!-- SCRIPTS -->
   <script>
     const usuarioId = <?php echo json_encode($_SESSION['usuario_id']); ?>;
