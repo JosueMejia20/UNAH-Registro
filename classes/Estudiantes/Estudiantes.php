@@ -278,12 +278,12 @@ class Estudiantes
 
             $solicitudes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            
+
 
             return [
-                'solicitudes'=>$solicitudes,
-                'pagina_actual'=>$pagina,
-                'total_paginas'=>$totalPaginas
+                'solicitudes' => $solicitudes,
+                'pagina_actual' => $pagina,
+                'total_paginas' => $totalPaginas
             ];
         } catch (PDOException $e) {
             return "Error en la base de datos: " . $e->getMessage();
@@ -524,7 +524,8 @@ class Estudiantes
         }
     }
 
-    public function obtenerDiasMatriculaEstudiante($idEstudiante){
+    public function obtenerDiasMatriculaEstudiante($idEstudiante)
+    {
         try {
             $db = new DataBase();
 
@@ -536,8 +537,9 @@ class Estudiantes
         }
     }
 
-    public function verificarConflictoHorario($idEstudiante, $idSeccion){
-        try{
+    public function verificarConflictoHorario($idEstudiante, $idSeccion)
+    {
+        try {
             $db = new DataBase();
             $pdo = $db->connect();
 
@@ -551,15 +553,15 @@ class Estudiantes
 
             //1 si hay conflicto, 0 si no lo hay
             return (int)$result['hay_conflicto'];
-
         } catch (PDOException $e) {
             // Manejo de error
             echo "Error al actualizar: " . $e->getMessage();
         }
     }
 
-    public function verificarEvaluacionExistente($idEstudiante, $idSeccion){
-        try{
+    public function verificarEvaluacionExistente($idEstudiante, $idSeccion)
+    {
+        try {
             $db = new DataBase();
             $pdo = $db->connect();
 
@@ -573,15 +575,15 @@ class Estudiantes
 
             //1 si existe la evaluacion, 0 si no
             return $result['existe_evaluacion'];
-
         } catch (PDOException $e) {
             // Manejo de error
             echo "Error al actualizar: " . $e->getMessage();
         }
     }
 
-    public function obtenerNotaEstudianteSeccion($idEstudiante, $idSeccion){
-        try{
+    public function obtenerNotaEstudianteSeccion($idEstudiante, $idSeccion)
+    {
+        try {
             $db = new DataBase();
             $pdo = $db->connect();
 
@@ -594,10 +596,41 @@ class Estudiantes
             $result = $pdo->query("SELECT @resultado as nota")->fetch(PDO::FETCH_ASSOC);
 
             return $result['nota'];
-
         } catch (PDOException $e) {
             // Manejo de error
             echo "Error al actualizar: " . $e->getMessage();
+        }
+    }
+
+    public function getIntroduccionClaseInfo($idSeccion)
+    {
+        try {
+            $db = new DataBase();
+
+            $datos = $db->executeQuery("CALL ObtenerIntroduccionInfo($idSeccion)");
+
+            return $datos;
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
+        }
+    }
+
+    public function getPdfIntroduccionClase($idSeccion)
+    {
+        try {
+            $db = new DataBase();
+            $pdo = $db->connect();
+            $stmt = $pdo->prepare("CALL GetIntroduccionClasePDF(:seccion)");
+            $stmt->bindParam(':seccion', $idSeccion, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $stmt->closeCursor();
+
+            return $resultado;
+        } catch (PDOException $e) {
+            return "Error en la base de datos: " . $e->getMessage();
         }
     }
 }

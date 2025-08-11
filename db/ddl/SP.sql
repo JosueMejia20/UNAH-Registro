@@ -79,6 +79,8 @@ DROP PROCEDURE IF EXISTS VerificarDiasMatriculaEstudiante;
 DROP PROCEDURE IF EXISTS VerificarConflictoHorarios;
 DROP PROCEDURE IF EXISTS VerificarEvaluacionExistente;
 DROP PROCEDURE IF EXISTS ObtenerNotaEstudianteSimple;
+DROP PROCEDURE IF EXISTS ObtenerIntroduccionInfo;
+DROP PROCEDURE IF EXISTS GetIntroduccionClasePDF;
 
 
 
@@ -1936,6 +1938,44 @@ BEGIN
     WHERE estudiante_id = p_estudiante_id
       AND seccion_id = p_seccion_id;
     
+END $$
+
+
+CREATE PROCEDURE ObtenerIntroduccionInfo(
+    IN p_seccion_id INT
+)
+BEGIN
+    SELECT 
+        c.nombre_clase,
+        s.codigo_seccion,
+        du.nombre_departamento,
+        CONCAT(p.nombre_completo, ' ', p.apellido_completo) AS nombre_docente,
+        u.correo_institucional,
+        ic.video
+    FROM Seccion s
+    INNER JOIN Clase c 
+        ON s.clase_id = c.clase_id
+    INNER JOIN Departamento_Uni du
+        ON c.departamento_id = du.departamento_id
+    INNER JOIN Docente d
+        ON s.docente_id = d.numero_empleado
+    INNER JOIN Persona p
+        ON d.persona_id = p.dni
+    INNER JOIN Usuario u
+        ON d.usuario_id = u.usuario_id
+    LEFT JOIN Introduccion_Clase ic
+        ON s.id = ic.seccion_id
+    WHERE s.id = p_seccion_id;
+END $$
+
+
+CREATE PROCEDURE GetIntroduccionClasePDF(
+    IN p_seccion_id INT
+)
+BEGIN
+    SELECT archivo_pdf
+    FROM Introduccion_Clase 
+    WHERE seccion_id = p_seccion_id;
 END $$
 
 

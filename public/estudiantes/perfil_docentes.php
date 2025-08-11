@@ -22,7 +22,8 @@
       {"label": "Gestión de Solicitudes", "href": "solicitudes.php"},
       {"label": "Perfil de Docentes", "href": "perfil_docentes.php"},
       {"label": "Certificado Académico", "href": "certificado.php"},
-      {"label": "Evaluacion Docente", "href": "evaluaciones.php"}
+      {"label": "Evaluacion Docente", "href": "evaluaciones.php"},
+      {"label": "Ver clases", "href": "ver_clases.php"}
     ]'></unah-sidebar>
 
         <main class="main-content p-4">
