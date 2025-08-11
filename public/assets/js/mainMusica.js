@@ -300,7 +300,7 @@ const cargarRecursosDetalleEstudiante = async () => {
          </div>`;
             }
 
-            let html = ''; // 🔹 Declarar antes de los if
+            let html = ''; 
 
             if (recurso.tipo_recurso === 'Pdf') {
                 html = `
@@ -580,74 +580,52 @@ function llenarDatalist(id, valores) {
     });
 }
 
-// Variables globales
-const inputBusqueda = document.getElementById('busquedaRecursos');
-const btnBuscar = document.getElementById('btnBuscar');
-const filterTags = document.querySelectorAll('.filter-tag');
-let categoriaSeleccionada = 'todos';
-
-// Función para filtrar recursos según búsqueda, categoría y curso
+// -------------------- Filtrar Recursos --------------------
 function filtrarRecursos() {
-    const busqueda = inputBusqueda.value.trim().toLowerCase();
-    const filtroCursoSelect = document.getElementById('filtroCurso');
-    const filtroCurso = filtroCursoSelect ? filtroCursoSelect.value.toLowerCase() : 'todos';
+    const busqueda = document.getElementById('busquedaRecursos').value.toLowerCase();
 
-    const recursos = document.querySelectorAll('#gridRecursos .resource-card');
+    const recursos = document.querySelectorAll('#gridRecursos .recurso-card');
     let resultadosEncontrados = false;
 
     recursos.forEach(recurso => {
-        const categoria = recurso.getAttribute('data-categoria')?.toLowerCase() || '';
-        const textoBusqueda = recurso.getAttribute('data-busqueda')?.toLowerCase() || '';
-        const cursos = recurso.getAttribute('data-cursos')?.toLowerCase() || '';
+        const cursos = recurso.getAttribute('data-cursos') || '';
+        const categoria = recurso.getAttribute('data-categoria') || '';
+        const textoBusqueda = recurso.getAttribute('data-busqueda') || '';
 
-        const coincideCategoria = categoriaSeleccionada === 'todos' || categoria === categoriaSeleccionada;
         const coincideBusqueda = busqueda === '' || textoBusqueda.includes(busqueda);
-        const coincideCurso = filtroCurso === 'todos' || cursos.includes(filtroCurso);
 
-        const contenedor = recurso.closest('.colRecurso');
-        if (coincideCategoria && coincideBusqueda && coincideCurso) {
-            contenedor.style.display = '';
+        if (coincideBusqueda) {
+            recurso.style.display = '';
             resultadosEncontrados = true;
         } else {
-            contenedor.style.display = 'none';
+            recurso.style.display = 'none';
         }
     });
 
-    // Mostrar u ocultar mensaje "no resultados"
+    // Mostrar mensaje si no hay resultados
     const noResultados = document.getElementById('noResultados');
-    if (noResultados) {
-        noResultados.classList.toggle('d-none', resultadosEncontrados);
+    if (resultadosEncontrados) {
+        noResultados.classList.add('d-none');
+    } else {
+        noResultados.classList.remove('d-none');
     }
 }
 
-// Eventos para filtros
+// -------------------- Eventos filtros por categoría --------------------
+document.addEventListener('DOMContentLoaded', () => {
+    const btnBuscar = document.getElementById('btnBuscar');
+    const inputBusqueda = document.getElementById('busquedaRecursos');
 
-// Botones categoría (badges)
-filterTags.forEach(tag => {
-    tag.addEventListener('click', () => {
-        filterTags.forEach(t => t.classList.remove('active'));
-        tag.classList.add('active');
-        categoriaSeleccionada = tag.textContent.trim().toLowerCase();
-        filtrarRecursos();
+    btnBuscar.addEventListener('click', filtrarRecursos);
+
+    inputBusqueda.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            filtrarRecursos();
+        }
     });
 });
 
-// Búsqueda por botón y Enter
-btnBuscar.addEventListener('click', filtrarRecursos);
-inputBusqueda.addEventListener('keydown', e => {
-    if (e.key === 'Enter') filtrarRecursos();
-});
 
-// Búsqueda mientras se escribe
-inputBusqueda.addEventListener('input', filtrarRecursos);
-
-// Cambio filtro curso
-document.getElementById('filtroCurso')?.addEventListener('change', filtrarRecursos);
-
-// Ejecutar filtro al cargar la página
-window.addEventListener('load', () => {
-    filtrarRecursos();
-});
 
 
 
@@ -724,29 +702,9 @@ window.onload = async function () {
 
 
         // Listeners de filtro
-        // Listener para input de búsqueda
-        document.getElementById('busquedaRecursos')?.addEventListener('input', filtrarRecursos);
-
-        // Listener para botón Buscar (si tienes)
-        document.getElementById('btnBuscar')?.addEventListener('click', filtrarRecursos);
-
-        // Listeners para badges de filtro por categoría
-        const filterTags = document.querySelectorAll('.filter-tag');
-        filterTags.forEach(tag => {
-            tag.addEventListener('click', () => {
-                // Cambiar clase active
-                filterTags.forEach(t => t.classList.remove('active'));
-                tag.classList.add('active');
-                // Ejecutar filtro
-                filtrarRecursos();
-            });
-        });
-
-        // Si tienes filtroCurso (select) en otro lado, agrega listener
         document.getElementById('filtroCurso')?.addEventListener('change', filtrarRecursos);
-
-        // Ejecutar filtro al cargar la página (opcional)
-        filtrarRecursos();
+        document.getElementById('filtroCategoria')?.addEventListener('input', filtrarRecursos);
+        document.getElementById('busquedaRecursos')?.addEventListener('input', filtrarRecursos);
     } catch (error) {
         console.error("Error fatal:", error);
     }

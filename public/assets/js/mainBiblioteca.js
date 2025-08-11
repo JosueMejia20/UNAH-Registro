@@ -486,7 +486,7 @@ function filtrarRecursos() {
 
     recursos.forEach(recurso => {
         const cursosData = recurso.getAttribute('data-cursos') || '';
-        // separar los nombres de las clases y limpiar espacios
+        
         const cursos = cursosData.split(',').map(c => c.trim());
 
         const categoria = recurso.getAttribute('data-categoria')?.toLowerCase() || '';

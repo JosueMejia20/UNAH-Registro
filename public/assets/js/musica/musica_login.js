@@ -61,14 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Mantener overlay visible hasta mostrar modal
                 setTimeout(() => {
-                    overlayCarga.style.display = 'none'; // Ocultamos overlay justo al mostrar modal
+                    overlayCarga.style.display = 'none'; 
                     modal.show("Acceso exitoso. Redirigiendo...", () => {
                         window.location.href = "../../../../musica/musica.php";
                     });
-                }, 500); // Pequeño delay para dar sensación fluida
+                }, 500); 
 
             } else {
-                // Ocultar overlay y mostrar modal de error
+                
                 overlayCarga.style.display = 'none';
                 modal.show("Credenciales incorrectas. Intente de nuevo.");
             }

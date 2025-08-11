@@ -2,6 +2,12 @@ import {
     validarCredenciales
 } from '../../../../components/Estudiantes/loginEstudiantes_Controller.mjs';
 
+import { UnahModal } from '../../../components/modal.mjs';
+customElements.define("unah-modal", UnahModal);
+
+// Obtener referencia al modal componentizado
+    const modal = document.querySelector('unah-modal');
+
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('loginForm');
     const btnLogin = document.querySelector('.btn-login');
@@ -53,14 +59,17 @@ document.addEventListener('DOMContentLoaded', function () {
             btnLogin.classList.add('btn-success');
 
             setTimeout(() => {
-                alert("Acceso exitoso. Redirigiendo...");
-                window.location.href = "../../../estudiantes/estudiante.php";
+                overlayCarga.style.display = 'none'; 
+                modal.show("Acceso exitoso. Redirigiendo...", () => {
+                    window.location.href = "../../../estudiantes/estudiante.php";
+                });
             }, 1000);
         } else {
             btnText.textContent = "Ingresar";
             spinner.classList.add('d-none');
             btnLogin.disabled = false;
-            alert("Credenciales incorrectas. Intente de nuevo.");
+            overlayCarga.style.display = 'none';
+            modal.show("Credenciales incorrectas. Intente de nuevo.");
         }
 
     });
