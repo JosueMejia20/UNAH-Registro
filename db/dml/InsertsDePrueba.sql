@@ -76,21 +76,21 @@ INSERT INTO Estudiante (numero_cuenta, carrera_id, usuario_id, centro_reg_id, an
 
 -- Docentes
 INSERT INTO Docente (numero_empleado, persona_id, centro_reg_id, usuario_id, departamento_id, foto) VALUES
-(1004, '0801199112350', 1, 6, 1, NULL),   -- María José - Dept. Matemáticas
-(1005, '0801198512351', 1, 7, 2, NULL),   -- Roberto Carlos - Dept. Física
-(1006, '0801199412352', 1, 8, 21, NULL),  -- Andrea Carolina - Dept. Arte
-(1007, '0801199212353', 1, 9, 1, NULL),   -- Jorge Enrique - Dept. Matemáticas
-(1008, '0801199712354', 1, 10, 2, NULL),  -- Sofía Alejandra - Dept. Física
-(1009, '0801198912355', 1, 11, 21, NULL), -- Diego Fernando - Dept. Arte
-(1010, '0801199312356', 1, 12, 1, NULL),  -- Valeria Beatriz - Dept. Matemáticas
-(1011, '0801199112357', 1, 13, 2, NULL),  -- Alejandro José - Dept. Física
-(1012, '0801199512358', 1, 14, 21, NULL), -- Isabella María - Dept. Arte
-(1013, '0801199012359', 1, 15, 1, NULL),  -- Kevin Alexander - Dept. Matemáticas
-(1014, '0801198812360', 1, 16, 2, NULL),  -- Paola Fernanda - Dept. Física
-(1015, '0801199612361', 1, 17, 21, NULL), -- Oscar David - Dept. Arte
-(1016, '0801199412362', 1, 18, 1, NULL),  -- Natalia Esperanza - Dept. Matemáticas
-(1017, '0801199212363', 1, 19, 2, NULL),  -- Fernando José - Dept. Física
-(1018, '0801199712364', 1, 20, 21, NULL); -- Camila Alejandra - Dept. Arte
+(1004, '0801198912355', 1, 6, 1, NULL),   -- persona 6
+(1005, '0801199312356', 1, 7, 2, NULL),   -- persona 7
+(1006, '0801199112357', 1, 8, 21, NULL),  -- persona 8
+(1007, '0801199512358', 1, 9, 1, NULL),   -- persona 9
+(1008, '0801199012359', 1, 10, 2, NULL),  -- persona 10
+(1009, '0801198812360', 1, 11, 21, NULL), -- persona 11
+(1010, '0801199612361', 1, 12, 1, NULL),  -- persona 12
+(1011, '0801199412362', 1, 13, 2, NULL),  -- persona 13
+(1012, '0801199212363', 1, 14, 21, NULL), -- persona 14
+(1013, '0801199712364', 1, 15, 1, NULL),  -- persona 15
+(1014, '0801198512365', 1, 16, 2, NULL),  -- persona 16
+(1015, '0801199312366', 1, 17, 21, NULL), -- persona 17
+(1016, '0801199112367', 1, 18, 1, NULL),  -- persona 18
+(1017, '0801199512368', 1, 19, 2, NULL),  -- persona 19
+(1018, '0801199012369', 1, 20, 21, NULL); -- persona 20
 
 
 
@@ -276,20 +276,32 @@ INSERT INTO Usuario_Rol (usuario_id, rol_id) VALUES
 
 
 
+-- Revisores
+INSERT INTO Usuario_Rol (usuario_id, rol_id) VALUES
+(1, 1),(2,1);
 
--- INSERTS PARA HISTORIAL ACADEMICO
--- Estudiante inscrito a 10 secciones con diferentes notas
--- INSERT INTO Estudiantes_Secciones (estudiante_id, seccion_id, nota, estado_clase_id)
--- VALUES 
--- ('20201003849', 1, 87, 1),  
--- ('20201003849', 2, 73, 1),
--- ('20201003849', 3, 91, 1),
--- ('20201003849', 4, 52, 2),  
--- ('20201003849', 5, 0, 4),   
--- ('20201003849', 6, 60, 2),
--- ('20201003849', 7, 75, 1),
--- ('20201003849', 8, 44, 2),
--- ('20201003849', 9, 66, 1),
--- ('20201003849', 12, 0, 4);
+-- Matricula Indice. Para todos los dias del 11 de agosto a 30 de agosto
+-- Para pruebas, y que el estudiante pueda matricular todos los dias.
+INSERT INTO Matricula_Indice (periodo_matricula_id, dia, indice_minimo, indice_maximo) VALUES 
+(2, '2025-08-11', 0, 100),
+(2, '2025-08-12', 0, 100),
+(2, '2025-08-13', 0, 100),
+(2, '2025-08-14', 0, 100),
+(2, '2025-08-15', 0, 100),
+(2, '2025-08-16', 0, 100),
+(2, '2025-08-17', 0, 100),
+(2, '2025-08-18', 0, 100),
+(2, '2025-08-19', 0, 100),
+(2, '2025-08-20', 0, 100),
+(2, '2025-08-21', 0, 100),
+(2, '2025-08-22', 0, 100),
+(2, '2025-08-23', 0, 100),
+(2, '2025-08-24', 0, 100),
+(2, '2025-08-25', 0, 100),
+(2, '2025-08-26', 0, 100),
+(2, '2025-08-27', 0, 100),
+(2, '2025-08-28', 0, 100),
+(2, '2025-08-29', 0, 100),
+(2, '2025-08-30', 0, 100);
 
 
